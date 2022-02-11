@@ -1,17 +1,32 @@
 import Head from 'next/head'
 import Image from 'next/image'
+import Link from 'next/link'
+import { onAuthStateChanged, signOut, getAuth } from 'firebase/auth'
+import { auth } from '../src/config/firebase.config'
+import { useState } from 'react'
+
 
 export default function Home() {
+
+  const [user, setUser] = useState({});
+
+  onAuthStateChanged(auth, (currentUser) => {
+    setUser(currentUser);
+  })
+
+  const logout = async () => {
+    const auth = getAuth();
+    await signOut(auth).then(() => {
+      window.location = '/login';
+    }).catch((error) => {
+      throw error;
+    });
+  }
+
   return (
     <>
-      <div className='main'>
-        <h1 style={{ padding: "100px 0 20px" }}>ABSEIL PRO</h1>
-        <h4>ROPE ACCESS & HEIGHT SAFETY</h4>
-        <div style={{ display: "grid", width: "500px", margin: "0 auto" }}>
-          <input  type="email" placeholder="E-mail" style={{marginBottom: "12px"}} />
-          <input  type="password" placeholder="Password" />
-        </div>
-      </div>
+      <h1>WELCOME</h1>
+      <button onClick={logout}>Sign out</button>
     </>
   )
 }
