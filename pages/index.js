@@ -3,7 +3,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { onAuthStateChanged, signOut, getAuth } from 'firebase/auth'
 import { auth } from '../src/config/firebase.config'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Modal from '../components/modal'
 
 
 export default function Home() {
@@ -14,17 +17,21 @@ export default function Home() {
     setUser(currentUser);
   })
 
-  const logout = async () => {
+  const logout = async () => {  
     const auth = getAuth();
     await signOut(auth).then(() => {
-      window.location = '/login';
+        window.location = '/login'
     }).catch((error) => {
-      throw error;
+      console.log(error.message);
     });
   }
 
+  
+  
+ 
   return (
     <>
+      {!user ? <Modal /> : ""}
       <h1>WELCOME</h1>
       <button onClick={logout}>Sign out</button>
     </>

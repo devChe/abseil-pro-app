@@ -7,18 +7,21 @@ import 'react-skeleton-css/styles/skeleton.2.0.4.css'
 import 'react-skeleton-css/styles/normalize.3.0.2.css'
 import { auth } from '../src/config/firebase.config'
 import { onAuthStateChanged, currentUser, signOut, signInWithEmailAndPassword } from 'firebase/auth';
-import firebase from "firebase/compat/app";
+import firebase from "firebase/app";
 import { useState, useEffect } from 'react';
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 
 function MyApp({ Component, pageProps }) {
 
-  const [user, setUser] = useState(null);
+  useEffect(() => {
+    AOS.init({
+      offset: 200,
+      duration: 500
+    });
+  }, []);
 
-  onAuthStateChanged(auth, (currentUser) => {
-    setUser(currentUser);
-  })
-  
   return (
     <Layout>
       <Head>
