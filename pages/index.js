@@ -1,39 +1,64 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import Link from 'next/link'
-import { onAuthStateChanged, signOut, getAuth } from 'firebase/auth'
+/* eslint-disable react-hooks/rules-of-hooks */
+import { async } from '@firebase/util';
+import React, { useState } from 'react'
 import { auth } from '../src/config/firebase.config'
-import { useState, useEffect } from 'react'
+import { onAuthStateChanged, currentUser, signOut, signInWithEmailAndPassword } from 'firebase/auth';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Modal from '../components/modal'
+import { useRouter } from 'next/router';
+
+function login() {
+    const notify = () => toast("Wow so easy!");
+
+    const [loginEmail, setLoginEmail] = useState("");
+    const [loginPassword, setLoginPassword] = useState("");
+    const [textError, setTextError] = useState("")
+    const [user, setUser] = useState({});
+
+    const router = useRouter();
 
 
-export default function Home() {
+    onAuthStateChanged(auth, (currentUser) => {
+        setUser(currentUser);
+    })
 
-  const [user, setUser] = useState({});
-
-  onAuthStateChanged(auth, (currentUser) => {
-    setUser(currentUser);
-  })
-
-  const logout = async () => {  
-    const auth = getAuth();
-    await signOut(auth).then(() => {
-        window.location = '/login'
-    }).catch((error) => {
-      console.log(error.message);
-    });
-  }
-
-  
-  
- 
-  return (
-    <>
-      {!user ? <Modal /> : ""}
-      <h1>WELCOME</h1>
-      <button onClick={logout}>Sign out</button>
-    </>
+    const login = async () => {
+        try {
+            const user = await signInWithEmailAndPassword(
+                auth,
+                loginEmail,
+                loginPassword
+            );
+            
+            if(user) {
+                const successful = () => toast.success("SUCCESS");
+                setTextError(successful);
+                router.push('/dashboard'); //After successful login, user will be redirected to home.html
+            } else {
+                window.location = '/';
+            }
+            
+        } catch (error) {
+            const notify = () => toast.error("Please Check Email & Password");
+            setTextError(notify);
+        }
+        
+    }
+    
+    return (
+    
+    <div className='main'>
+        <ToastContainer />
+        <h1 style={{ padding: "100px 0 0" }}>ABSEIL PRO</h1>
+        <p>ROPE ACCESS & HEIGHT SAFETY</p>
+        <div style={{ display: "grid", width: "500px", margin: "0 auto" }}>
+          <input  type="email" placeholder="E-mail" onChange={(event) => setLoginEmail(event.target.value)} style={{marginBottom: "12px"}} />
+          <input  type="password" placeholder="Password" onChange={(event) => setLoginPassword(event.target.value)} style={{marginBottom: "12px"}}  />
+          <button type='submit' onClick={login}>Login</button>
+          
+        </div>
+    </div>
   )
 }
+
+export default login;
