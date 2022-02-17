@@ -11,9 +11,12 @@ import firebase from "firebase/app";
 import { useState, useEffect } from 'react';
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { useRouter } from 'next/router'
+
 
 
 function MyApp({ Component, pageProps }) {
+  const router = useRouter();
 
   useEffect(() => {
     AOS.init({
@@ -22,18 +25,36 @@ function MyApp({ Component, pageProps }) {
     });
   }, []);
 
-  return (
-    <Layout>
-      <Head>
-        <title>Create Next App</title>
-        <meta name="description" content="Abreil Pro System" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <div className='container' style={{ height: "90vh" }}>
-        <Component {...pageProps} />
-      </div>
-    </Layout>
-  )
+  if (router.pathname != "/")
+    return (
+      <Layout>
+        <Head>
+          <title>Create Next App</title>
+          <meta name="description" content="Abreil Pro System" />
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
+        <div className='container' style={{ height: "90vh" }}>
+          <Component {...pageProps} />
+        </div>
+      </Layout>
+    )
+  else {
+    return (
+      <>
+        <Head>
+          <title>Create Next App</title>
+          <meta name="description" content="Abreil Pro System" />
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
+        <div className='container' style={{ height: "90vh" }}>
+          <Component {...pageProps} />
+        </div>
+      </>
+
+    )
+  }
+
+
 }
 
 export default MyApp
