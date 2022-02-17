@@ -28,7 +28,7 @@ function MyApp({ Component, pageProps }) {
     return (
       <Layout>
         <Head>
-          <title>Create Next App</title>
+          <title>ABSEIL PRO SYSTEM MANAGEMENT APP</title>
           <meta name="description" content="Abreil Pro System" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
