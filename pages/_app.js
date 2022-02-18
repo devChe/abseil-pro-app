@@ -11,6 +11,7 @@ import { useState, useEffect } from 'react';
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useRouter } from 'next/router'
+import { AuthCheck } from '../components/AuthCheck'
 
 
 function MyApp({ Component, pageProps }) {
@@ -25,16 +26,18 @@ function MyApp({ Component, pageProps }) {
 
   if (router.pathname != "/")
     return (
-      <Layout>
-        <Head>
-          <title>ABSEIL PRO SYSTEM MANAGEMENT APP</title>
-          <meta name="description" content="Abreil Pro System" />
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
-        <div className='container' style={{ height: "90vh" }}>
-          <Component {...pageProps} />
-        </div>
-      </Layout>
+      <AuthCheck>
+        <Layout>
+          <Head>
+            <title>ABSEIL PRO SYSTEM MANAGEMENT APP</title>
+            <meta name="description" content="Abreil Pro System" />
+            <link rel="icon" href="/favicon.ico" />
+          </Head>
+          <div className='rightSideContent' style={{ height: "90vh"}}>
+            <Component {...pageProps} />
+          </div>
+        </Layout>
+      </AuthCheck>
     )
   else {
     return (

@@ -1,13 +1,26 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+import Sidebar from './Sidebar';
 
 function Layout({children}) {
   return (
       <>
-        <Navbar />
+        <div className='flex'>
+          <Sidebar />
+          <div className='rightSide'>
+            <Navbar />
             <main>{children}</main>
-        <Footer />
+          </div>
+        </div>
+        <style jsx>{`
+          .flex {
+            display: flex;
+          }
+
+          .rightSide {
+            flex: 1;
+          }
+        `}</style>
       </>
   )
 }

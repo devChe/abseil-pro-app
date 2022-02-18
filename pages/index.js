@@ -51,12 +51,32 @@ function login() {
         <ToastContainer />
         <h1 style={{ padding: "100px 0 0" }}>ABSEIL PRO</h1>
         <p>ROPE ACCESS & HEIGHT SAFETY</p>
-        <div style={{ display: "grid", width: "500px", margin: "0 auto" }}>
+        <div className='appForm' style={{ display: "grid", width: "500px", margin: "0 auto" }}>
           <input  type="email" placeholder="E-mail" onChange={(event) => setLoginEmail(event.target.value)} style={{marginBottom: "12px"}} />
           <input  type="password" placeholder="Password" onChange={(event) => setLoginPassword(event.target.value)} style={{marginBottom: "12px"}}  />
           <button type='submit' onClick={login}>Login</button>
           
         </div>
+        <style jsx>{`
+            .appForm {
+                display: grid;
+                width: 500px;
+                margin: 0 auto;
+            }
+
+            @media only screen and (min-width: 300px) and (max-width: 375px) {
+                .appForm {
+                    width: auto !important;
+                }
+            }
+
+            @media only screen and (min-width: 376px) and (max-width: 425px) {
+                .appForm {
+                    width: auto !important;
+                }
+            }
+
+        `}</style>
     </div>
   )
 }
