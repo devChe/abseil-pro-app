@@ -1,25 +1,27 @@
+/* eslint-disable @next/next/no-html-link-for-pages */
 /* eslint-disable @next/next/link-passhref */
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import Router from 'next/router'
-import React from 'react'
+import React, { useState } from 'react'
+import { cssTransition } from 'react-toastify'
 
 const Sidebar = () => {
   const router = useRouter();
+
   return (
     <div className='wrapper'>
         <div className='logo'>
             <img src='logo.png' width="100" height="100" />
         </div>
         <div className='tools'>
-            <div onClick={(e) => router.push('/dashboard')}>Dashboard</div>
-            <div onClick={(e) => router.push('/clients')}>Clients</div>
-            <div onClick={(e) => router.push('/jobs')}>Jobs</div>
-            <div onClick={(e) => router.push('/business')}>Business</div>
-            <div onClick={(e) => router.push('/reports')}>Reports</div>
-            
+            <Link href="/dashboard"><a>Dashboard</a></Link>
+            <Link href="/clients"><a>Clients</a></Link>
+            <Link href="/jobs"><a>Jobs</a></Link>
+            <Link href="/business"><a>Business</a></Link>
+            <Link href="/reports"><a>Reports</a></Link>
         </div>
         <style jsx>{`
             .wrapper {
@@ -41,19 +43,24 @@ const Sidebar = () => {
                 padding: 30px 0;
             }
 
-            .tools div {
+            .tools a {
                 padding: 10px 0 10px 40px;
                 cursor: pointer;
                 
             }
 
-            .tools div:hover {
+            .tools a:hover {
+                background: lightgrey;
+                color: white;
+            }
+
+            .tools a:focus {
                 background: grey;
                 color: white;
             }
 
-            .tools div:active {
-                background: lightgrey;
+            .change {
+                background: grey;
                 color: white;
             }
 
@@ -63,4 +70,4 @@ const Sidebar = () => {
   )
 }
 
-export default Sidebar
+export default Sidebar;
