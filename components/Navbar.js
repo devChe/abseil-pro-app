@@ -26,7 +26,7 @@ function Navbar() {
   return (
       <>
         <div className='headerContainer'>
-            <h1>Abseil Pro System Management</h1>
+            <div>{user.email}</div>
             <div className='flex1'></div>
             <button onClick={logout}>Logout</button>
         </div>
@@ -37,7 +37,7 @@ function Navbar() {
             justify-content: space-between;
             background-color: #E6EAEC;
             align-items: center;
-            padding: 0 20px;
+            padding: 10px 20px;
           }
 
         `}</style>
