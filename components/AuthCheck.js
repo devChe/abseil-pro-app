@@ -18,6 +18,7 @@ export const AuthCheck = (props) => {
   
   if (typeof window !== 'undefined' && user === null) router.push('/');
 
+
   if(!user) return <Loading /> // a loading component that prevents the page from rendering
    
   return props.children
