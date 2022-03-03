@@ -67,23 +67,23 @@ function Tabs() {
             </div>
             <style jsx>{`
             *, ::before, ::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
             }
 
             body {
-            background: #fff;
+                background: #fff;
             }
 
             .container {
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            background: #f1f1f1;
-            margin: 50px auto 0;
-            word-break: break-all;
-            border: 1px solid rgba(0, 0, 0, 0.274);
+                display: flex;
+                flex-direction: column;
+                position: relative;
+                background: #f1f1f1;
+                margin: 50px auto 50px;
+                word-break: break-all;
+                border: 1px solid rgba(0, 0, 0, 0.274);
             }
 
             .row {
@@ -93,75 +93,75 @@ function Tabs() {
             }
 
             .blocTabs {
-            display: flex;
+                display: flex;
             }
 
 
 
             .tabs {
-            padding: 15px;
-            text-align: center;
-            width: 50%;
-            background: rgba(128, 128, 128, 0.075);
-            cursor: pointer;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.274);
-            box-sizing: content-box;
-            position: relative;
-            outline: none;
+                padding: 15px;
+                text-align: center;
+                width: 50%;
+                background: rgba(128, 128, 128, 0.075);
+                cursor: pointer;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.274);
+                box-sizing: content-box;
+                position: relative;
+                outline: none;
             }
 
             .tabs:not(:last-child){
-            border-right: 1px solid rgba(0, 0, 0, 0.274);
+                border-right: 1px solid rgba(0, 0, 0, 0.274);
             }
 
             .activeTabs  {
-            background: white;
-            border-bottom: 1px solid transparent;
+                background: white;
+                border-bottom: 1px solid transparent;
             }
 
             .activeTabs::before {
-            content: "";
-            display: block;
-            position: absolute;
-            top: -5px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: calc(100% + 2px);
-            height: 5px;
-            background: rgb(88, 147, 241);
+                content: "";
+                display: block;
+                position: absolute;
+                top: -5px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: calc(100% + 2px);
+                height: 5px;
+                background: rgb(88, 147, 241);
             }
 
             button {
-            border: none;
+                border: none;
             }
             .contentTabs {
-            flex-grow : 1;
+                flex-grow : 1;
             }
             .content {
-            background: white;
-            padding: 20px;
-            width: 100%;
-            height: 100%;
-            display: none;
+                background: white;
+                padding: 20px;
+                width: 100%;
+                height: 100%;
+                display: none;
             }
             
             .activeContent {
-            display: block;
+                display: block;
             }
 
             table {
-            border-collapse: collapse;
-            width: 100%;
+                border-collapse: collapse;
+                width: 100%;
             }
 
             td, th {
-            border: 1px solid #dddddd;
-            text-align: left;
-            padding: 8px;
+                border: 1px solid #dddddd;
+                text-align: left;
+                padding: 8px;
             }
 
             tr:nth-child(even) {
-            background-color: #dddddd;
+                background-color: #dddddd;
             }
             `}</style>
         </>

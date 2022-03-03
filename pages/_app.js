@@ -33,7 +33,7 @@ function MyApp({ Component, pageProps }) {
             <meta name="description" content="Abreil Pro System" />
             <link rel="icon" href="/favicon.ico" />
           </Head>
-          <div className='rightSideContent' style={{ height: "90vh"}}>
+          <div className='rightSideContent'>
             <Component {...pageProps} />
           </div>
         </Layout>
