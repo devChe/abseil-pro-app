@@ -8,10 +8,10 @@ import { db } from '../src/config/firebase.config';
 import { collection, getDocs } from 'firebase/firestore'
 import ClientData from './ClientData';
 
-
 function Tabs() {
     const [toggleState, setToggleState] = useState(1);
-    const [clients, setClients] = useState([]);
+    const [clients, setClients] = useState([]);    
+
     const clientsCollectionRef = collection(db, "clients");
 
     useEffect(() => {
@@ -49,6 +49,7 @@ function Tabs() {
                                 <th>Name</th>
                                 <th>Phone</th>
                                 <th>Email</th>
+                                <th>Action</th>
                             </thead>
                             {clients.map((client) => {
                                 return (

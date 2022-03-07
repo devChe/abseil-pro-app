@@ -11,7 +11,7 @@ const newClient = () => {
   const clientsCollectionRef = collection(db, "clients");
 
   const createClient = async () => {
-    await addDoc(clientsCollectionRef, { name: newName, phone: newPhone, email: newEmail  });
+    await addDoc(clientsCollectionRef, { name: newName, phone: Number(newPhone), email: newEmail  });
     window.location.pathname="/clients";
   }
 
