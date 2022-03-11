@@ -5,7 +5,7 @@
 import Link from 'next/link';
 import React, { useState, useEffect, useRef } from 'react'
 import { db } from '../src/config/firebase.config';
-import { collection, getDocs } from 'firebase/firestore'
+import { collection, getDocs, orderBy, query } from 'firebase/firestore'
 import ClientData from './ClientData';
 
 function Tabs() {
@@ -23,9 +23,9 @@ function Tabs() {
 
     useEffect(() => {
         const getClients = async () => {
-            const data = await getDocs(clientsCollectionRef);
+            const q = query(clientsCollectionRef, orderBy("name"));
+            const data = await getDocs(q);
             setClients(data.docs.map((doc) => ({...doc.data(), id: doc.id })))
-        
         }
         getClients();
     }, [])
