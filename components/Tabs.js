@@ -59,7 +59,7 @@ function Tabs() {
         <>
             <div className='container'>
                 <div className='row'>
-                    <input className="ten columns" type="text" placeholder="Search" value={name}  onChange={filter} />
+                    <input className="ten columns" type="text" placeholder="Search name here..." value={name}  onChange={filter} />
                     <Link href={'/newClient'}><button className='button-primary two columns'>+ New</button></Link>
                 </div>
                 <div className='blocTabs'>
