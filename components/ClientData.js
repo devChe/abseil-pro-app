@@ -19,13 +19,11 @@ const ClientData = ({client}) => {
   return (
     <>
         
-            <tr>
-                <td>{client.id}</td>
-                <Link href={"/" + client.id} key={client.id}><td>{client.name}</td></Link>
-                <td>{client.phone}</td>
-                <td>{client.email}</td>
+            <tr key={client.id} >
+                <Link href={"/" + client.id}><td>{client.name}</td></Link>
+                <Link href={"/" + client.id}><td>{client.phone}</td></Link>
+                <Link href={"/" + client.id}><td>{client.email}</td></Link>
                 <td><button type='submit' onClick={() => {deleteClient(client.id)}}>Delete</button></td>
-
             </tr>
         <style jsx>{`
             td, th {

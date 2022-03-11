@@ -3,14 +3,21 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/rules-of-hooks */
 import Link from 'next/link';
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { db } from '../src/config/firebase.config';
 import { collection, getDocs } from 'firebase/firestore'
 import ClientData from './ClientData';
 
 function Tabs() {
     const [toggleState, setToggleState] = useState(1);
-    const [clients, setClients] = useState([]);    
+    const [clients, setClients] = useState([]);
+    //THE VALUE OF THE SEARCH FIELD
+    const [name, setName] = useState('')
+    const [phone, setPhone] = useState('')
+    const [email, setEmail] = useState('')
+
+    //THE SEARCH RESULT
+    const [searchResult, setSearchResult] = useState([])
 
     const clientsCollectionRef = collection(db, "clients");
 
@@ -18,7 +25,7 @@ function Tabs() {
         const getClients = async () => {
             const data = await getDocs(clientsCollectionRef);
             setClients(data.docs.map((doc) => ({...doc.data(), id: doc.id })))
-            console.log(data);
+        
         }
         getClients();
     }, [])
@@ -28,11 +35,31 @@ function Tabs() {
     };
 
 
+    const filter = (e) => {
+        const keyword = e.target.value;
+    
+        if (keyword !== '') {
+          const results = clients.filter(client => {
+            return client.name.toLowerCase().includes(keyword.toLowerCase());
+            // Use the toLowerCase() method to make it case-insensitive
+          });
+          setSearchResult(results);
+        } else {
+          setSearchResult(clients);
+          // If the text field is empty, show all users
+        }
+    
+        setName(keyword);
+      };
+
+
+
+
     return (
         <>
             <div className='container'>
                 <div className='row'>
-                    <input className="ten columns" type="text" placeholder="Search.." />
+                    <input className="ten columns" type="text" placeholder="Search" value={name}  onChange={filter} />
                     <Link href={'/newClient'}><button className='button-primary two columns'>+ New</button></Link>
                 </div>
                 <div className='blocTabs'>
@@ -45,17 +72,20 @@ function Tabs() {
                         <hr />
                         <table>
                             <thead>
-                                <th>ID</th>
                                 <th>Name</th>
                                 <th>Phone</th>
                                 <th>Email</th>
                                 <th>Action</th>
                             </thead>
-                            {clients.map((client) => {
-                                return (
+                            {searchResult && searchResult.length > 0 ? (
+                            searchResult.map((client) => (
+                                <ClientData client={client} />
+                            ))
+                            ) : (
+                                clients.map((client) => (
                                     <ClientData client={client} />
-                                )
-                            })}
+                                ))
+                            )}
                             
                         </table>
                     </div>

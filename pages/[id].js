@@ -18,7 +18,7 @@ function post() {
         const getClients = async () => {
             const data = await getDocs(clientsCollectionRef);
             setClients(data.docs.filter((doc) => doc.id === window.location.pathname.substring(1)).map((doc) => ({...doc.data(), id: doc.id })))
-            console.log(data)
+
         }
         getClients();
     }, [])
