@@ -20,6 +20,16 @@ function Layout({children}) {
           .rightSide {
             flex: 1;
           }
+
+          @media screen and (min-width: 991px) {
+                
+          }
+  
+          @media screen and (max-width: 990px) {
+            .flex {
+              display: block;
+            }
+          }
         `}</style>
       </>
   )
