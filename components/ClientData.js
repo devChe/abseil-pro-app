@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { async } from '@firebase/util'
 import { db } from '../src/config/firebase.config'
 import { deleteDoc, doc } from 'firebase/firestore'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrashCan } from '@fortawesome/free-solid-svg-icons'
 
 
 const ClientData = ({client}) => {
@@ -18,34 +20,35 @@ const ClientData = ({client}) => {
   
   return (
     <>
-        
-            <tr key={client.id} >
-                <Link href={"/" + client.id}><td>{client.name}</td></Link>
-                <Link href={"/" + client.id}><td>{client.phone}</td></Link>
-                <Link href={"/" + client.id}><td>{client.email}</td></Link>
-                <td><button type='submit' onClick={() => {deleteClient(client.id)}}>Delete</button></td>
-            </tr>
-        <style jsx>{`
-            td, th {
+      <tr key={client.id} >
+        <Link href={"/" + client.id}><td style={{textAlign:"center"}}>{client.name}</td></Link>
+        <Link href={"/" + client.id}><td>{client.phone}</td></Link>
+        <Link href={"/" + client.id}><td>{client.email}</td></Link>
+        <td><FontAwesomeIcon icon={faTrashCan} onClick={() => {deleteClient(client.id)}} width="35" className='trashIcon' /></td>
+      </tr>
+      <style jsx>{`
+          td, th {
             border: 1px solid #dddddd;
-            text-align: left;
+            text-align: center;
             padding: 8px;
-            }
+            white-space: nowrap;
+          }
+          
+          tr:hover {
+            background: lightgrey;
+            color: white;
+            cursor: pointer;
+          }
+          
+          tr:active {
+            background: darkgrey;
+          }
 
-            tr:hover {
-              background: lightgrey;
-              color: white;
-              cursor: pointer;
-            }
+          trashIcon:active {
+            background: red;
+          }
 
-            tr:active {
-              background: darkgrey;
-            }
 
-            button:hover {
-              background: red;
-              
-            }
 
         `}</style>
     </>
