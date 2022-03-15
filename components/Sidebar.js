@@ -26,12 +26,12 @@ const Sidebar = () => {
             <Link href="/business"><a>Business</a></Link>
             <Link href="/reports"><a>Reports</a></Link>
         </div>
-        <div>ABSEIL PRO</div>
+        <div className='mobileLogo' style={{display:'none'}}>ABSEIL PRO</div>
         <div>
-            <div style={{position:"relative"}} onClick={() => isToggle(!toggle)}>
+            <div className='menuBurger' style={{position:"relative", display: 'none'}} onClick={() => isToggle(!toggle)}>
                 <FontAwesomeIcon icon={faBurger} style={{fontSize:"25px"}} />
             </div>
-            <div className={toggle ? "mobileTools" : "hide"}>
+            <div className={toggle ? "mobileTools" : "hide"} style={{display:'none'}}>
                 <Link href="/dashboard"><a>Dashboard</a></Link>
                 <Link href="/clients"><a>Clients</a></Link>
                 <Link href="/jobs"><a>Jobs</a></Link>
@@ -103,8 +103,16 @@ const Sidebar = () => {
                     padding-left: 15px;
                 }
 
+                .mobileLogo {
+                    display: block !important;
+                }
+
+                .menuBurger {
+                    display: block !important;
+                }
+
                 .mobileTools {
-                    display: grid;
+                    display: grid !important;
                     position: absolute;
                     right: 20px;
                     padding: 23px;

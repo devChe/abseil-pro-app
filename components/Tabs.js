@@ -158,7 +158,7 @@ function Tabs() {
                 transform: translateX(-50%);
                 width: calc(100% + 2px);
                 height: 5px;
-                background: rgb(88, 147, 241);
+                background: #E6EAEC;
             }
 
             button {
@@ -186,6 +186,7 @@ function Tabs() {
                 border-collapse: collapse;
                 border-spacing: 0;
                 width: 100%;
+                margin: 0 0 50px;
             }
 
             td, th {
