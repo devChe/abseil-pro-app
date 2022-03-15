@@ -57,44 +57,40 @@ function Tabs() {
 
     return (
         <>
-            <div className='container'>
-                <div className='row'>
-                    <input className="ten columns" type="text" placeholder="Search name here..." value={name}  onChange={filter} />
-                    <Link href={'/newClient'}><button className='button-primary two columns'>+ New</button></Link>
-                </div>
-                <div className='blocTabs'>
-                    <div className={toggleState === 1 ? "tabs activeTabs" : "tabs"} onClick={() => toggleTab(1)}>Clients</div>
-                    <div className={toggleState === 2 ? "tabs activeTabs" : "tabs"} onClick={() => toggleTab(2)}>Contacts</div>
-                </div>
-                <div className='contentTabs'>
-                    <div id="clients" className={toggleState === 1 ? "content  activeContent" : "content"}>
-                        <h5>Clients</h5>
-                        <hr />
-                        <table>
-                            <thead>
-                                <th>Name</th>
-                                <th>Phone</th>
-                                <th>Email</th>
-                                <th>Action</th>
-                            </thead>
-                            {searchResult && searchResult.length > 0 ? (
+            <div className='row'>
+                <input className="ten columns" type="text" placeholder="Search name here..." value={name}  onChange={filter} />
+                <Link href={'/newClient'}><button className='button-primary two columns'>+ New</button></Link>
+            </div>
+            <div className='blocTabs'>
+                <div className={toggleState === 1 ? "tabs activeTabs" : "tabs"} onClick={() => toggleTab(1)}>Clients</div>
+                <div className={toggleState === 2 ? "tabs activeTabs" : "tabs"} onClick={() => toggleTab(2)}>Contacts</div>
+            </div>
+            <div id="clients" className={toggleState === 1 ? "content  activeContent" : "content"} style={{overflowX:"auto"}}>
+                <h5>Clients</h5>
+                <div>
+                    <table>
+                        <tr>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Action</th>
+                        </tr>
+                        {searchResult && searchResult.length > 0 ? (
                             searchResult.map((client) => (
                                 <ClientData client={client} />
                             ))
-                            ) : (
-                                clients.map((client) => (
-                                    <ClientData client={client} />
-                                ))
-                            )}
-                            
-                        </table>
-                    </div>
-                    <div id="contacts"  className={toggleState === 2 ? "content  activeContent" : "content"}>
-                        <h5>Contacts</h5>
-                        <hr />
-                        <center>List of Contacts</center>
-                    </div>
+                        ) : (
+                            clients.map((client) => (
+                                <ClientData client={client} />
+                            ))
+                        )}
+                    </table>
                 </div>
+            </div>
+            <div id="contacts"  className={toggleState === 2 ? "content  activeContent" : "content"}>
+                <h5>Contacts</h5>
+                <hr />
+                <center>List of Contacts</center>
             </div>
             <style jsx>{`
             *, ::before, ::after {
@@ -117,8 +113,13 @@ function Tabs() {
                 border: 1px solid rgba(0, 0, 0, 0.274);
             }
 
+        
+            h5 {
+                padding: 15px;
+            }
+
             .row {
-                padding: 10px 15px;
+                padding: 15px 0;
                 display: flex;
                 gap: 15px;
             }
@@ -126,8 +127,6 @@ function Tabs() {
             .blocTabs {
                 display: flex;
             }
-
-
 
             .tabs {
                 padding: 15px;
@@ -170,7 +169,6 @@ function Tabs() {
             }
             .content {
                 background: white;
-                padding: 20px;
                 width: 100%;
                 height: 100%;
                 display: none;
@@ -180,19 +178,52 @@ function Tabs() {
                 display: block;
             }
 
+            .tableWrapper {
+                overflow-x: auto;
+            }
+
             table {
                 border-collapse: collapse;
+                border-spacing: 0;
                 width: 100%;
             }
 
             td, th {
                 border: 1px solid #dddddd;
-                text-align: left;
+                text-align: center;
                 padding: 8px;
             }
 
             tr:nth-child(even) {
                 background-color: #dddddd;
+            }
+
+            .isMobile {
+                display: none;
+            }
+
+            @media screen and (min-width: 991px) {
+                
+            }
+
+            @media screen and (max-width: 990px) {
+
+                .isMobile {
+                    display: block;
+                }
+
+                .container {
+                    width: auto;
+                }
+
+                .row {
+                    padding: 20px 15px;
+                }
+
+                .button-primary {
+                    width: fit-content;
+                    padding: 5px;
+                }
             }
             `}</style>
         </>
