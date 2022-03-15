@@ -4,9 +4,19 @@ import Tabs from '../components/Tabs'
 const clients = () => {
   return (
     <>
-      <h1>All Clients</h1>
-      <hr/>
-      <Tabs />
+      <div>
+        <h1>All Clients</h1>
+        <hr/>
+        <Tabs />
+      </div>
+      <style jsx>{`
+        @media screen and (max-width: 990px) {
+          h1 {
+            padding: 15px;
+          }
+        }
+        
+      `}</style>
     </>
   )
 }

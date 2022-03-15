@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-sync-scripts */
 import Head from 'next/head'
 import Layout from '../components/Layout'
 import '../styles/globals.css'
@@ -12,7 +13,12 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import { useRouter } from 'next/router'
 import { AuthCheck } from '../components/AuthCheck'
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css"
+import { config } from '@fortawesome/fontawesome-svg-core'
+import '@fortawesome/fontawesome-svg-core/styles.css'
 
+config.autoAddCss = false
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
@@ -30,8 +36,10 @@ function MyApp({ Component, pageProps }) {
         <Layout>
           <Head>
             <title>ABSEIL PRO SYSTEM MANAGEMENT APP</title>
-            <meta name="description" content="Abreil Pro System" />
+            <meta name="description" content="Abseil Pro System" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
             <link rel="icon" href="/favicon.ico" />
+            <script src="https://use.fontawesome.com/e6c3f5247b.js" />
           </Head>
           <div className='rightSideContent'>
             <Component {...pageProps} />
@@ -54,8 +62,6 @@ function MyApp({ Component, pageProps }) {
 
     )
   }
-
-
 }
 
 export default MyApp

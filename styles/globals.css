@@ -21,3 +21,13 @@ a {
 .rightSideContent {
   padding: 0 2.0rem;
 }
+
+@media screen and (min-width: 991px) {
+  
+}
+
+@media screen and (max-width: 990px) {
+  .rightSideContent {
+    padding: 0;
+  }
+}

@@ -16,7 +16,7 @@ const newClient = () => {
   }
 
   return (
-    <div>
+    <>
       <h1>New Client</h1>
       <hr/>
       <div>
@@ -25,7 +25,13 @@ const newClient = () => {
         <input placeholder="Email..." onChange={(event) => {setNewEmail(event.target.value)}} />
         <button type="submit" onClick={createClient}>Save</button>
       </div>
-    </div>
+
+      <style jsx>{`
+        button:active {
+          background: darkgrey;
+        }
+      `}</style>
+    </>
   )
 }
 
