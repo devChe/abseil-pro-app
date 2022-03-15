@@ -7,9 +7,12 @@ import { useRouter } from 'next/router'
 import Router from 'next/router'
 import React, { useState } from 'react'
 import { cssTransition } from 'react-toastify'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faBurger } from '@fortawesome/free-solid-svg-icons'
 
 const Sidebar = () => {
-  const router = useRouter();
+    const [toggle, isToggle] = useState(false)
+    const router = useRouter();
 
   return (
     <div className='wrapper'>
@@ -23,11 +26,24 @@ const Sidebar = () => {
             <Link href="/business"><a>Business</a></Link>
             <Link href="/reports"><a>Reports</a></Link>
         </div>
+        <div>ABSEIL PRO</div>
+        <div>
+            <div style={{position:"relative"}} onClick={() => isToggle(!toggle)}>
+                <FontAwesomeIcon icon={faBurger} style={{fontSize:"25px"}} />
+            </div>
+            <div className={toggle ? "mobileTools" : "hide"}>
+                <Link href="/dashboard"><a>Dashboard</a></Link>
+                <Link href="/clients"><a>Clients</a></Link>
+                <Link href="/jobs"><a>Jobs</a></Link>
+                <Link href="/business"><a>Business</a></Link>
+                <Link href="/reports"><a>Reports</a></Link>
+            </div>
+        </div>
+        
         <style jsx>{`
             .wrapper {
                 background-color: #FCFCFC;
                 width: 200px;
-                height: 100vh;
             }
 
             .logo {
@@ -62,6 +78,45 @@ const Sidebar = () => {
             .change {
                 background: grey;
                 color: white;
+            }
+
+            @media screen and (min-width: 991px) {
+                
+            }
+
+            @media screen and (max-width: 990px) {
+                .logo {
+                    display: none;
+                }
+
+                .tools {
+                    display: none;
+                }
+
+                .wrapper {
+                    display: flex;
+                    width: 100%;
+                    height: 40px;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding-right: 15px;
+                    padding-left: 15px;
+                }
+
+                .mobileTools {
+                    display: grid;
+                    position: absolute;
+                    right: 20px;
+                    padding: 23px;
+                    background: #fff;
+                    gap: 5px;
+                    text-align: center;
+                    font-size: 18px;
+                }
+
+                .hide {
+                    display: none;
+                }
             }
 
 
