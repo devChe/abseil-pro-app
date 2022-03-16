@@ -31,7 +31,7 @@ const Sidebar = () => {
             <div className='menuBurger' style={{position:"relative", display: 'none'}} onClick={() => isToggle(!toggle)}>
                 <FontAwesomeIcon icon={faBurger} style={{fontSize:"25px"}} />
             </div>
-            <div className={toggle ? "mobileTools" : "hide"} style={{display:'none'}}>
+            <div className={toggle ? "mobileTools" : "hide"} style={{display:'none',zIndex:"99999"}}>
                 <Link href="/dashboard"><a>Dashboard</a></Link>
                 <Link href="/clients"><a>Clients</a></Link>
                 <Link href="/jobs"><a>Jobs</a></Link>

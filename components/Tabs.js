@@ -52,9 +52,6 @@ function Tabs() {
         setName(keyword);
       };
 
-
-
-
     return (
         <>
             <div className='row'>
