@@ -35,7 +35,7 @@ function Navbar() {
             display: flex;
             width: 100% !important;
             justify-content: space-between;
-            background-color: #E6EAEC;
+            background-color: #F6F7F9;
             align-items: center;
             padding: 10px 20px;
           }

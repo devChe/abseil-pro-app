@@ -42,7 +42,7 @@ const Sidebar = () => {
         
         <style jsx>{`
             .wrapper {
-                background-color: #FCFCFC;
+                background-color: #051E34;
                 width: 200px;
             }
 
@@ -62,12 +62,12 @@ const Sidebar = () => {
             .tools a {
                 padding: 10px 0 10px 40px;
                 cursor: pointer;
+                transition: background-color .15s ease;
                 
             }
 
             .tools a:hover {
-                background: lightgrey;
-                color: white;
+                background-color: #253D53;
             }
 
             .tools a:focus {
@@ -105,10 +105,12 @@ const Sidebar = () => {
 
                 .mobileLogo {
                     display: block !important;
+                    color: #ffff;
                 }
 
                 .menuBurger {
                     display: block !important;
+                    color: #ffff;
                 }
 
                 .mobileTools {

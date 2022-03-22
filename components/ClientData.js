@@ -21,9 +21,9 @@ const ClientData = ({client}) => {
   return (
     <>
       <tr key={client.id} >
-        <Link href={"/" + client.id}><td style={{textAlign:"center"}}>{client.name}</td></Link>
-        <Link href={"/" + client.id}><td>{client.phone}</td></Link>
-        <Link href={"/" + client.id}><td>{client.email}</td></Link>
+        <Link href="clientProfile/[id]" as={`clientProfile/${client.id}`}><td style={{textAlign:"center"}}>{client.name}</td></Link>
+        <Link href="clientProfile/[id]" as={`clientProfile/${client.id}`}><td>{client.phone}</td></Link>
+        <Link href="clientProfile/[id]" as={`clientProfile/${client.id}`}><td>{client.email}</td></Link>
         <td><FontAwesomeIcon icon={faTrashCan} onClick={() => {deleteClient(client.id)}} width="35" className='trashIcon' /></td>
       </tr>
       <style jsx>{`
@@ -47,9 +47,7 @@ const ClientData = ({client}) => {
           trashIcon:active {
             background: red;
           }
-
-
-
+          
         `}</style>
     </>
   )
