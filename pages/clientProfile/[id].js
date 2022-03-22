@@ -4,7 +4,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import Link from 'next/link';
 import React, { useState, useEffect } from 'react'
-import { db } from '../src/config/firebase.config'
+import { db } from '../../src/config/firebase.config'
 import { collection, doc, getDocs, updateDoc } from 'firebase/firestore'
 
 
@@ -12,12 +12,14 @@ function post() {
     const [clients, setClients] = useState([]);
     const [edit, isEdit] = useState(false);
     const [newName, setNewName] = useState("");
+    
     const clientsCollectionRef = collection(db, "clients");
 
     useEffect(() => {
         const getClients = async () => {
             const data = await getDocs(clientsCollectionRef);
-            setClients(data.docs.filter((doc) => doc.id === window.location.pathname.substring(1)).map((doc) => ({...doc.data(), id: doc.id })))
+            setClients(data.docs.filter((doc) => doc.id === window.location.pathname.substring(15)).map((doc) => ({...doc.data(), id: doc.id })))
+            console.log(window.location.pathname)
 
         }
         getClients();
