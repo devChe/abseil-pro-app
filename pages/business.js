@@ -2,7 +2,9 @@ import React from 'react'
 
 const business = () => {
   return (
-    <h1>Business</h1>
+    <div style={{height:"100vh"}}>
+      <h1>Business</h1>
+    </div>
   )
 }
 

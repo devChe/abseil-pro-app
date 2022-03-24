@@ -17,7 +17,7 @@ const Sidebar = () => {
   return (
     <div className='wrapper'>
         <div className='logo'>
-            <img src='logo.png' width="100" height="100" />
+            <img src='/logo.png' width="100" height="100" />
         </div>
         <div className='tools'>
             <Link href="/dashboard"><a>Dashboard</a></Link>

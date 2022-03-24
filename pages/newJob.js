@@ -1,8 +1,11 @@
 import React from 'react'
+import ImageUpload from '../components/ImageUpload'
 
 function newJob() {
   return (
-    <div>newJob</div>
+    <div>
+      <ImageUpload />
+    </div>
   )
 }
 
