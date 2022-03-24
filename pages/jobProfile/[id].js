@@ -67,11 +67,11 @@ function jobProfile() {
                                     <div className='clientWrapper'>
                                         <div className='clientName'>{job.client}</div>
                                         <div className='info'>
-                                            <FontAwesomeIcon icon={faPhone} className="icon" />
+                                            <FontAwesomeIcon icon={faPhone} className="icon" width="20" />
                                             <div><a href={"tel:" + job.contact}>{job.contact}</a></div>
                                         </div>
                                         <div className='info'>
-                                            <FontAwesomeIcon icon={faLocationDot} className="icon" />
+                                            <FontAwesomeIcon icon={faLocationDot} className="icon" width="20" />
                                             <div><a href={job.locationURL} target="_blank">{job.siteAddress}</a></div>
                                         </div>
                                     </div>
