@@ -143,6 +143,7 @@ function jobProfile() {
 
                 .icon {
                     font-size: 20px;
+                    width: 20px;
                 }
 
                 @media screen and (max-width: 990px) {
