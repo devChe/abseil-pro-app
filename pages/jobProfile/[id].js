@@ -53,7 +53,7 @@ function jobProfile() {
                         </div>
 
                     ) : (
-                        <div>
+                        <div style={{height:"100vh"}}>
                             <div className='jobNameWrapper'>
                                 <h1>{job.name}</h1>
                                 <div className='editBtn'>
@@ -68,14 +68,19 @@ function jobProfile() {
                                         <div className='clientName'>{job.client}</div>
                                         <div className='info'>
                                             <FontAwesomeIcon icon={faPhone} className="icon" width="20" />
-                                            <div><a href={"tel:" + job.contact}>{job.contact}</a></div>
+                                            <div><a href={"tel:" + job.contact} className='contact'>{job.contact}</a></div>
                                         </div>
                                         <div className='info'>
                                             <FontAwesomeIcon icon={faLocationDot} className="icon" width="20" />
-                                            <div><a href={job.locationURL} target="_blank">{job.siteAddress}</a></div>
+                                            <div>
+                                                <div className='location'>{job.siteAddress}</div>
+                                                <a href={job.locationURL} target="_blank" className='goMap'>Get directions</a>
+                                            </div>
                                         </div>
                                     </div>
                             </div>
+                            <h2 style={{textAlign:"center", paddingBottom:"15px", paddingTop:"15px"}}>Scope</h2>
+                            <div>{job.description}</div>
                             
                         </div>
                     )}
@@ -112,6 +117,8 @@ function jobProfile() {
                 .jobImage {
                     object-fit: cover;
                     object-position: center;
+                    height: 100%;
+                    width: 100%;
                 }
 
                 .darken {
@@ -137,13 +144,34 @@ function jobProfile() {
 
                 .info {
                     display: flex;
-                    align-items: center;
+                    align-items: baseline;
                     gap: 15px;
                 }
 
                 .icon {
                     font-size: 20px;
                     width: 20px;
+                }
+
+                .contact {
+                    color: #ffff;
+                }
+
+                .location {
+                    padding-bottom: 8px;
+                }
+
+                .goMap {
+                    color: #fff;
+                    border: 1px solid #ffff;
+                    padding: 5px;
+                    border-radius: 5px;
+                    transition: .15s ease;
+                }
+
+                .goMap:hover {
+                    color: black;
+                    background: #ffff;
                 }
 
                 @media screen and (max-width: 990px) {
