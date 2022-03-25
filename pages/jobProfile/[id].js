@@ -81,7 +81,6 @@ function jobProfile() {
                             </div>
                             <h2 style={{textAlign:"center", paddingBottom:"15px", paddingTop:"15px"}}>Scope</h2>
                             <div>{job.description}</div>
-                            
                         </div>
                     )}
                     

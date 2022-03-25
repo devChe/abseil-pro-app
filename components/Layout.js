@@ -9,7 +9,7 @@ function Layout({children}) {
           <Sidebar />
           <div className='rightSide'>
             <Navbar />
-            <main>{children}</main>
+            <main style={{display:"inline-block"}}>{children}</main>
           </div>
         </div>
         <style jsx>{`
