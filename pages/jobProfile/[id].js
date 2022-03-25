@@ -67,11 +67,15 @@ function jobProfile() {
                                     <div className='clientWrapper'>
                                         <div className='clientName'>{job.client}</div>
                                         <div className='info'>
-                                            <FontAwesomeIcon icon={faPhone} className="icon" width="20" />
+                                            <div className="icon">
+                                            <FontAwesomeIcon icon={faPhone} />
+                                            </div>
                                             <div><a href={"tel:" + job.contact} className='contact'>{job.contact}</a></div>
                                         </div>
                                         <div className='info'>
-                                            <FontAwesomeIcon icon={faLocationDot} className="icon" width="20" />
+                                            <div className="icon">
+                                            <FontAwesomeIcon icon={faLocationDot} />
+                                            </div>
                                             <div>
                                                 <div className='location'>{job.siteAddress}</div>
                                                 <a href={job.locationURL} target="_blank" className='goMap'>Get directions</a>
@@ -139,6 +143,7 @@ function jobProfile() {
 
                 .clientName {
                     font-size: 40px;
+                    text-shadow: 0 1px black;
                 }
 
                 .info {
@@ -150,14 +155,21 @@ function jobProfile() {
                 .icon {
                     font-size: 20px;
                     width: 20px;
+                    text-shadow: 0 1px black;
                 }
 
                 .contact {
                     color: #ffff;
+                    text-shadow: 0 1px black;
+                }
+
+                .loc {
+                    width: 20px;
                 }
 
                 .location {
                     padding-bottom: 8px;
+                    text-shadow: 0 1px black;
                 }
 
                 .goMap {
@@ -166,6 +178,7 @@ function jobProfile() {
                     padding: 5px;
                     border-radius: 5px;
                     transition: .15s ease;
+                    text-shadow: 0 1px black;
                 }
 
                 .goMap:hover {
@@ -174,6 +187,7 @@ function jobProfile() {
                 }
 
                 @media screen and (max-width: 990px) {
+
                     .jobNameWrapper {
                         justify-content: space-between;
                     }
