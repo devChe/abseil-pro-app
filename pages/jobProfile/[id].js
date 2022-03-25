@@ -41,10 +41,10 @@ function jobProfile() {
     }
 
     return (
-        <> 
+        <div> 
             {jobs.map((job) => {
                 return (
-                    <>
+                <div>
                     {edit ? (
                         <div className='container'>
                             <label>Edit Name</label>
@@ -53,7 +53,7 @@ function jobProfile() {
                         </div>
 
                     ) : (
-                        <div style={{height:"100vh"}}>
+                        <div>
                             <div className='jobNameWrapper'>
                                 <h1>{job.name}</h1>
                                 <div className='editBtn'>
@@ -62,26 +62,26 @@ function jobProfile() {
                                 </div>
                             </div>
                             <div className="heroImage">
-                                    <div className='darken'></div>
-                                    <img src={job.image} className='jobImage' />
-                                    <div className='clientWrapper'>
-                                        <div className='clientName'>{job.client}</div>
-                                        <div className='info'>
-                                            <div className="icon">
+                                <div className='darken'></div>
+                                <img src={job.image} className='jobImage' />
+                                <div className='clientWrapper'>
+                                    <div className='clientName'>{job.client}</div>
+                                    <div className='info'>
+                                        <div className="icon">
                                             <FontAwesomeIcon icon={faPhone} />
-                                            </div>
-                                            <div><a href={"tel:" + job.contact} className='contact'>{job.contact}</a></div>
                                         </div>
-                                        <div className='info'>
-                                            <div className="icon loc">
-                                            <FontAwesomeIcon icon={faLocationDot} />
-                                            </div>
-                                            <div>
-                                                <div className='location'>{job.siteAddress}</div>
-                                                <a href={job.locationURL} target="_blank" className='goMap'>Get directions</a>
-                                            </div>
-                                        </div>
+                                        <div><a href={"tel:" + job.contact} className='contact'>{job.contact}</a></div>
                                     </div>
+                                    <div className='info'>
+                                        <div className="icon loc">
+                                            <FontAwesomeIcon icon={faLocationDot} />
+                                        </div>
+                                        <div>
+                                            <div className='location'>{job.siteAddress}</div>
+                                            <a href={job.locationURL} target="_blank" className='goMap'>Get directions</a>
+                                        </div>
+                                    </div>    
+                                </div>
                             </div>
                             <h2 style={{textAlign:"center", paddingBottom:"15px", paddingTop:"15px"}}>Scope</h2>
                             <div>{job.description}</div>
@@ -89,7 +89,7 @@ function jobProfile() {
                     )}
                     
                         
-                </>
+                </div>
                 )
             })}
             <style jsx>{`
@@ -166,6 +166,7 @@ function jobProfile() {
                 .location {
                     padding-bottom: 8px;
                     text-shadow: 0 1px black;
+                    width: 60%;
                 }
 
                 .goMap {
@@ -194,7 +195,7 @@ function jobProfile() {
                 }
 
             `}</style>
-        </>
+        </div>
     )
 }
 

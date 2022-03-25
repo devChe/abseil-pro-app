@@ -4,12 +4,12 @@ import Sidebar from './Sidebar';
 
 function Layout({children}) {
   return (
-      <>
+      <div>
         <div className='flex'>
           <Sidebar />
           <div className='rightSide'>
             <Navbar />
-            <main style={{display:"inline-block"}}>{children}</main>
+            <main>{children}</main>
           </div>
         </div>
         <style jsx>{`
@@ -31,7 +31,7 @@ function Layout({children}) {
             }
           }
         `}</style>
-      </>
+      </div>
   )
 }
 
