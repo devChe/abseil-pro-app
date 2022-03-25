@@ -73,7 +73,7 @@ function jobProfile() {
                                             <div><a href={"tel:" + job.contact} className='contact'>{job.contact}</a></div>
                                         </div>
                                         <div className='info'>
-                                            <div className="icon">
+                                            <div className="icon loc">
                                             <FontAwesomeIcon icon={faLocationDot} />
                                             </div>
                                             <div>
@@ -163,10 +163,6 @@ function jobProfile() {
                     text-shadow: 0 1px black;
                 }
 
-                .loc {
-                    width: 20px;
-                }
-
                 .location {
                     padding-bottom: 8px;
                     text-shadow: 0 1px black;
@@ -190,6 +186,10 @@ function jobProfile() {
 
                     .jobNameWrapper {
                         justify-content: space-between;
+                    }
+
+                    .loc {
+                        width: 31px;
                     }
                 }
 
