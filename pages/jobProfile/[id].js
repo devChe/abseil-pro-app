@@ -130,7 +130,7 @@ function jobProfile() {
                     z-index: 999;
                     width: 100%;
                     height: 300px;
-                    opacity: 0.3;
+                    opacity: 0.5;
                 }
 
                 .clientWrapper {
