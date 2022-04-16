@@ -26,7 +26,7 @@ function jobProfile() {
     useEffect(() => {
         const getJobs = async () => {
             const data = await getDocs(jobsCollectionRef);
-            setJobs(data.docs.map((doc) => ({...doc.data(), id: doc.id })))
+            setJobs(data.docs.filter((doc) => doc.id === window.location.pathname.substring(12)).map((doc) => ({...doc.data(), id: doc.id })))
             console.log(window.location.pathname)
 
         }
@@ -63,7 +63,7 @@ function jobProfile() {
                             </div>
                             <div className="heroImage">
                                 <div className='darken'></div>
-                                <img src={job.image} className='jobImage' />
+                                <img src={job.imageUrl} className='jobImage' />
                                 <div className='clientWrapper'>
                                     <div className='clientName'>{job.client}</div>
                                     <div className='info'>
@@ -84,7 +84,7 @@ function jobProfile() {
                                 </div>
                             </div>
                             <h2 style={{textAlign:"center", paddingBottom:"15px", paddingTop:"15px"}}>Scope</h2>
-                            <div>{job.description}</div>
+                            <div dangerouslySetInnerHTML={{ __html: job.description }}></div>
                         </div>
                     )}
                     

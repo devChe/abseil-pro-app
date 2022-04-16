@@ -4,16 +4,16 @@ import Link from 'next/dist/client/link'
 function JobData({job}) {
   return (
     <>
-        <Link  href="jobProfile/[id]" as={`jobProfile/${job.id}`}>
-        <tr>
-            <td>{job.jobNumber}</td>
-            <td>{job.client}</td>
-            <td>{job.name}</td>
-            <td>{job.state}</td>
-            <td>{new Date(job.startDate.seconds * 1000).toLocaleDateString("en-US")}</td>
-            <td>{new Date(job.dueDate.seconds * 1000).toLocaleDateString("en-US")}</td>
+        
+        <tr key={job.id}>
+        <Link  href="jobProfile/[id]" as={`jobProfile/${job.id}`}><td>{job.jobNumber}</td></Link>
+        <Link  href="jobProfile/[id]" as={`jobProfile/${job.id}`}><td>{job.client}</td></Link>
+        <Link  href="jobProfile/[id]" as={`jobProfile/${job.id}`}><td>{job.name}</td></Link>
+        <Link  href="jobProfile/[id]" as={`jobProfile/${job.id}`}><td>{job.state}</td></Link>
+        <Link  href="jobProfile/[id]" as={`jobProfile/${job.id}`}><td>{new Date(job.startDate.seconds * 1000).toLocaleDateString("en-US")}</td></Link>
+        <Link  href="jobProfile/[id]" as={`jobProfile/${job.id}`}><td>{new Date(job.dueDate.seconds * 1000).toLocaleDateString("en-US")}</td></Link>
         </tr>
-        </Link>
+        
         <style jsx>{`
             td, th {
                 border: 1px solid #dddddd;

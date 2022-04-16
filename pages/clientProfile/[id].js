@@ -52,7 +52,7 @@ function post() {
                         <div className='container'>
                             <div>Client name: {client.name}</div>
                             <div>Client phone: {client.phone}</div>
-                            <div>Client email: {client.email}</div>
+                            <div>Client email: {client.email}</div> 
                             <button onClick={() => isEdit("true")}>Edit</button>
                         </div>
                     )}

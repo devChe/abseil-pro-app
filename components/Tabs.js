@@ -16,6 +16,8 @@ function Tabs() {
     const [phone, setPhone] = useState('')
     const [email, setEmail] = useState('')
 
+    console.log(clients);
+
     //THE SEARCH RESULT
     const [searchResult, setSearchResult] = useState([])
 

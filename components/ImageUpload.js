@@ -1,17 +1,11 @@
 import React from 'react'
 
-function ImageUpload() {
-
-  const handleChange = e => {
-      if(e.target.files[0]) {
-          
-      }
-  }
+function ImageUpload({ image, handleChange, handleUpload }) {
 
   return (
     <div>
         <input type="file" onChange={handleChange} />
-        <button>Upload</button>
+        <button onClick={handleUpload}>Upload</button>
     </div>
   )
 }
