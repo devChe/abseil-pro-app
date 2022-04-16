@@ -2,6 +2,9 @@ html,
 body {
   padding: 0;
   margin: 0;
+  font-size: 1.5em;
+  line-height: 1.6;
+  font-weight: 400;
 }
 
 a {

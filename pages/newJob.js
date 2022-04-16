@@ -177,11 +177,11 @@ function newJob() {
       </select>
 
       <label>Site Address</label>
-      <textarea value={location} onChange={(event) => setLocation(event.target.value)} />
+      <textarea style={{width:"100%", height: "150px"}} value={location} onChange={(event) => setLocation(event.target.value)} />
       <hr />
-      <h1>Schedule Information</h1>
-      <div className='date'>
-        <div className='startDate'>
+      <h6 className='docsHeader'>SCHEDULE INFORMATION</h6>
+      <div className='row'>
+        <div className='startDate six columns'>
           <label>Start Date</label>
           <DatePicker
             selected={startDate}
@@ -189,9 +189,10 @@ function newJob() {
             startDate={startDate}
             endDate={endDate}
             onChange={date => setStartDate(date)}
+            className="six columns"
           />
         </div>
-        <div className='dueDate'>
+        <div className='dueDate six columns'>
           <label>Due Date</label>
           <DatePicker
             selected={endDate}
@@ -200,9 +201,10 @@ function newJob() {
             endDate={endDate}
             minDate={startDate}
             onChange={date => setEndDate(date)}
+            className="six columns"
           />
         </div>
-      </div>
+        </div>
       <label>Priority</label>
         <select value={newPriority} onChange={(event) => setNewPriority(event.target.value)}>
           <option value="Immediate">Immediate</option>
@@ -233,7 +235,8 @@ function newJob() {
             <option value={team.name}>{team.name}</option>
           ))}
         </select>
-      <button type="submit" onClick={createJob}>Save</button>
+        <div className='btnWrapper'><input className="button-primary" type="submit" value="submit" onClick={createJob}/></div>
+      
       
       <style jsx>{`
         .wrapper {
@@ -249,9 +252,18 @@ function newJob() {
           width: 100%;
         }
 
-        .date {
-          display: flex;
+        .docsHeader {
+          text-transform: uppercase;
+          font-size: 1.4rem;
+          letter-spacing: .2rem;
+          font-weight: 600;
+        } 
+
+        .btnWrapper {
+          text-align: center;
+          margin-bottom: 100px;
         }
+
       `}</style>
     </div>
   )
