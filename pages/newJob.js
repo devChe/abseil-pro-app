@@ -3,7 +3,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react-hooks/rules-of-hooks */
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useMemo } from 'react'
 import { collection, addDoc, getDocs, query, orderBy } from 'firebase/firestore';
 import { db, storage  } from '../src/config/firebase.config'
 import dynamic from 'next/dynamic';
@@ -18,11 +18,13 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { v4 } from 'uuid';
 import DatePicker from "react-datepicker"; 
 import "react-datepicker/dist/react-datepicker.css";
+import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 
 
 function newJob() {
   const [clients, setClients] = useState([]);
   const [staff, setStaff] = useState([]);
+  const [jobs, setJobs] = useState([]);
   const [name, setName] = useState("");
   const [newClient, setNewClient] = useState("");
   const [newContact, setNewContact] = useState("");
@@ -38,14 +40,18 @@ function newJob() {
   const [newMngr, setNewMngr] = useState("");
   const [newTeam, seTNewTeam] = useState("");
   const [temps, setTemps] = useState([]);
-  const [jobNumber, setJobNumber] = useState("");
-  const [location, setLocation] = useState("");
+  const [jobUniId, setJobUniId] = useState("");
+  const [address, setAddress] = useState("");
+  const [coordinates, setCoordinates] = useState({lat: null, lng: null})
 
   const clientsCollectionRef = collection(db, "clients");
+
+  const jobsCollectionRef = collection(db, "jobs");
 
   const staffCollectionRef = collection(db, "staff");
 
   const tempCollectionRef = collection(db, "jobTemplate");
+
 
     useEffect(() => {
         const getClients = async () => {
@@ -54,6 +60,16 @@ function newJob() {
             setClients(data.docs.map((doc) => ({...doc.data(), id: doc.id })))
         }
         getClients();
+    }, [])
+    
+
+    useEffect(() => {
+      const getJobs = async () => {
+          const q = query(jobsCollectionRef, orderBy("name"));
+          const data = await getDocs(q);
+          setJobs(data.docs.map((doc) => ({...doc.data(), id: doc.id })))
+      }
+      getJobs();
     }, [])
 
     useEffect(() => {
@@ -89,6 +105,14 @@ function newJob() {
     setName(selectedTemplate.name);
   }
 
+  const handleSelect = async value => {
+    const results = await geocodeByAddress(value);
+    const latLng = await getLatLng(results[0]);
+    setAddress(value);
+    setCoordinates(latLng);
+    console.log(value);
+  }
+
 
   const handleUpload = () => {
     if(image == null) return;
@@ -101,12 +125,10 @@ function newJob() {
     })
   };
 
-  const jobsCollectionRef = collection(db, "jobs");
-
   const createJob = async () => {
     
     await addDoc(jobsCollectionRef, {
-      jobNumber: jobNumber,
+      jobNumber: "J" + jobUniId,
       imageUrl: url, 
       client: newClient,
       name: name,
@@ -117,16 +139,34 @@ function newJob() {
       priority: newPriority,
       accountManager: newAccMngr,
       manager: newMngr,
-      staff: newTeam
+      staff: newTeam,
+      state: newState
      });
     window.location.pathname="/jobs";
   }
+
+  const uniId = () => {
+    const d = new Date()
+    const day = d.getDate().toString()
+    const month = d.getMonth().toString()
+    const yr = d.getFullYear().toString()
+    const hr = d.getHours().toString()
+    const min = d.getMinutes().toString()
+    const sec = d.getSeconds().toString()
+    const formattedDate = month + day + yr + hr + min + sec
+    setJobUniId(formattedDate)
+  }
+
   return (
     <div className='wrapper'>
       <div>
         <h1>Job Information</h1>
         <hr/>
       </div>
+
+      <input value= {"J" + jobUniId} onChange={(event) => {setJobUniId(event.target.value)}} />
+      <button onClick={uniId}>Generate Job Number</button>
+
       
       <label>Upload Cover Photo</label>
       <div style={{width:"100%",marginBottom:"15px",marginTop:"15px"}}>
@@ -177,7 +217,28 @@ function newJob() {
       </select>
 
       <label>Site Address</label>
-      <textarea style={{width:"100%", height: "150px"}} value={location} onChange={(event) => setLocation(event.target.value)} />
+      
+      <div>
+        <PlacesAutocomplete value={address} onChange={setAddress} onSelect={handleSelect}>
+          {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => ( 
+            <div>
+              <p>Latitude: {coordinates.lat}</p>
+              <p>Longitude: {coordinates.lng}</p>
+              <input {...getInputProps({placeholder: "Search address"})} />
+              <div>
+                {loading ? <div>Loading...</div> : null}
+                {suggestions.map((suggestion) => {
+                  const style = {
+                    backgroundColor: suggestion.active ? "#E6EAEC" : "#fff"
+                  }
+                  return <div {...getSuggestionItemProps(suggestion, { style })}>{suggestion.description}</div>;
+                })}
+              </div>
+            </div> )}
+        </PlacesAutocomplete>
+      </div>
+      
+      
       <hr />
       <h6 className='docsHeader'>SCHEDULE INFORMATION</h6>
       <div className='row'>
@@ -190,6 +251,7 @@ function newJob() {
             endDate={endDate}
             onChange={date => setStartDate(date)}
             className="six columns"
+            dateFormat={'dd/MM/yyyy'}
           />
         </div>
         <div className='dueDate six columns'>
@@ -202,6 +264,7 @@ function newJob() {
             minDate={startDate}
             onChange={date => setEndDate(date)}
             className="six columns"
+            dateFormat={'dd/MM/yyyy'}
           />
         </div>
         </div>

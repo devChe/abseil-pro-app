@@ -83,7 +83,7 @@ function jobProfile() {
                                     </div>    
                                 </div>
                             </div>
-                            <h2 style={{textAlign:"center", paddingBottom:"15px", paddingTop:"15px"}}>Scope</h2>
+                            <h2 style={{paddingBottom:"15px", paddingTop:"15px"}}>Scope</h2>
                             <div dangerouslySetInnerHTML={{ __html: job.description }}></div>
                         </div>
                     )}

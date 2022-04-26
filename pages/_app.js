@@ -40,6 +40,7 @@ function MyApp({ Component, pageProps }) {
             <meta name="viewport" content="width=device-width, initial-scale=1" />
             <link rel="icon" href="/favicon.ico" />
             <script src="https://use.fontawesome.com/e6c3f5247b.js" />
+            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4clmPx_bEwSwrVgprTEQYbRZgc7CKGcM&libraries=places" />
           </Head>
           <div className='rightSideContent'>
             <Component {...pageProps} />
