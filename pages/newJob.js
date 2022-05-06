@@ -3,6 +3,9 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react-hooks/rules-of-hooks */
+import DatePicker from "react-datepicker"; 
+import "react-datepicker/dist/react-datepicker.css";
+import 'react-datepicker/dist/react-datepicker-cssmodules.css';
 import React, {useState, useEffect, useMemo } from 'react'
 import { collection, addDoc, getDocs, query, orderBy } from 'firebase/firestore';
 import { db, storage  } from '../src/config/firebase.config'
@@ -16,9 +19,10 @@ import 'firebase/compat/firestore';
 import 'firebase/compat/storage';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { v4 } from 'uuid';
-import DatePicker from "react-datepicker"; 
-import "react-datepicker/dist/react-datepicker.css";
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
+import MultiSelect from  'react-multiple-select-dropdown-lite'
+import  'react-multiple-select-dropdown-lite/dist/index.css'
+require('react-datepicker/dist/react-datepicker.css')
 
 
 function newJob() {
@@ -38,9 +42,9 @@ function newJob() {
   const [newPriority, setNewPriority] = useState("");
   const [newAccMngr, setNewAccMngr] = useState("");
   const [newMngr, setNewMngr] = useState("");
-  const [newTeam, seTNewTeam] = useState("");
+  const [newTeam, setNewTeam] = useState("");
   const [temps, setTemps] = useState([]);
-  const [jobUniId, setJobUniId] = useState("");
+  const [jobUniId, setJobUniId] = useState("0000");
   const [address, setAddress] = useState("");
   const [coordinates, setCoordinates] = useState({lat: null, lng: null})
 
@@ -76,7 +80,7 @@ function newJob() {
       const getStaff = async () => {
           const q = query(staffCollectionRef, orderBy("name"));
           const data = await getDocs(q);
-          setStaff(data.docs.map((doc) => ({...doc.data(), id: doc.id })))
+          setStaff(data.docs.map((doc) => ({...doc.data(), id: doc.id })));
         }
         getStaff();
     }, [])
@@ -86,7 +90,6 @@ function newJob() {
           const q = query(tempCollectionRef, orderBy("name"));
           const data = await getDocs(q);
           setTemps(data.docs.map((doc) => ({...doc.data(), id: doc.id })));
-          console.log(data);
         }
         getTemp();
     }, [])
@@ -154,26 +157,32 @@ function newJob() {
     const min = d.getMinutes().toString()
     const sec = d.getSeconds().toString()
     const formattedDate = month + day + yr + hr + min + sec
-    setJobUniId(formattedDate)
+    setJobUniId(formattedDate);
   }
+
+  useEffect(() => {
+    setJobUniId(uniId);
+  }, [])
+
+  const options = staff.map(team => (
+    { label: `${team.name}`, value: `${team.name}` }
+  ))
+
 
   return (
     <div className='wrapper'>
       <div>
+        <h5>{"J" + jobUniId}</h5>
         <h1>Job Information</h1>
-        <hr/>
       </div>
-
-      <input value= {"J" + jobUniId} onChange={(event) => {setJobUniId(event.target.value)}} />
-      <button onClick={uniId}>Generate Job Number</button>
-
-      
+      <hr />
+      {/* <input  value={"J" + jobUniId} onChange={(event) => {setJobUniId(event.target.value)}} /> */}
+      {/* <button onClick={uniId}>Generate ID</button><span>{"J" + jobUniId}</span> */}
       <label>Upload Cover Photo</label>
       <div style={{width:"100%",marginBottom:"15px",marginTop:"15px"}}>
         <ImageUpload image={image} handleChange={handleChange} handleUpload={handleUpload} />
         <br />
-        <label>Image URL:</label>
-        <input type="text" value={url} onChange={(event) => {setUrl(event.target.value)}}  />
+        <input type="hidden" value={url} onChange={(event) => {setUrl(event.target.value)}}  />
       </div>
       <hr />
       <label>Client</label>
@@ -198,8 +207,6 @@ function newJob() {
         <option>Choose Template...</option>
         {temps.map(temp => 
           <option key={temp.id} value={temp.name}>{temp.name}</option>
-          
-    
         )}
       </select>
       <label>Name</label>
@@ -208,6 +215,7 @@ function newJob() {
       <ReactQuill value={newDesc} onChange={setNewDesc} />
       <label>State</label>
       <select value={newState} onChange={(event) => setNewState(event.target.value)} >
+        <option>Choose State...</option>
         <option value="Planned">Planned</option>
         <option value="Scheduled">Scheduled</option>
         <option value="In Progress">In Progress</option>
@@ -229,7 +237,8 @@ function newJob() {
                 {loading ? <div>Loading...</div> : null}
                 {suggestions.map((suggestion) => {
                   const style = {
-                    backgroundColor: suggestion.active ? "#E6EAEC" : "#fff"
+                    backgroundColor: suggestion.active ? "#E6EAEC" : "#fff",
+                    cursor: "pointer"
                   }
                   return <div {...getSuggestionItemProps(suggestion, { style })}>{suggestion.description}</div>;
                 })}
@@ -237,8 +246,6 @@ function newJob() {
             </div> )}
         </PlacesAutocomplete>
       </div>
-      
-      
       <hr />
       <h6 className='docsHeader'>SCHEDULE INFORMATION</h6>
       <div className='row'>
@@ -252,6 +259,8 @@ function newJob() {
             onChange={date => setStartDate(date)}
             className="six columns"
             dateFormat={'dd/MM/yyyy'}
+            isClearable
+            placeholderText="I have been cleared!"
           />
         </div>
         <div className='dueDate six columns'>
@@ -265,11 +274,14 @@ function newJob() {
             onChange={date => setEndDate(date)}
             className="six columns"
             dateFormat={'dd/MM/yyyy'}
+            isClearable
+            placeholderText="I have been cleared!"
           />
         </div>
         </div>
       <label>Priority</label>
         <select value={newPriority} onChange={(event) => setNewPriority(event.target.value)}>
+          <option>Choose Priority...</option>
           <option value="Immediate">Immediate</option>
           <option value="High">High</option>
           <option value="Normal">Normal</option>
@@ -277,7 +289,7 @@ function newJob() {
         </select>
         <label>Account Manager</label>
         <select value={newAccMngr} onChange={(event) => setNewAccMngr(event.target.value)}>
-          <option>Choose Account Manager</option>
+          <option>Choose Account Manager...</option>
           {staff.map(mngr => (
             <option value={mngr.name}>{mngr.name}</option>
           ))}
@@ -292,12 +304,28 @@ function newJob() {
         </select>
 
         <label>Staff</label>
-        <select value={newTeam} onChange={(event) => seTNewTeam(event.target.value)}>
+        <MultiSelect
+          onChange={(val) => setNewTeam(val)}
+          options={options}
+          value={newTeam}
+        />
+
+        <br />
+
+        
+        {/* {staff.map(team => (
+          <div>
+            <label htmlFor={team.id}>{team.name}</label>
+            <input type="radio" key={team.id} value={newTeam} checked={ value === newTeam } onChange={(event) => seTNewTeam(event.target.value)} />
+          </div>
+        ))} */}
+        
+        {/* <select value={newTeam} onChange={(event) => seTNewTeam(event.target.value)}>
           <option>Choose Staff</option>
           {staff.map(team => (
             <option value={team.name}>{team.name}</option>
           ))}
-        </select>
+        </select> */}
         <div className='btnWrapper'><input className="button-primary" type="submit" value="submit" onClick={createJob}/></div>
       
       

@@ -5,7 +5,8 @@ function ImageUpload({ image, handleChange, handleUpload }) {
   return (
     <div>
         <input type="file" onChange={handleChange} />
-        <button onClick={handleUpload}>Upload</button>
+        <button className="button-primary" style={{width:"100%",marginTop:"15px"}} onClick={handleUpload}>UPLOAD</button>
+        
     </div>
   )
 }
