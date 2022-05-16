@@ -53,7 +53,7 @@ function Tabs() {
         }
     
         setName(keyword);
-      };
+    };
 
     return (
         <>

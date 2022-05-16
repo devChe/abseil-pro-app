@@ -7,13 +7,13 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import 'react-datepicker/dist/react-datepicker-cssmodules.css';
 import React, {useState, useEffect, useMemo } from 'react'
-import { collection, addDoc, getDocs, query, orderBy } from 'firebase/firestore';
+import { collection, addDoc, getDocs, query, orderBy, doc  } from 'firebase/firestore';
 import { db, storage  } from '../src/config/firebase.config'
 import dynamic from 'next/dynamic';
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import 'react-quill/dist/quill.snow.css';
 import ImageUpload from '../components/ImageUpload'
-import firebase from 'firebase/compat/app';
+import firebase from 'firebase/compat/app'; 
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import 'firebase/compat/storage';
@@ -56,6 +56,8 @@ function newJob() {
 
   const tempCollectionRef = collection(db, "jobTemplate");
 
+  const usersRef = collection(db, "users");
+
 
     useEffect(() => {
         const getClients = async () => {
@@ -84,6 +86,7 @@ function newJob() {
         }
         getStaff();
     }, [])
+
 
     useEffect(() => {
       const getTemp = async () => {
@@ -142,10 +145,13 @@ function newJob() {
       priority: newPriority,
       accountManager: newAccMngr,
       manager: newMngr,
-      staff: newTeam,
+      staff: newTeam.split(",").map(staff => doc(db, "users", staff))
+      ,
       state: newState
      });
+
     window.location.pathname="/jobs";
+
   }
 
   const uniId = () => {
@@ -165,7 +171,7 @@ function newJob() {
   }, [])
 
   const options = staff.map(team => (
-    { label: `${team.name}`, value: `${team.name}` }
+    { label: `${team.name}`, value: `${team.id}` }
   ))
 
 
@@ -307,7 +313,7 @@ function newJob() {
         <MultiSelect
           onChange={(val) => setNewTeam(val)}
           options={options}
-          value={newTeam}
+          value={console.log(newTeam)}
         />
 
         <br />

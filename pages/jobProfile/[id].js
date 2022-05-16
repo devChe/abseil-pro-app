@@ -7,8 +7,9 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import Link from 'next/link';
 import React, { useState, useEffect } from 'react'
-import { db } from '../../src/config/firebase.config'
-import { collection, doc, getDocs, updateDoc } from 'firebase/firestore'
+import { db, auth } from '../../src/config/firebase.config'
+import { collection, doc, getDocs, updateDoc, query, orderBy } from 'firebase/firestore'
+import { onAuthStateChanged, signOut, getAuth } from 'firebase/auth'
 import firebase from 'firebase/app';
 import { getStorage, ref } from "firebase/storage";
 import Image from 'next/image';
@@ -18,19 +19,35 @@ import { faPhone, faLocationDot, faPenToSquare } from '@fortawesome/free-solid-s
 
 function jobProfile() {
     const [jobs, setJobs] = useState([]);
+    const [staff, setStaff] = useState([]);
     const [edit, isEdit] = useState(false);
     const [newName, setNewName] = useState("");
+    const [user, setUser] = useState({});
+
+    onAuthStateChanged(auth, (currentUser) => {
+        setUser(currentUser);
+    })
     
     const jobsCollectionRef = collection(db, "jobs");
+
+    const staffCollectionRef = collection(db, "staff");
 
     useEffect(() => {
         const getJobs = async () => {
             const data = await getDocs(jobsCollectionRef);
             setJobs(data.docs.filter((doc) => doc.id === window.location.pathname.substring(12)).map((doc) => ({...doc.data(), id: doc.id })))
-            console.log(window.location.pathname)
-
+           
         }
         getJobs();
+    }, [])
+
+    useEffect(() => {
+        const getStaff = async () => {
+            const q = query(staffCollectionRef, orderBy("name"));
+            const data = await getDocs(q);
+            setStaff(data.docs.map((doc) => ({...doc.data(), id: doc.id })));
+          }
+          getStaff();
     }, [])
 
     const updateJob = async (id, name) => {
@@ -39,6 +56,31 @@ function jobProfile() {
         await updateDoc(jobDoc, newFields);
         window.location.reload(false)
     }
+
+    
+
+    // const array2 = jobs.map(ass => (
+    //     ass.staff.map(user => (
+    //         user.id
+    //     ))
+    // ))
+
+    const array1 = staff.map(team => (
+        team.id
+    ));
+
+    const array2 = jobs.map(men => men.staff.map(ass => ass.id) );
+
+
+    // const values = array1.filter(value => array2.includes(value))
+
+    
+
+    // const users = staff.filter((staffA)=> {
+    //     return !staffId.find((staffB)=> {
+    //         return staffA.id === staffB.id;
+    //     })
+    //   })
 
     return (
         <div> 
@@ -55,7 +97,7 @@ function jobProfile() {
                     ) : (
                         <div>
                             <div className='jobNameWrapper'>
-                                <h1>{job.name}</h1>
+                                <h4>{job.jobNumber} - {job.name}</h4>
                                 <div className='editBtn'>
                                     <div>Edit</div>
                                     <FontAwesomeIcon icon={faPenToSquare} onClick={() => isEdit("true")} className='editIcon' />
@@ -83,14 +125,38 @@ function jobProfile() {
                                     </div>    
                                 </div>
                             </div>
-                            <h2 style={{paddingBottom:"15px", paddingTop:"15px"}}>Description</h2>
-                            <div dangerouslySetInnerHTML={{ __html: job.description }}></div>
+                            <h4 style={{paddingBottom:"15px", paddingTop:"20px"}}>Description</h4>
+                            <div style={{background: "#ffff", padding: "15px"}}>
+                                <div dangerouslySetInnerHTML={{ __html: job.description }}></div>
+                            </div>
                             <hr />
+                            <h4>Schedule  Information</h4>
+                            <label>Start Date:</label>
+                            <p>{job.startDate.toDate().toDateString()}</p>
+
+                            <label>Start Date:</label>
+                            <p>{job.dueDate.toDate().toDateString()}</p>
+
+                            <label>Priority:</label>
+                            <p>{job.priority}</p>
+
+                            <label>Account Manager:</label>
+                            <p>{job.accountManager}</p>
+
+                            <label>Manager:</label>
+                            <p>{job.manager}</p>
+
+                            <label>Staff:</label>
+                            {staff.filter(f => array2[0].map(e => e ).includes(f.id)).map(f => (
+                                <li>{f.name}</li>
+                            ))}
+
+                            <hr />
+
+                            <h4>Tasks</h4>
                             
                         </div>
                     )}
-                    
-                        
                 </div>
                 )
             })}
