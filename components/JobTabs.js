@@ -4,14 +4,17 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import Link from 'next/link';
 import React, { useState, useEffect, useRef } from 'react'
-import { db } from '../src/config/firebase.config';
-import { collection, getDocs, orderBy, query, serverTimestamp } from 'firebase/firestore'
+import { db, auth } from '../src/config/firebase.config';
+import { collection, getDocs, orderBy, query, serverTimestamp } from 'firebase/firestore';
 import ClientData from './ClientData';
 import JobData from './JobData';
+import { onAuthStateChanged } from 'firebase/auth';
 
 function JobTabs() {
     const [toggleState, setToggleState] = useState(1);
     const [jobs, setJobs] = useState([]);
+    const [staff, setStaff] = useState([]);
+    const [user, setUser] = useState({});
     //THE VALUE OF THE SEARCH FIELD
     const [name, setName] = useState('')
     const [phone, setPhone] = useState('')
@@ -22,20 +25,47 @@ function JobTabs() {
 
     const jobsCollectionRef = collection(db, "jobs");
 
+    const staffCollectionRef = collection(db, "staff");
+
+    onAuthStateChanged(auth, (currentUser) => {
+        setUser(currentUser);
+    })
+
     useEffect(() => {
         const getJobs = async () => {
-            const q = query(jobsCollectionRef, orderBy("name"));
+            const q = query(jobsCollectionRef, orderBy("startDate"));
             const data = await getDocs(q);
-            setJobs(data.docs.map((doc) => ({...doc.data(), id: doc.id })))
+            const res = data.docs.map((doc) => ({...doc.data(), id: doc.id })); 
+            setJobs(res);
         }
         getJobs();
     }, [])
+
+    useEffect(() => {
+        const getStaff = async () => {
+            const q = query(staffCollectionRef, orderBy("name"));
+            const data = await getDocs(q);
+            setStaff(data.docs.map((doc) => ({...doc.data(), id: doc.id })));
+          }
+          getStaff();
+    }, [])
+
+    // const array2 = jobs.map(men => men.staff.map(ass => ass.id) );
+    // const arrayStaff = jobs.map(ass => ass.staff.map(men => men.id)); // [Array(3), Array(3), Array(3)]
+
+    // const userID = `${user.uid}`;
+
+    // const play = jobs.map(job => job.staff.map(e => e.id));
+
+    // console.log(arrayStaff);
 
     const toggleTab = (index) => {
         setToggleState(index);
     };
 
+    console.log(jobs);
 
+    const admin = staff.map(user => user.role);
 
 
     const filter = (e) => {
@@ -83,9 +113,19 @@ function JobTabs() {
                             <th>Start</th>
                             <th>Due</th>
                         </tr>
-                        {jobs.map(job => (
+                        {/* {jobs.map((job) => (
                             <JobData job={job} />
-                        ))}
+                        ))} */}
+                        {jobs.filter(job => {
+                            let isAssigned = false;
+                            job.staff.forEach(s => {
+                                if(s._key.path.segments[6]  === user.uid) isAssigned = true;
+                            })
+                            return isAssigned
+                            }).map(job => 
+                            <JobData job={job} />
+                        )}
+
                         
                         {/* {searchResult && searchResult.length > 0 ? (
                             searchResult.map((client) => (
