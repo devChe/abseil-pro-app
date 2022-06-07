@@ -5,13 +5,13 @@ function JobData({job}) {
   return (
     <>
         
-        <tr key={job.id}>
-        <Link  href="jobProfile/[id]" as={`jobProfile/${job.id}`}><td>{job.jobNumber}</td></Link>
-        <Link  href="jobProfile/[id]" as={`jobProfile/${job.id}`}><td>{job.client}</td></Link>
-        <Link  href="jobProfile/[id]" as={`jobProfile/${job.id}`}><td>{job.name}</td></Link>
-        <Link  href="jobProfile/[id]" as={`jobProfile/${job.id}`}><td>{job.state}</td></Link>
-        <Link  href="jobProfile/[id]" as={`jobProfile/${job.id}`}><td>{new Date(job.startDate.seconds * 1000).toLocaleDateString("en-US")}</td></Link>
-        <Link  href="jobProfile/[id]" as={`jobProfile/${job.id}`}><td>{new Date(job.dueDate.seconds * 1000).toLocaleDateString("en-US")}</td></Link>
+        <tr>
+            <Link  href="jobProfile/[id]" as={`jobProfile/${job.id}`} key={job.id}><td>{job.jobNumber}</td></Link>
+            <Link  href="jobProfile/[id]" as={`jobProfile/${job.id}`} key={job.id}><td>{job.client}</td></Link>
+            <Link  href="jobProfile/[id]" as={`jobProfile/${job.id}`} key={job.id}><td>{job.name}</td></Link>
+            <Link  href="jobProfile/[id]" as={`jobProfile/${job.id}`} key={job.id}><td>{job.state}</td></Link>
+            <Link  href="jobProfile/[id]" as={`jobProfile/${job.id}`} key={job.id}><td>{new Date(job.startDate.seconds * 1000).toLocaleDateString("en-US")}</td></Link>
+            <Link  href="jobProfile/[id]" as={`jobProfile/${job.id}`} key={job.id}><td>{new Date(job.dueDate.seconds * 1000).toLocaleDateString("en-US")}</td></Link>
         </tr>
         
         <style jsx>{`
