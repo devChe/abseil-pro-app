@@ -39,7 +39,8 @@ export const getStaticProps = async (context) => {
     const jobProps = docSnap.data();
     jobProps.id = id;
     return {
-        props: { jobProps: JSON.stringify(jobProps) || null}
+        props: { jobProps: JSON.stringify(jobProps) || null},
+        revalidate: 10
     }
 }
 
