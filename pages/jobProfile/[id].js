@@ -7,39 +7,68 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import Link from 'next/link';
 import React, { useState, useEffect } from 'react'
-import { db, auth } from '../../src/config/firebase.config'
-import { collection, doc, getDocs, updateDoc, query, orderBy } from 'firebase/firestore'
+import { db, storage } from '../../src/config/firebase.config'
+import { collection, doc, setDoc, getDoc, getDocs, updateDoc, query, orderBy, arrayUnion } from 'firebase/firestore'
 import { onAuthStateChanged, signOut, getAuth } from 'firebase/auth'
 import firebase from 'firebase/app';
-import { getStorage, ref } from "firebase/storage";
+import { getStorage, ref, storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
 import Image from 'next/image';
+import { v4 } from 'uuid';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPhone, faLocationDot, faPenToSquare } from '@fortawesome/free-solid-svg-icons'
+import ImgMultipleUpload from '../../components/ImgMultipleUpload';
 
 
-function jobProfile() {
+export const getStaticPaths = async () => {
+    const snapshot = await getDocs(collection(db, 'jobs'));
+    const paths = snapshot.docs.map(doc => {
+        return {
+            params: { id: doc.id.toString() }
+        }
+    })
+    return {
+        paths,
+        fallback: false
+    }
+}
+
+export const getStaticProps = async (context) => {
+    const id = context.params.id;
+    const docRef = doc(db, "jobs", id);
+    const docSnap = await getDoc(docRef);
+    const jobProps = docSnap.data();
+    jobProps.id = id;
+    return {
+        props: { jobProps: JSON.stringify(jobProps) || null}
+    }
+}
+
+
+function jobProfile({jobProps}) {
+    const job = JSON.parse(jobProps);
+    
     const [jobs, setJobs] = useState([]);
     const [staff, setStaff] = useState([]);
     const [edit, isEdit] = useState(false);
-    const [newName, setNewName] = useState("");
+    const [newClient, setNewClient] = useState("");
     const [user, setUser] = useState({});
-
-    onAuthStateChanged(auth, (currentUser) => {
-        setUser(currentUser);
-    })
-    
-    const jobsCollectionRef = collection(db, "jobs");
+    const [toggleState, setToggleState] = useState(1);
+    const [image, setImage] = useState(null);
+    const [url, setUrl] = useState("");
+    const [imageName, setImageName] = useState("");
+    const [hide, setHide] = useState("block");
+    const [show, setShow] = useState("none");
 
     const staffCollectionRef = collection(db, "staff");
 
-    useEffect(() => {
-        const getJobs = async () => {
-            const data = await getDocs(jobsCollectionRef);
-            setJobs(data.docs.filter((doc) => doc.id === window.location.pathname.substring(12)).map((doc) => ({...doc.data(), id: doc.id })))
-           
-        }
-        getJobs();
-    }, [])
+    const addPhoto = async () => {
+        const id = job.id;
+        const jobDoc = doc(db, "jobs", id);
+        await updateDoc(jobDoc, {
+            images: arrayUnion({name: imageName, url: url})
+        });
+        window.location.reload(false);
+    }
 
     useEffect(() => {
         const getStaff = async () => {
@@ -50,54 +79,63 @@ function jobProfile() {
           getStaff();
     }, [])
 
+
+    const editHandler = () => {
+        isEdit(true)
+    }
+
     const updateJob = async (id, name) => {
         const jobDoc = doc(db, "jobs", id);
-        const newFields = { name: newName };
+        const newFields = { client: newClient };
         await updateDoc(jobDoc, newFields);
         window.location.reload(false)
     }
 
+    const array2 = job.staff.map(s => s._key.path.segments[6])
+
+    const toggleTab = (index) => {
+        setToggleState(index);
+    };
+
+    const handleChange = e => {
+        if(e.target.files[0]) {
+            setImage(e.target.files[0]);
+        }
+    }
+
+    const handleChangeName = e => {
+        setImageName(e.target.value)
+    }
+
+    const handleUpload = () => {
+        if(image == null) return;
+        const imageRef = ref(storage, `images/${image.name + v4()}`);
+        uploadBytes(imageRef, image).then(() => {
+          getDownloadURL(imageRef).then(url => {
+            alert("Success!");
+            setUrl(url);
+            setHide("none");
+            setShow("block");
+          })
+        })
+    };
+
     
 
-    // const array2 = jobs.map(ass => (
-    //     ass.staff.map(user => (
-    //         user.id
-    //     ))
-    // ))
-
-    const array1 = staff.map(team => (
-        team.id
-    ));
-
-    const array2 = jobs.map(men => men.staff.map(ass => ass.id) );
-
-
-    // const values = array1.filter(value => array2.includes(value))
-
-    
-
-    // const users = staff.filter((staffA)=> {
-    //     return !staffId.find((staffB)=> {
-    //         return staffA.id === staffB.id;
-    //     })
-    //   })
 
     return (
-        <div> 
-            {jobs.map((job) => {
-                return (
-                <div>
-                    {edit ? (
-                        <div className='container'>
+        <> 
+            {edit ? (
+                <div className='container'>
                             <label>Edit Name</label>
-                            <div><input type="text" placeholder={job.name} onChange={(event) => {setNewName(event.target.value)}} /></div>
-                            <button type="submit" onClick={() => {updateJob(job.id, job.name)}}>Save</button>
+                            <div><input type="text" placeholder={job.client} onChange={(event) => {setNewClient(event.target.value)}} /></div>
+                            <button type="submit" onClick={() => {updateJob(job.id, job.client)}}>Save</button>
                         </div>
 
                     ) : (
                         <div>
                             <div className='jobNameWrapper'>
-                                <h4>{job.jobNumber} - {job.name}</h4>
+                                <h4><span style={{color:"blue"}}>{job.jobNumber}</span> - {job.name}</h4>
                                 <div className='editBtn'>
                                     <div>Edit</div>
                                     <FontAwesomeIcon icon={faPenToSquare} onClick={() => isEdit("true")} className='editIcon' />
@@ -112,7 +150,7 @@ function jobProfile() {
                                         <div className="icon">
                                             <FontAwesomeIcon icon={faPhone} />
                                         </div>
-                                        <div><a href={"tel:" + job.contact} className='contact'>{job.contact}</a></div>
+                                        <div><a href={"tel:" + job.contact} className='contact'>{job.contact}<span style={{color:"blue"}}> Click to call</span></a></div>
                                     </div>
                                     <div className='info'>
                                         <div className="icon loc">
@@ -125,41 +163,74 @@ function jobProfile() {
                                     </div>    
                                 </div>
                             </div>
-                            <h4 style={{paddingBottom:"15px", paddingTop:"20px"}}>Description</h4>
-                            <div style={{background: "#ffff", padding: "15px"}}>
-                                <div dangerouslySetInnerHTML={{ __html: job.description }}></div>
+
+                            <div className='blocTabs' style={{overflowX:"auto", marginTop:"20px"}}>
+                                <div className={toggleState === 1 ? "tabs activeTabs" : "tabs"} onClick={() => toggleTab(1)}>Info</div>
+                                <div className={toggleState === 2 ? "tabs activeTabs" : "tabs"} onClick={() => toggleTab(2)}>Photos</div>
+                                <div className={toggleState === 3 ? "tabs activeTabs" : "tabs"} onClick={() => toggleTab(3)}>Documents</div>
                             </div>
-                            <hr />
-                            <h4>Schedule  Information</h4>
-                            <label>Start Date:</label>
-                            <p>{job.startDate.toDate().toDateString()}</p>
 
-                            <label>Start Date:</label>
-                            <p>{job.dueDate.toDate().toDateString()}</p>
+                            <div id="info" className={toggleState === 1 ? "content  activeContent" : "content"} style={{overflowX:"auto"}}>
+                                <h4 style={{paddingBottom:"15px", paddingTop:"20px"}}>Description</h4>
+                                <div style={{background: "#ffff", padding: "15px"}}>
+                                    <div dangerouslySetInnerHTML={{ __html: job.description }}></div>
+                                </div>
+                                <hr />
+                                <h4>Schedule  Information</h4>
+                                <label>Start Date:</label>
+                                <p>{new Date(job.startDate.seconds * 1000).toLocaleDateString("en-US")}</p>
 
-                            <label>Priority:</label>
-                            <p>{job.priority}</p>
+                                <label>Start Date:</label>
+                                <p>{new Date(job.dueDate.seconds * 1000).toLocaleDateString("en-US")}</p>
 
-                            <label>Account Manager:</label>
-                            <p>{job.accountManager}</p>
+                                <label>Priority:</label>
+                                <p>{job.priority}</p> 
 
-                            <label>Manager:</label>
-                            <p>{job.manager}</p>
+                                <label>Account Manager:</label>
+                                <p>{job.accountManager}</p>
 
-                            <label>Staff:</label>
-                            {staff.filter(f => array2[0].map(e => e ).includes(f.id)).map(f => (
-                                <li>{f.name}</li>
-                            ))}
+                                <label>Manager:</label>
+                                <p>{job.manager}</p>
 
-                            <hr />
+                                <label>Staff:</label>
+                                {staff.filter(f => array2.includes(f.id)).map(f => (
+                                    <li>{f.name}</li>
+                                ))}
 
-                            <h4>Tasks</h4>
+                                <hr />
+
+                                <h4>Tasks</h4>
+                            </div>
+                            <div id="photos"  className={toggleState === 2 ? "content  activeContent" : "content"}>
+                                <h4 style={{paddingBottom:"15px", paddingTop:"20px"}}>Image gallery</h4>
+                                <ImgMultipleUpload url={url} hide={hide} imageName={imageName} image={image} handleChangeName={handleChangeName} handleChange={handleChange} handleUpload={handleUpload}  />
+                                <input className="show" placeholder="Name..." value={imageName} onChange={handleChangeName} />
+                                <input className="show" type="submit" value="submit" onClick={addPhoto}/>
+
+                                <input type="hidden" value={url} onChange={(event) => {setUrl(event.target.value)}}  />
+                                <hr />
+                                <div className="container">
+                                    {job.images ? job.images.map(img => (
+                                        <img className="item" src={img.url} alt={img.name} width="200" height="200" />
+                                    )) : (
+                                        <h4 style={{ height:"20vh", whiteSpace:"nowrap"}}>No Images uploaded</h4>
+                                    
+                                    )
+                                }
+                                       
+                                </div>
+                            </div>
+                            <div id="docs"  className={toggleState === 3 ? "content  activeContent" : "content"}>
+                                <h5>Documents</h5>
+                                <hr />
+                                <center>List of documents</center>
+                            </div>
                             
                         </div>
                     )}
-                </div>
-                )
-            })}
+                
+                
+        
             <style jsx>{`
                 .jobNameWrapper {
                     display: flex;
@@ -251,6 +322,79 @@ function jobProfile() {
                     background: #ffff;
                 }
 
+                .blocTabs {
+                    display: flex;
+                }
+
+                .tabs {
+                    padding: 15px;
+                    text-align: center;
+                    width: 50%;
+                    background: rgba(128, 128, 128, 0.075);
+                    cursor: pointer;
+                    border-bottom: 1px solid rgba(0, 0, 0, 0.274);
+                    box-sizing: content-box;
+                    position: relative;
+                    outline: none;
+                }
+
+                .tabs:not(:last-child){
+                    border-right: 1px solid rgba(0, 0, 0, 0.274);
+                }
+
+                .activeTabs  {
+                    background: white;
+                    border-bottom: 1px solid transparent;
+                }
+
+                .activeTabs::before {
+                    content: "";
+                    display: block;
+                    position: absolute;
+                    top: -5px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    width: calc(100% + 2px);
+                    height: 5px;
+                    background: #E6EAEC;
+                }
+
+                .contentTabs {
+                flex-grow : 1;
+                }
+
+                .content {
+                    background: white;
+                    width: 100%;
+                    height: 100%;
+                    display: none;
+                }
+                
+                .activeContent {
+                    display: block;
+                }
+
+                .container {
+                    display: grid;
+                    grid-template-columns: repeat(2, 1fr);
+                    justify-content: center;
+                    gap: 15px;
+                }
+
+                .item {
+                    margin: 5px;
+                }
+
+                .hide {
+                    display: ${hide}
+                }
+
+                .show {
+                    display: ${show}
+                }
+
+
+
                 @media screen and (max-width: 990px) {
 
                     .jobNameWrapper {
@@ -263,7 +407,7 @@ function jobProfile() {
                 }
 
             `}</style>
-        </div>
+        </>
     )
 }
 

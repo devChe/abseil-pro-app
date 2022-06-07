@@ -145,8 +145,7 @@ function newJob() {
       priority: newPriority,
       accountManager: newAccMngr,
       manager: newMngr,
-      staff: newTeam.split(",").map(staff => doc(db, "users", staff))
-      ,
+      staff: newTeam.split(",").map(staff => doc(db, "users", staff)),
       state: newState
      });
 
