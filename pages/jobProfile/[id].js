@@ -210,9 +210,12 @@ function jobProfile({jobProps}) {
                                 <input type="hidden" value={url} onChange={(event) => {setUrl(event.target.value)}}  />
                                 <hr />
                                 <div className="container">
-                                    {job.images.map(img => (
+                                    {job.images ? job.images.map(img => (
                                         <img className="item" src={img.url} alt={img.name} width="200" height="200" />
-                                    )) 
+                                    )) : (
+                                        <h4 style={{ height:"20vh", whiteSpace:"nowrap"}}>No Images uploaded</h4>
+                                    
+                                    )
                                 }
                                        
                                 </div>
