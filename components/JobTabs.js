@@ -112,6 +112,7 @@ function JobTabs() {
                             <th>State</th>
                             <th>Start</th>
                             <th>Due</th>
+                            <th>Action</th>
                         </tr>
                         {/* {jobs.map((job) => (
                             <JobData job={job} />
