@@ -16,7 +16,6 @@ function JobData({job}) {
 
   return (
     <>
-        
         <tr>
             <Link  href="jobProfile/[id]" as={`jobProfile/${job.id}`} key={job.id}><td>{job.jobNumber}</td></Link>
             <Link  href="jobProfile/[id]" as={`jobProfile/${job.id}`} key={job.id}><td>{job.client}</td></Link>

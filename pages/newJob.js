@@ -312,7 +312,7 @@ function newJob() {
         <MultiSelect
           onChange={(val) => setNewTeam(val)}
           options={options}
-          value={console.log(newTeam)}
+          value={newTeam}
         />
 
         <br />

@@ -120,10 +120,7 @@ function jobProfile({jobProps}) {
           })
         })
     };
-
     
-
-    console.log(job);
     return (
         <> 
             {edit ? (
