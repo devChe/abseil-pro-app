@@ -40,7 +40,7 @@ export const getStaticProps = async (context) => {
     jobProps.id = id;
     return {
         props: { jobProps: JSON.stringify(jobProps) || null},
-        revalidate: 10
+        revalidate: 5
     }
 }
 
