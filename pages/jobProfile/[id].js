@@ -7,6 +7,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import Link from 'next/link';
 import React, { useState, useEffect } from 'react'
+import { useRouter } from 'next/router';
 import { db, storage } from '../../src/config/firebase.config'
 import { collection, doc, setDoc, getDoc, getDocs, updateDoc, query, orderBy, arrayUnion } from 'firebase/firestore'
 import { onAuthStateChanged, signOut, getAuth } from 'firebase/auth'
@@ -29,7 +30,7 @@ export const getStaticPaths = async () => {
     console.log(paths);
     return {
         paths,
-        fallback: false
+        fallback: true
     }
 }
 
@@ -122,6 +123,10 @@ function jobProfile({jobProps}) {
         })
     };
     
+    const router = useRouter()
+    if(router.isFallback)
+        return <div>...Loading</div>
+
     return (
         <> 
             {edit ? (
