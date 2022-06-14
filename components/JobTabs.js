@@ -114,10 +114,8 @@ function JobTabs() {
                             <th>Due</th>
                             <th>Action</th>
                         </tr>
-                        {/* {jobs.map((job) => (
-                            <JobData job={job} />
-                        ))} */}
-                        {jobs.filter(job => {
+                        
+                        {/* {jobs.filter(job => {
                             let isAssigned = false;
                             job.staff.forEach(s => {
                                 if(s._key.path.segments[6]  === user.uid) isAssigned = true;
@@ -125,7 +123,11 @@ function JobTabs() {
                             return isAssigned
                             }).map(job => 
                             <JobData job={job} />
-                        )}
+                        )} */}
+
+                        {jobs.map(job => (
+                            <JobData job={job} />
+                        ))}
 
                         
                         {/* {searchResult && searchResult.length > 0 ? (
