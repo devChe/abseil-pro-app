@@ -146,7 +146,8 @@ function newJob() {
       accountManager: newAccMngr,
       manager: newMngr,
       staff: newTeam.split(",").map(staff => doc(db, "users", staff)),
-      state: newState
+      state: newState,
+      images: null
      });
 
     window.location.pathname="/jobs";
