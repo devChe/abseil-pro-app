@@ -48,6 +48,10 @@ export const getStaticProps = async (context) => {
 
 
 function jobProfile({jobProps}) {
+    const router = useRouter()
+    if(router.isFallback)
+        return <div>...Loading</div>
+        
     const job = JSON.parse(jobProps);
     
     const [jobs, setJobs] = useState([]);
@@ -123,9 +127,7 @@ function jobProfile({jobProps}) {
         })
     };
     
-    const router = useRouter()
-    if(router.isFallback)
-        return <div>...Loading</div>
+    
 
     return (
         <> 
