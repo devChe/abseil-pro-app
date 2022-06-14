@@ -26,9 +26,10 @@ export const getStaticPaths = async () => {
             params: { id: doc.id.toString() }
         }
     })
+    console.log(paths);
     return {
         paths,
-        fallback: true
+        fallback: false
     }
 }
 
@@ -199,6 +200,7 @@ function jobProfile({jobProps}) {
 
                                 <h4>Tasks</h4>
                             </div>
+
                             <div id="photos"  className={toggleState === 2 ? "content  activeContent" : "content"}>
                                 <h4 style={{paddingBottom:"15px", paddingTop:"20px"}}>Image gallery</h4>
                                 <ImgMultipleUpload url={url} hide={hide} imageName={imageName} image={image} handleChangeName={handleChangeName} handleChange={handleChange} handleUpload={handleUpload}  />
@@ -391,7 +393,9 @@ function jobProfile({jobProps}) {
                     display: ${show}
                 }
 
-
+                img {
+                    image-rendering: pixelated;
+                }
 
                 @media screen and (max-width: 990px) {
 
