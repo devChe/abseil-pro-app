@@ -27,7 +27,6 @@ export const getStaticPaths = async () => {
             params: { id: doc.id.toString() }
         }
     })
-    console.log(paths);
     return {
         paths,
         fallback: true
@@ -49,9 +48,11 @@ export const getStaticProps = async (context) => {
 
 function jobProfile({jobProps}) {
     const router = useRouter()
+
+    //so the data will go first to the fallback while loading is not done
     if(router.isFallback)
         return <div>...Loading</div>
-        
+
     const job = JSON.parse(jobProps);
     
     const [jobs, setJobs] = useState([]);
@@ -398,10 +399,6 @@ function jobProfile({jobProps}) {
 
                 .show {
                     display: ${show}
-                }
-
-                img {
-                    image-rendering: pixelated;
                 }
 
                 @media screen and (max-width: 990px) {
