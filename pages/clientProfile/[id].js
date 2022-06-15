@@ -17,7 +17,7 @@ export const getStaticPaths = async () => {
     })
     return {
         paths,
-        fallback: false
+        fallback: true
     }
 }
 
@@ -32,7 +32,13 @@ export const getStaticProps = async (context) => {
     }
 }
 
-function post({clientProps}){
+function post({clientProps}) {
+    const router = useRouter();
+
+    //so the data will go first to the fallback while loading is not done
+    if(router.isFallback)
+        return <div>...Loading</div>
+        
     const client = JSON.parse(clientProps);
 
     const databaseRef = collection(db, 'clients')
