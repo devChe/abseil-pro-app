@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unknown-property */
 /* eslint-disable @next/next/no-sync-scripts */
 import Head from 'next/head'
 import Layout from '../components/Layout'
@@ -42,6 +43,7 @@ function MyApp({ Component, pageProps }) {
             <link rel="icon" href="/favicon.ico" />
             <script src="https://use.fontawesome.com/e6c3f5247b.js" />
             <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4clmPx_bEwSwrVgprTEQYbRZgc7CKGcM&libraries=places" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/react-modal/3.14.3/react-modal.min.js"integrity="sha512-MY2jfK3DBnVzdS2V8MXo5lRtr0mNRroUI9hoLVv2/yL3vrJTam3VzASuKQ96fLEpyYIT4a8o7YgtUs5lPjiLVQ=="crossorigin="anonymous"referrerpolicy="no-referrer"/>
           </Head>
           <div className='rightSideContent'>
             <Component {...pageProps} />

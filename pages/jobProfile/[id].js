@@ -18,6 +18,8 @@ import { v4 } from 'uuid';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPhone, faLocationDot, faPenToSquare } from '@fortawesome/free-solid-svg-icons'
 import ImgMultipleUpload from '../../components/ImgMultipleUpload';
+import ReactDOM from 'react-dom';
+import Modal from 'react-modal';
 
 
 export const getStaticPaths = async () => {
@@ -45,6 +47,20 @@ export const getStaticProps = async (context) => {
     }
 }
 
+const customStyles = {
+    content: {
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+      zIndex: '99999',
+      background: '#ffff',
+      width: '100vw'
+    },
+  };
+
 
 function jobProfile({jobProps}) {
     const router = useRouter()
@@ -66,6 +82,37 @@ function jobProfile({jobProps}) {
     const [imageName, setImageName] = useState("");
     const [hide, setHide] = useState("block");
     const [show, setShow] = useState("none");
+    const [modalIsOpen, setIsOpen] = useState("");
+    const [imgNewId, setImgNewId] = useState("");
+
+  let subtitle;
+
+
+  function openModal(id) {
+    setIsOpen(id)
+  }
+
+  function afterOpenModal() {
+    // references are now sync'd and can be accessed.
+    subtitle.style.color = '#f00';
+  }
+
+  function closeModal() {
+    setIsOpen(false);
+  }
+
+  const uniId = () => {
+    const d = new Date()
+    const day = d.getDate().toString()
+    const month = d.getMonth().toString()
+    const yr = d.getFullYear().toString()
+    const hr = d.getHours().toString()
+    const min = d.getMinutes().toString()
+    const sec = d.getSeconds().toString()
+    const formattedDate = month + day + yr + hr + min + sec
+    setImgNewId(formattedDate);
+  }
+    
 
     const staffCollectionRef = collection(db, "staff");
 
@@ -73,7 +120,7 @@ function jobProfile({jobProps}) {
         const id = job.id;
         const jobDoc = doc(db, "jobs", id);
         await updateDoc(jobDoc, {
-            images: arrayUnion({name: imageName, url: url})
+            images: arrayUnion({id: "IMG" + imgNewId, name: imageName, url: url})
         });
         window.location.reload(false);
     }
@@ -127,8 +174,6 @@ function jobProfile({jobProps}) {
           })
         })
     };
-    
-    
 
     return (
         <> 
@@ -140,7 +185,7 @@ function jobProfile({jobProps}) {
                         </div>
 
                     ) : (
-                        <div>
+                        <div className='wrapper'>
                             <div className='jobNameWrapper'>
                                 <h4><span style={{color:"blue"}}>{job.jobNumber}</span> - {job.name}</h4>
                                 <div className='editBtn'>
@@ -219,7 +264,23 @@ function jobProfile({jobProps}) {
                                 <hr />
                                 <div className="container">
                                     {job.images ? job.images.map(img => (
-                                        <img className="item" src={img.url} alt={img.name} width="200" height="200" />
+                                        <div>
+                                            <img key={img.id} className="item" src={img.url} alt={img.name} width="200" height="200" onClick={() => openModal(img.id)} />
+                                            <div className='modal'>
+                                            <Modal
+                                                isOpen={modalIsOpen === img.id}
+                                                onAfterOpen={afterOpenModal}
+                                                onRequestClose={closeModal}
+                                                style={customStyles}
+                                                contentLabel="Example Modal"
+                                            >
+                                                <h2 ref={(_subtitle) => (subtitle = _subtitle)}>{img.name}</h2>
+                                                <button className='modalBtn' onClick={closeModal}>close</button>
+                                                <div className='modalPicture'><img src={img.url} alt={img.name} width="100%" height="390" /></div>
+                                                
+                                            </Modal>
+                                            </div>
+                                        </div>
                                     )) : (
                                         <h4 style={{ height:"20vh", whiteSpace:"nowrap"}}>No Images uploaded</h4>
                                     
@@ -236,10 +297,11 @@ function jobProfile({jobProps}) {
                             
                         </div>
                     )}
-                
-                
-        
             <style jsx>{`
+                .wrapper {
+                    position: relative;
+                }
+
                 .jobNameWrapper {
                     display: flex;
                     justify-content: space-between;
@@ -368,7 +430,7 @@ function jobProfile({jobProps}) {
                 }
 
                 .contentTabs {
-                flex-grow : 1;
+                    flex-grow : 1;
                 }
 
                 .content {
@@ -387,6 +449,7 @@ function jobProfile({jobProps}) {
                     grid-template-columns: repeat(2, 1fr);
                     justify-content: center;
                     gap: 15px;
+                    height: 100vh;
                 }
 
                 .item {
@@ -399,6 +462,10 @@ function jobProfile({jobProps}) {
 
                 .show {
                     display: ${show}
+                }
+
+                .modalBtn {
+                    margin-bottom: 20px;
                 }
 
                 @media screen and (max-width: 990px) {
