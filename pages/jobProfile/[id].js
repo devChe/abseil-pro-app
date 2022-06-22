@@ -264,21 +264,23 @@ function jobProfile({jobProps}) {
                                 <hr />
                                 <div className="container">
                                     {job.images ? job.images.map(img => (
-                                        <div>
-                                            <img key={img.id} className="item" src={img.url} alt={img.name} width="200" height="200" onClick={() => openModal(img.id)} />
+                                        <div className='imgWrapper'>
+                                            <img key={img.id} className="item" src={img.url} alt={img.name} onClick={() => openModal(img.id)} />
                                             <div className='modal'>
-                                            <Modal
-                                                isOpen={modalIsOpen === img.id}
-                                                onAfterOpen={afterOpenModal}
-                                                onRequestClose={closeModal}
-                                                style={customStyles}
-                                                contentLabel="Example Modal"
-                                            >
-                                                <h2 ref={(_subtitle) => (subtitle = _subtitle)}>{img.name}</h2>
-                                                <button className='modalBtn' onClick={closeModal}>close</button>
-                                                <div className='modalPicture'><img src={img.url} alt={img.name} width="100%" height="390" /></div>
-                                                
-                                            </Modal>
+                                                <Modal
+                                                    isOpen={modalIsOpen === img.id}
+                                                    onAfterOpen={afterOpenModal}
+                                                    onRequestClose={closeModal}
+                                                    style={customStyles}
+                                                    contentLabel="Example Modal"
+                                                >
+                                                    <h2 ref={(_subtitle) => (subtitle = _subtitle)}>{img.name}</h2>
+                                                    <button className='modalBtn' onClick={closeModal}>close</button>
+                                                    <div className='modalPicture'>
+                                                        <img src={img.url} alt={img.name} width="100%" height="390" />
+                                                    </div>
+                                                    
+                                                </Modal>
                                             </div>
                                         </div>
                                     )) : (
@@ -438,6 +440,7 @@ function jobProfile({jobProps}) {
                     width: 100%;
                     height: 100%;
                     display: none;
+                    padding: 15px;
                 }
                 
                 .activeContent {
@@ -449,11 +452,7 @@ function jobProfile({jobProps}) {
                     grid-template-columns: repeat(2, 1fr);
                     justify-content: center;
                     gap: 15px;
-                    height: 100vh;
-                }
-
-                .item {
-                    margin: 5px;
+                    margin-bottom: 50px;
                 }
 
                 .hide {
@@ -466,6 +465,28 @@ function jobProfile({jobProps}) {
 
                 .modalBtn {
                     margin-bottom: 20px;
+                }
+
+                .imgWrapper {
+                    overflow: hidden;
+                    height: 200px;
+                }
+
+                .imgWrapper > img {
+                    object-fit: cover;
+                    width: 100%;
+                    height: 100%;
+                }
+
+                .modalPicture {
+                    overflow: hidden;
+                    height: 390px;
+                }
+
+                .modalPicture > img {
+                    object-fit: cover;
+                    width: 100%;
+                    height: 100%;
                 }
 
                 @media screen and (max-width: 990px) {
