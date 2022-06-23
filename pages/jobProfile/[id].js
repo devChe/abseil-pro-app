@@ -112,6 +112,10 @@ function jobProfile({jobProps}) {
     const formattedDate = month + day + yr + hr + min + sec
     setImgNewId(formattedDate);
   }
+
+  useEffect(() => {
+    setImgNewId(uniId);
+  }, [])
     
 
     const staffCollectionRef = collection(db, "staff");
@@ -120,7 +124,7 @@ function jobProfile({jobProps}) {
         const id = job.id;
         const jobDoc = doc(db, "jobs", id);
         await updateDoc(jobDoc, {
-            images: arrayUnion({id: "IMG" + imgNewId, name: imageName, url: url})
+            images: arrayUnion({id: "IMG:" + imgNewId, name: imageName, url: url})
         });
         window.location.reload(false);
     }
