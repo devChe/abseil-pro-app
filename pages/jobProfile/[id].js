@@ -402,7 +402,7 @@ function jobProfile({jobProps}) {
                                         <th>Actual</th>
                                         <th>Remaining</th>
                                     </tr>
-                                    {job.tasks ? tasks.map(task => (
+                                    {job.tasks ? job.tasks.map(task => (
                                         <tr>
                                             <td>{task.name}</td>
                                             <td>{new Date(task.startDate.seconds * 1000).toLocaleDateString("en-US")}</td>
