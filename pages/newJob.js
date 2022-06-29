@@ -284,7 +284,7 @@ function newJob() {
             placeholderText="I have been cleared!"
           />
         </div>
-        </div>
+      </div>
       <label>Priority</label>
         <select value={newPriority} onChange={(event) => setNewPriority(event.target.value)}>
           <option>Choose Priority...</option>

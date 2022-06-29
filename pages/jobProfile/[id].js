@@ -20,6 +20,14 @@ import { faPhone, faLocationDot, faPenToSquare } from '@fortawesome/free-solid-s
 import ImgMultipleUpload from '../../components/ImgMultipleUpload';
 import ReactDOM from 'react-dom';
 import Modal from 'react-modal';
+import dynamic from 'next/dynamic';
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+import 'react-quill/dist/quill.snow.css';
+import DatePicker from "react-datepicker"; 
+import "react-datepicker/dist/react-datepicker.css";
+import 'react-datepicker/dist/react-datepicker-cssmodules.css';
+
+require('react-datepicker/dist/react-datepicker.css')
 
 
 export const getStaticPaths = async () => {
@@ -57,13 +65,18 @@ const customStyles = {
       transform: 'translate(-50%, -50%)',
       zIndex: '99999',
       background: '#ffff',
-      width: '100vw'
+      width: '100vw',
+      height: '100vh'
     },
   };
 
 
 function jobProfile({jobProps}) {
     const router = useRouter()
+
+    const tasksCollectionRef = collection(db, "task");
+
+    const staffCollectionRef = collection(db, "staff");
 
     //so the data will go first to the fallback while loading is not done
     if(router.isFallback)
@@ -73,6 +86,7 @@ function jobProfile({jobProps}) {
     
     const [jobs, setJobs] = useState([]);
     const [staff, setStaff] = useState([]);
+    const [tasks, setTasks] = useState([]);
     const [edit, isEdit] = useState(false);
     const [newClient, setNewClient] = useState("");
     const [user, setUser] = useState({});
@@ -84,6 +98,14 @@ function jobProfile({jobProps}) {
     const [show, setShow] = useState("none");
     const [modalIsOpen, setIsOpen] = useState("");
     const [imgNewId, setImgNewId] = useState("");
+    const [newTaskName, setNewTaskName] = useState("");
+    const [newDesc, setNewDesc] = useState("");
+    const [startDate, setStartDate] = useState(new Date());
+    const [endDate, setEndDate] = useState(new Date());
+    const [est, setEst] = useState(0);
+    const [actual, setActual] = useState(0);
+    const [remaining, setRemaining] = useState(0);
+    const [taskId, setTaskId] = useState("");
 
   let subtitle;
 
@@ -101,6 +123,8 @@ function jobProfile({jobProps}) {
     setIsOpen(false);
   }
 
+    //   UNIQUE ID
+
   const uniId = () => {
     const d = new Date()
     const day = d.getDate().toString()
@@ -111,23 +135,33 @@ function jobProfile({jobProps}) {
     const sec = d.getSeconds().toString()
     const formattedDate = month + day + yr + hr + min + sec
     setImgNewId(formattedDate);
+    setTaskId(formattedDate);
   }
 
   useEffect(() => {
     setImgNewId(uniId);
   }, [])
+
+  useEffect(() => {
+    setTaskId(uniId);
+  }, [])
+
+
     
 
-    const staffCollectionRef = collection(db, "staff");
+    // GET TASKS COLLECTION 
 
-    const addPhoto = async () => {
-        const id = job.id;
-        const jobDoc = doc(db, "jobs", id);
-        await updateDoc(jobDoc, {
-            images: arrayUnion({id: "IMG:" + imgNewId, name: imageName, url: url})
-        });
-        window.location.reload(false);
-    }
+    useEffect(() => {
+        const getTasks = async () => {
+            const q = query(tasksCollectionRef, orderBy("startDate"));
+            const data = await getDocs(q);
+            const res = data.docs.map((doc) => ({...doc.data(), id: doc.id })); 
+            setTasks(res);
+        }
+        getTasks();
+    }, [])
+
+    // GET STAFF COLLECTION
 
     useEffect(() => {
         const getStaff = async () => {
@@ -138,10 +172,42 @@ function jobProfile({jobProps}) {
           getStaff();
     }, [])
 
+    // ADD PHOTO IN AN ARRAY OF IMAGES
+
+    const addPhoto = async () => {
+        const id = job.id;
+        const jobDoc = doc(db, "jobs", id);
+        await updateDoc(jobDoc, {
+            images: arrayUnion({id: "IMG:" + imgNewId, name: imageName, url: url})
+        });
+        window.location.reload(false);
+    }
+
+    // ADD TASK IN AN ARRAY OF TASKS
+
+    const addTask = async () => {
+        const id = job.id;
+        const jobDoc = doc(db, "jobs", id);
+        await updateDoc(jobDoc, {
+            tasks: arrayUnion({id: "TSK:" + taskId, 
+                                name: newTaskName, 
+                                startDate: startDate, 
+                                dueDate: endDate, 
+                                estimated: est,
+                                actual: actual,
+                                remaining: remaining
+                            })
+        });
+        window.location.reload(false);
+    }
+
+    // EDIT JOB FORM FUNCTION
 
     const editHandler = () => {
         isEdit(true)
     }
+
+    // EDIT AND UPDATE JOB FUNCTION
 
     const updateJob = async (id, name) => {
         const jobDoc = doc(db, "jobs", id);
@@ -150,11 +216,16 @@ function jobProfile({jobProps}) {
         window.location.reload(false)
     }
 
+    // GET THE IDS OF STAFF
+
     const array2 = job.staff.map(s => s._key.path.segments[6])
+
+    // TOGGLE TAB
 
     const toggleTab = (index) => {
         setToggleState(index);
     };
+
 
     const handleChange = e => {
         if(e.target.files[0]) {
@@ -164,6 +235,13 @@ function jobProfile({jobProps}) {
 
     const handleChangeName = e => {
         setImageName(e.target.value)
+    }
+
+    const handleTaskChange = (e) => {
+        console.log(e.target.value);
+        const selectedTask = tasks.find(task => task.name === e.target.value);
+        setNewDesc(selectedTask.description);
+        setNewTaskName(selectedTask.name);
     }
 
     const handleUpload = () => {
@@ -256,6 +334,89 @@ function jobProfile({jobProps}) {
                                 <hr />
 
                                 <h4>Tasks</h4>
+                                <button onClick={() => openModal(job.id)}>+ New Task</button>
+                                <Modal
+                                isOpen={modalIsOpen === job.id}
+                                onAfterOpen={afterOpenModal}
+                                onRequestClose={closeModal}
+                                style={customStyles}
+                                contentLabel="Example Modal"
+                                >
+                                    <h2 ref={(_subtitle) => (subtitle = _subtitle)}>TASK FORM</h2>
+                                    <button className='modalBtn' onClick={closeModal}>close</button>
+                                    <label>Template</label>
+                                    <select value={newTaskName} onChange={handleTaskChange}>
+                                        <option>Choose Template...</option>
+                                        {tasks.map(task => 
+                                        <option key={task.id} value={task.name}>{task.name}</option>
+                                        )}
+                                    </select>
+                                    <label>Description</label>
+                                    <ReactQuill value={newDesc} onChange={setNewDesc} />
+                                    <div className='row'>
+                                        <div className='startDate six columns'>
+                                        <label>Start Date</label>
+                                        <DatePicker
+                                            selected={startDate}
+                                            selectsStart
+                                            startDate={startDate}
+                                            endDate={endDate}
+                                            onChange={date => setStartDate(date)}
+                                            className="six columns"
+                                            dateFormat={'dd/MM/yyyy'}
+                                            isClearable
+                                            placeholderText="I have been cleared!"
+                                        />
+                                        </div>
+                                        <div className='dueDate six columns'>
+                                        <label>Due Date</label>
+                                        <DatePicker
+                                            selected={endDate}
+                                            selectsEnd
+                                            startDate={startDate}
+                                            endDate={endDate}
+                                            minDate={startDate}
+                                            onChange={date => setEndDate(date)}
+                                            className="six columns"
+                                            dateFormat={'dd/MM/yyyy'}
+                                            isClearable
+                                            placeholderText="I have been cleared!"
+                                        />
+                                        </div>
+                                    </div>
+                                    <label>Estimated</label>
+                                    <input type="number" value={est} onChange={(event) => {setEst(event.target.value)}}  />
+                                    <label>Actual</label>
+                                    <input type="number" value={actual} onChange={(event) => {setActual(event.target.value)}}  />
+                                    <label>Remaining</label>
+                                    <input type="number" value={remaining} onChange={(event) => {setRemaining(event.target.value)}}  />
+                                    <input type="submit" value="submit" onClick={addTask}/>
+
+                                </Modal>
+                                <table>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Start</th>
+                                        <th>Due</th>
+                                        <th>Estimated</th>
+                                        <th>Actual</th>
+                                        <th>Remaining</th>
+                                    </tr>
+                                    {job.tasks ? tasks.map(task => (
+                                        <tr>
+                                            <td>{task.name}</td>
+                                            <td>{new Date(task.startDate.seconds * 1000).toLocaleDateString("en-US")}</td>
+                                            <td>{new Date(task.dueDate.seconds * 1000).toLocaleDateString("en-US")}</td>
+                                            <td>{task.estimated}</td>
+                                            <td>{task.actual}</td>
+                                            <td>{task.remaining}</td>
+                                        </tr>
+                                    )) : (
+                                        <di>UPLOAD TASKS</di>
+                                    )}
+                                    
+                                </table>
+
                             </div>
 
                             <div id="photos"  className={toggleState === 2 ? "content  activeContent" : "content"}>
