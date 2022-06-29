@@ -306,7 +306,7 @@ function jobProfile({jobProps}) {
 
                             <div id="info" className={toggleState === 1 ? "content  activeContent" : "content"} style={{overflowX:"auto"}}>
                                 <h4 style={{paddingBottom:"15px", paddingTop:"20px"}}>Description</h4>
-                                <div style={{background: "#ffff", padding: "15px"}}>
+                                <div style={{background: "#ffff", padding: "15px", overflow: "scroll",height: "300px",border: "1px solid #ecec"}}>
                                     <div dangerouslySetInnerHTML={{ __html: job.description }}></div>
                                 </div>
                                 <hr />
@@ -632,26 +632,14 @@ function jobProfile({jobProps}) {
                     margin-bottom: 20px;
                 }
 
-                .imgWrapper {
-                    overflow: hidden;
-                    height: 200px;
-                }
-
                 .imgWrapper > img {
-                    object-fit: cover;
                     width: 100%;
-                    height: 100%;
-                }
-
-                .modalPicture {
-                    overflow: hidden;
-                    height: 390px;
+                    height: auto;
                 }
 
                 .modalPicture > img {
-                    object-fit: cover;
                     width: 100%;
-                    height: 100%;
+                    height: auto;
                 }
 
                 @media screen and (max-width: 990px) {
