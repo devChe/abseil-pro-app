@@ -9,14 +9,14 @@ import Link from 'next/link';
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router';
 import { db, storage } from '../../src/config/firebase.config'
-import { collection, doc, setDoc, getDoc, getDocs, updateDoc, query, orderBy, arrayUnion } from 'firebase/firestore'
+import { collection, doc, setDoc, getDoc, getDocs, updateDoc, update, query, orderBy, arrayUnion, arrayRemove } from 'firebase/firestore'
 import { onAuthStateChanged, signOut, getAuth } from 'firebase/auth'
 import firebase from 'firebase/app';
 import { getStorage, ref, storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
 import Image from 'next/image';
 import { v4 } from 'uuid';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPhone, faLocationDot, faPenToSquare } from '@fortawesome/free-solid-svg-icons'
+import { faTrashCan, faPhone, faLocationDot, faPenToSquare } from '@fortawesome/free-solid-svg-icons'
 import ImgMultipleUpload from '../../components/ImgMultipleUpload';
 import ReactDOM from 'react-dom';
 import Modal from 'react-modal';
@@ -26,6 +26,7 @@ import 'react-quill/dist/quill.snow.css';
 import DatePicker from "react-datepicker"; 
 import "react-datepicker/dist/react-datepicker.css";
 import 'react-datepicker/dist/react-datepicker-cssmodules.css';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 require('react-datepicker/dist/react-datepicker.css')
 
@@ -106,6 +107,7 @@ function jobProfile({jobProps}) {
     const [actual, setActual] = useState(0);
     const [remaining, setRemaining] = useState(0);
     const [taskId, setTaskId] = useState("");
+    const [isLoading, setIsLoading] = useState("");
 
   let subtitle;
 
@@ -183,20 +185,39 @@ function jobProfile({jobProps}) {
         window.location.reload(false);
     }
 
+
+    const deletePhoto = async (deleteId) => {
+        const id = job.id;
+         //deleteId is the id from the post you want to delete
+        const jobDoc = doc(db, "jobs", id);
+        await updateDoc(jobDoc, {
+             images: job.images.filter(image => image.id !== deleteId )
+         }).then(() => {
+            setIsLoading(deleteId);
+          })
+        .catch(function(error) {
+            console.error("Error removing document: ", error);
+            setIsLoading(false);
+        });
+
+        window.location.reload(false)
+    }
+
     // ADD TASK IN AN ARRAY OF TASKS
 
-    const addTask = async () => {
+    async function addTask() {
         const id = job.id;
         const jobDoc = doc(db, "jobs", id);
         await updateDoc(jobDoc, {
-            tasks: arrayUnion({id: "TSK:" + taskId, 
-                                name: newTaskName, 
-                                startDate: startDate, 
-                                dueDate: endDate, 
-                                estimated: est,
-                                actual: actual,
-                                remaining: remaining
-                            })
+            tasks: arrayUnion({
+                id: "TSK:" + taskId,
+                name: newTaskName,
+                startDate: startDate,
+                dueDate: endDate,
+                estimated: est,
+                actual: actual,
+                remaining: remaining
+            })
         });
         window.location.reload(false);
     }
@@ -393,29 +414,31 @@ function jobProfile({jobProps}) {
                                     <input type="submit" value="submit" onClick={addTask}/>
 
                                 </Modal>
-                                <table>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Start</th>
-                                        <th>Due</th>
-                                        <th>Estimated</th>
-                                        <th>Actual</th>
-                                        <th>Remaining</th>
-                                    </tr>
-                                    {job.tasks ? job.tasks.map(task => (
+                                <div className='tableWrapper'>
+                                    <table>
                                         <tr>
-                                            <td>{task.name}</td>
-                                            <td>{new Date(task.startDate.seconds * 1000).toLocaleDateString("en-US")}</td>
-                                            <td>{new Date(task.dueDate.seconds * 1000).toLocaleDateString("en-US")}</td>
-                                            <td>{task.estimated}</td>
-                                            <td>{task.actual}</td>
-                                            <td>{task.remaining}</td>
+                                            <th>Name</th>
+                                            <th>Start</th>
+                                            <th>Due</th>
+                                            <th>Estimated</th>
+                                            <th>Actual</th>
+                                            <th>Remaining</th>
                                         </tr>
-                                    )) : (
-                                        <di>UPLOAD TASKS</di>
-                                    )}
-                                    
-                                </table>
+                                        {job.tasks ? job.tasks.map(task => (
+                                            <tr>
+                                                <td>{task.name}</td>
+                                                <td>{new Date(task.startDate.seconds * 1000).toLocaleDateString("en-US")}</td>
+                                                <td>{new Date(task.dueDate.seconds * 1000).toLocaleDateString("en-US")}</td>
+                                                <td>{task.estimated}</td>
+                                                <td>{task.actual}</td>
+                                                <td>{task.remaining}</td>
+                                            </tr>
+                                        )) : (
+                                            <di>UPLOAD TASKS</di>
+                                        )}
+                                        
+                                    </table>
+                                </div>
 
                             </div>
 
@@ -431,6 +454,8 @@ function jobProfile({jobProps}) {
                                     {job.images ? job.images.map(img => (
                                         <div className='imgWrapper'>
                                             <img key={img.id} className="item" src={img.url} alt={img.name} onClick={() => openModal(img.id)} />
+                                            {isLoading === img.id ? <LoadingSpinner  /> : ""}
+                                            <FontAwesomeIcon icon={faTrashCan} onClick={() => deletePhoto(img.id)} disabled={isLoading} width="35" className='trashIcon' />
                                             <div className='modal'>
                                                 <Modal
                                                     isOpen={modalIsOpen === img.id}
@@ -640,6 +665,27 @@ function jobProfile({jobProps}) {
                 .modalPicture > img {
                     width: 100%;
                     height: auto;
+                }
+
+                .tableWrapper {
+                    overflow-x: auto;
+                }
+
+                table {
+                    border-collapse: collapse;
+                    border-spacing: 0;
+                    width: 100%;
+                    margin: 0 0 50px;
+                }
+
+                td, th {
+                    border: 1px solid #dddddd;
+                    text-align: center;
+                    padding: 8px;
+                }
+
+                tr:nth-child(even) {
+                    background-color: #dddddd;
                 }
 
                 @media screen and (max-width: 990px) {
