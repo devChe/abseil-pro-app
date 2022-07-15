@@ -16,7 +16,7 @@ import { getStorage, ref, storageRef, uploadBytes, getDownloadURL } from "fireba
 import Image from 'next/image';
 import { v4 } from 'uuid';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrashCan, faPhone, faLocationDot, faPenToSquare } from '@fortawesome/free-solid-svg-icons'
+import { faTrashCan, faPhone, faLocationDot, faPenToSquare, faClose } from '@fortawesome/free-solid-svg-icons'
 import ImgMultipleUpload from '../../components/ImgMultipleUpload';
 import ReactDOM from 'react-dom';
 import Modal from 'react-modal';
@@ -73,7 +73,7 @@ const customStyles = {
 
 
 function jobProfile({jobProps}) {
-    const router = useRouter()
+    const router = useRouter();
 
     const tasksCollectionRef = collection(db, "task");
 
@@ -98,6 +98,15 @@ function jobProfile({jobProps}) {
     const [hide, setHide] = useState("block");
     const [show, setShow] = useState("none");
     const [modalIsOpen, setIsOpen] = useState("");
+    const [modalIsOpenJSEA, setIsOpenJSEA] = useState(false);
+    const [modalIsOpenDPR, setIsOpenDPR] = useState(false);
+    const [modalIsOpenTTR, setIsOpenTTR] = useState(false);
+    const [modalIsOpenRB, setIsOpenRB] = useState(false);
+    const [modalIsOpenIR, setIsOpenIR] = useState(false);
+    const [modalIsOpenST, setIsOpenST] = useState(false);
+    const [modalIsOpenHSIF, setIsOpenHSIF] = useState(false);
+    const [modalIsOpenExQuote, setIsOpenExQuote] = useState(false);
+    const [modalIsOpenInQuote, setIsOpenInQuote] = useState(false);
     const [imgNewId, setImgNewId] = useState("");
     const [newTaskName, setNewTaskName] = useState("");
     const [newDesc, setNewDesc] = useState("");
@@ -113,8 +122,9 @@ function jobProfile({jobProps}) {
 
 
   function openModal(id) {
-    setIsOpen(id)
+    setIsOpen(id);
   }
+  
 
   function afterOpenModal() {
     // references are now sync'd and can be accessed.
@@ -123,6 +133,15 @@ function jobProfile({jobProps}) {
 
   function closeModal() {
     setIsOpen(false);
+    setIsOpenJSEA(false);
+    setIsOpenDPR(false);
+    setIsOpenTTR(false);
+    setIsOpenRB(false);
+    setIsOpenIR(false);
+    setIsOpenST(false);
+    setIsOpenHSIF(false);
+    setIsOpenExQuote(false);
+    setIsOpenInQuote(false);
   }
 
     //   UNIQUE ID
@@ -484,7 +503,202 @@ function jobProfile({jobProps}) {
                             <div id="docs"  className={toggleState === 3 ? "content  activeContent" : "content"}>
                                 <h5>Documents</h5>
                                 <hr />
-                                <center>List of documents</center>
+                                <div>
+                                    <div><h3>Job Forms</h3></div>
+
+                                    <div onClick={() => setIsOpenJSEA(true)} >JSEA, SWMS, Rescue Plan</div>
+                                    <div className='modal'>
+                                        <Modal
+                                            isOpen={modalIsOpenJSEA}
+                                            onAfterOpen={afterOpenModal}
+                                            onRequestClose={closeModal}
+                                            style={customStyles}
+                                            contentLabel="Example Modal"
+                                        >
+                                            <h2 ref={(_subtitle) => (subtitle = _subtitle)}>JSEA, SWMS, Rescue Plan</h2>
+                                            <div>
+                                                <p>A site-specific Job Safety Analysis (JSEA), Safe Work Method Statement (SWMS) & Rescue Plan must be developed and agreed to by all workers at the beginning of every project. This form will collect important information to be used in the creation of this documentation. The resulting document will be automatically sent to Abseil Pro management, all workers who enter their email addresses, and to the client if their email address is entered in this form.</p>
+                                                <p>The project supervisor must ensure that all workers have received the relevant training and hold the required qualifications to perform the work described in this document and that all workers have been inducted and have acknowledged their agreement to this document using the digital signature in this form. This document must be amended and reviewed by all workers as new hazards are identified throughout the course of the project.</p>
+                                                <p>
+                                                It is imperative that all information entered in this form is accurate and complete before submitting and commencing work. This form can collect client email address(es) which will automatically forward this information. If any portion of this form requires clarification or review from management, leave the client email field empty, submit this form, and notify the office of your concerns on <span><a href="info@abseil.pro">info@abseil.pro</a></span> or 0438 257 892. 
+                                                </p>
+                                                <hr />
+                                            </div>
+                                            <button className='modalBtn' onClick={closeModal}>close</button>
+                                        </Modal>
+                                    </div>
+
+                                    <div onClick={() => setIsOpenDPR(true)}>Daily Progress Report</div>
+                                    <div className='modal'>
+                                        <Modal
+                                            isOpen={modalIsOpenDPR}
+                                            onAfterOpen={afterOpenModal}
+                                            onRequestClose={closeModal}
+                                            style={customStyles}
+                                            contentLabel="Example Modal"
+                                        >
+                                            <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Daily Progress Report</h2>
+                                            <div>
+                                                <p>A site-specific Job Safety Analysis (JSEA), Safe Work Method Statement (SWMS) & Rescue Plan must be developed and agreed to by all workers at the beginning of every project. This form will collect important information to be used in the creation of this documentation. The resulting document will be automatically sent to Abseil Pro management, all workers who enter their email addresses, and to the client if their email address is entered in this form.</p>
+                                                <p>The project supervisor must ensure that all workers have received the relevant training and hold the required qualifications to perform the work described in this document and that all workers have been inducted and have acknowledged their agreement to this document using the digital signature in this form. This document must be amended and reviewed by all workers as new hazards are identified throughout the course of the project.</p>
+                                                <p>
+                                                It is imperative that all information entered in this form is accurate and complete before submitting and commencing work. This form can collect client email address(es) which will automatically forward this information. If any portion of this form requires clarification or review from management, leave the client email field empty, submit this form, and notify the office of your concerns on <span><a href="info@abseil.pro">info@abseil.pro</a></span> or 0438 257 892. 
+                                                </p>
+                                                <hr />
+                                            </div>
+                                            <button className='modalBtn' onClick={closeModal}>close</button>
+                                        </Modal>
+                                    </div>
+
+                                    <div onClick={() => setIsOpenTTR(true)}>Toolbox Talk Record</div>
+                                    <div className='modal'>
+                                        <Modal
+                                            isOpen={modalIsOpenTTR}
+                                            onAfterOpen={afterOpenModal}
+                                            onRequestClose={closeModal}
+                                            style={customStyles}
+                                            contentLabel="Example Modal"
+                                        >
+                                            <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Toolbox Talk Record</h2>
+                                            <div>
+                                                <p>A site-specific Job Safety Analysis (JSEA), Safe Work Method Statement (SWMS) & Rescue Plan must be developed and agreed to by all workers at the beginning of every project. This form will collect important information to be used in the creation of this documentation. The resulting document will be automatically sent to Abseil Pro management, all workers who enter their email addresses, and to the client if their email address is entered in this form.</p>
+                                                <p>The project supervisor must ensure that all workers have received the relevant training and hold the required qualifications to perform the work described in this document and that all workers have been inducted and have acknowledged their agreement to this document using the digital signature in this form. This document must be amended and reviewed by all workers as new hazards are identified throughout the course of the project.</p>
+                                                <p>
+                                                It is imperative that all information entered in this form is accurate and complete before submitting and commencing work. This form can collect client email address(es) which will automatically forward this information. If any portion of this form requires clarification or review from management, leave the client email field empty, submit this form, and notify the office of your concerns on <span><a href="info@abseil.pro">info@abseil.pro</a></span> or 0438 257 892. 
+                                                </p>
+                                                <hr />
+                                            </div>
+                                            <button className='modalBtn' onClick={closeModal}>close</button>
+                                        </Modal>
+                                    </div>
+
+                                    <div onClick={() => setIsOpenRB(true)}>Resident Balconies</div>
+                                    <div className='modal'>
+                                        <Modal
+                                            isOpen={modalIsOpenRB}
+                                            onAfterOpen={afterOpenModal}
+                                            onRequestClose={closeModal}
+                                            style={customStyles}
+                                            contentLabel="Example Modal"
+                                        >
+                                            <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Resident Balconies</h2>
+                                            <div>
+                                                <p>A site-specific Job Safety Analysis (JSEA), Safe Work Method Statement (SWMS) & Rescue Plan must be developed and agreed to by all workers at the beginning of every project. This form will collect important information to be used in the creation of this documentation. The resulting document will be automatically sent to Abseil Pro management, all workers who enter their email addresses, and to the client if their email address is entered in this form.</p>
+                                                <p>The project supervisor must ensure that all workers have received the relevant training and hold the required qualifications to perform the work described in this document and that all workers have been inducted and have acknowledged their agreement to this document using the digital signature in this form. This document must be amended and reviewed by all workers as new hazards are identified throughout the course of the project.</p>
+                                                <p>
+                                                It is imperative that all information entered in this form is accurate and complete before submitting and commencing work. This form can collect client email address(es) which will automatically forward this information. If any portion of this form requires clarification or review from management, leave the client email field empty, submit this form, and notify the office of your concerns on <span><a href="info@abseil.pro">info@abseil.pro</a></span> or 0438 257 892. 
+                                                </p>
+                                                <hr />
+                                            </div>
+                                            <button className='modalBtn' onClick={closeModal}>close</button>
+                                        </Modal>
+                                    </div>
+
+                                    <div onClick={() => setIsOpenIR(true)}>Incident Report</div>
+                                    <div className='modal'>
+                                        <Modal
+                                            isOpen={modalIsOpenIR}
+                                            onAfterOpen={afterOpenModal}
+                                            onRequestClose={closeModal}
+                                            style={customStyles}
+                                            contentLabel="Example Modal"
+                                        >
+                                            <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Incident Report</h2>
+                                            <div>
+                                                <p>A site-specific Job Safety Analysis (JSEA), Safe Work Method Statement (SWMS) & Rescue Plan must be developed and agreed to by all workers at the beginning of every project. This form will collect important information to be used in the creation of this documentation. The resulting document will be automatically sent to Abseil Pro management, all workers who enter their email addresses, and to the client if their email address is entered in this form.</p>
+                                                <p>The project supervisor must ensure that all workers have received the relevant training and hold the required qualifications to perform the work described in this document and that all workers have been inducted and have acknowledged their agreement to this document using the digital signature in this form. This document must be amended and reviewed by all workers as new hazards are identified throughout the course of the project.</p>
+                                                <p>
+                                                It is imperative that all information entered in this form is accurate and complete before submitting and commencing work. This form can collect client email address(es) which will automatically forward this information. If any portion of this form requires clarification or review from management, leave the client email field empty, submit this form, and notify the office of your concerns on <span><a href="info@abseil.pro">info@abseil.pro</a></span> or 0438 257 892. 
+                                                </p>
+                                                <hr />
+                                            </div>
+                                            <button className='modalBtn' onClick={closeModal}>close</button>
+                                        </Modal>
+                                    </div>
+
+                                    <div onClick={() => setIsOpenST(true)}>Subcontractor Timesheet</div>
+                                    <div className='modal'>
+                                        <Modal
+                                            isOpen={modalIsOpenST}
+                                            onAfterOpen={afterOpenModal}
+                                            onRequestClose={closeModal}
+                                            style={customStyles}
+                                            contentLabel="Example Modal"
+                                        >
+                                            <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Subcontractor Timesheet</h2>
+                                            <div>
+                                                <p>A site-specific Job Safety Analysis (JSEA), Safe Work Method Statement (SWMS) & Rescue Plan must be developed and agreed to by all workers at the beginning of every project. This form will collect important information to be used in the creation of this documentation. The resulting document will be automatically sent to Abseil Pro management, all workers who enter their email addresses, and to the client if their email address is entered in this form.</p>
+                                                <p>The project supervisor must ensure that all workers have received the relevant training and hold the required qualifications to perform the work described in this document and that all workers have been inducted and have acknowledged their agreement to this document using the digital signature in this form. This document must be amended and reviewed by all workers as new hazards are identified throughout the course of the project.</p>
+                                                <p>
+                                                It is imperative that all information entered in this form is accurate and complete before submitting and commencing work. This form can collect client email address(es) which will automatically forward this information. If any portion of this form requires clarification or review from management, leave the client email field empty, submit this form, and notify the office of your concerns on <span><a href="info@abseil.pro">info@abseil.pro</a></span> or 0438 257 892. 
+                                                </p>
+                                                <hr />
+                                            </div>
+                                            <button className='modalBtn' onClick={closeModal}>close</button>
+                                        </Modal>
+                                    </div>
+
+                                    <div><h3>Height Safety</h3></div>
+                                    <div onClick={() => setIsOpenHSIF(true)}>Height Safety Inspection Form</div>
+                                    <div className='modal'>
+                                        <Modal
+                                            isOpen={modalIsOpenHSIF}
+                                            onAfterOpen={afterOpenModal}
+                                            onRequestClose={closeModal}
+                                            style={customStyles}
+                                            contentLabel="Example Modal"
+                                        >
+                                            <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Height Safety Inspection Form</h2>
+                                            <div>
+                                                <p>A site-specific Job Safety Analysis (JSEA), Safe Work Method Statement (SWMS) & Rescue Plan must be developed and agreed to by all workers at the beginning of every project. This form will collect important information to be used in the creation of this documentation. The resulting document will be automatically sent to Abseil Pro management, all workers who enter their email addresses, and to the client if their email address is entered in this form.</p>
+                                                <p>The project supervisor must ensure that all workers have received the relevant training and hold the required qualifications to perform the work described in this document and that all workers have been inducted and have acknowledged their agreement to this document using the digital signature in this form. This document must be amended and reviewed by all workers as new hazards are identified throughout the course of the project.</p>
+                                                <p>
+                                                It is imperative that all information entered in this form is accurate and complete before submitting and commencing work. This form can collect client email address(es) which will automatically forward this information. If any portion of this form requires clarification or review from management, leave the client email field empty, submit this form, and notify the office of your concerns on <span><a href="info@abseil.pro">info@abseil.pro</a></span> or 0438 257 892. 
+                                                </p>
+                                                <hr />
+                                            </div>
+                                            <button className='modalBtn' onClick={closeModal}>close</button>
+                                        </Modal>
+                                    </div>
+
+                                    <div><h3>Sales & Estimating</h3></div>
+
+                                    <div onClick={() => setIsOpenExQuote(true)}>External Quote</div>
+                                    <div className='modal'>
+                                        <Modal
+                                            isOpen={modalIsOpenExQuote}
+                                            onAfterOpen={afterOpenModal}
+                                            onRequestClose={closeModal}
+                                            style={customStyles}
+                                            contentLabel="Example Modal"
+                                        >
+                                            <h2 ref={(_subtitle) => (subtitle = _subtitle)}>External Quote</h2>
+                                            <div>
+                                                
+                                                <hr />
+                                            </div>
+                                            <button className='modalBtn' onClick={closeModal}>close</button>
+                                        </Modal>
+                                    </div>
+
+                                    <div onClick={() => setIsOpenInQuote(true)}>Internal Quote</div>
+                                    <div className='modal'>
+                                        <Modal
+                                            isOpen={modalIsOpenInQuote}
+                                            onAfterOpen={afterOpenModal}
+                                            onRequestClose={closeModal}
+                                            style={customStyles}
+                                            contentLabel="Example Modal"
+                                        >
+                                            <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Internal Quote</h2>
+                                            <div>
+                                                
+                                                <hr />
+                                            </div>
+                                            <button className='modalBtn' onClick={closeModal}>close</button>
+                                        </Modal>
+                                    </div>
+                                </div>
                             </div>
                             
                         </div>
@@ -528,7 +742,6 @@ function jobProfile({jobProps}) {
                 .darken {
                     background: black;
                     position: absolute;
-                    z-index: 999;
                     width: 100%;
                     height: 300px;
                     opacity: 0.5;
@@ -536,7 +749,6 @@ function jobProfile({jobProps}) {
 
                 .clientWrapper {
                     position: absolute;
-                    z-index: 9999;
                     top: 0;
                     color: #ffff;
                     padding: 15px;
