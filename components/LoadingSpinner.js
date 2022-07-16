@@ -22,6 +22,10 @@ function LoadingSpinner({loading}) {
             border-top: 10px solid #383636; /* Black */
             border-radius: 50%;
             animation: spinner 1.5s linear infinite;
+            position: absolute;
+            inset: 50% auto auto 50%;
+            overflow: auto;
+            transform: translate(-50%, -50%);
         }
     `}</style>
     </div>

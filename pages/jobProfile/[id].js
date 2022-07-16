@@ -98,6 +98,7 @@ function jobProfile({jobProps}) {
     const [hide, setHide] = useState("block");
     const [show, setShow] = useState("none");
     const [modalIsOpen, setIsOpen] = useState("");
+    const [modalIsOpenYesNo, setIsOpenYesNo] = useState("");
     const [modalIsOpenJSEA, setIsOpenJSEA] = useState(false);
     const [modalIsOpenDPR, setIsOpenDPR] = useState(false);
     const [modalIsOpenTTR, setIsOpenTTR] = useState(false);
@@ -473,8 +474,24 @@ function jobProfile({jobProps}) {
                                     {job.images ? job.images.map(img => (
                                         <div className='imgWrapper'>
                                             <img key={img.id} className="item" src={img.url} alt={img.name} onClick={() => openModal(img.id)} />
-                                            {isLoading === img.id ? <LoadingSpinner  /> : ""}
-                                            <FontAwesomeIcon icon={faTrashCan} onClick={() => deletePhoto(img.id)} disabled={isLoading} width="35" className='trashIcon' />
+                                            
+                                            <FontAwesomeIcon icon={faTrashCan} onClick={() => setIsOpenYesNo(img.id)} width="35" className='trashIcon' />
+                                            <div className='modal'>
+                                                <Modal
+                                                    isOpen={modalIsOpenYesNo === img.id}
+                                                    onAfterOpen={afterOpenModal}
+                                                    onRequestClose={closeModal}
+                                                    style={customStyles}
+                                                    contentLabel="Example Modal"
+                                                >
+                                                    <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Delete Photo?</h2>
+                                                    <div className='modalBtn'disabled={isLoading} onClick={() => deletePhoto(img.id)}>{isLoading === img.id ? <LoadingSpinner  /> : "YES"}</div>
+                                                    <div className='modalBtn' onClick={closeModal}>No</div>
+                                                   
+                                                    
+                                                </Modal>
+                                            </div>
+                                            
                                             <div className='modal'>
                                                 <Modal
                                                     isOpen={modalIsOpen === img.id}
@@ -674,8 +691,7 @@ function jobProfile({jobProps}) {
                                         >
                                             <h2 ref={(_subtitle) => (subtitle = _subtitle)}>External Quote</h2>
                                             <div>
-                                                
-                                                <hr />
+                                                <h1>FORM HERE</h1>
                                             </div>
                                             <button className='modalBtn' onClick={closeModal}>close</button>
                                         </Modal>
