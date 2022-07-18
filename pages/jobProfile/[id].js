@@ -175,13 +175,14 @@ function jobProfile({jobProps}) {
 
     useEffect(() => {
         const getTasks = async () => {
-            const q = query(tasksCollectionRef, orderBy("startDate"));
+            const q = query(tasksCollectionRef, orderBy("name"));
             const data = await getDocs(q);
             const res = data.docs.map((doc) => ({...doc.data(), id: doc.id })); 
             setTasks(res);
         }
         getTasks();
     }, [])
+
 
     // GET STAFF COLLECTION
 
@@ -388,10 +389,11 @@ function jobProfile({jobProps}) {
                                     <label>Template</label>
                                     <select value={newTaskName} onChange={handleTaskChange}>
                                         <option>Choose Template...</option>
-                                        {tasks.map(task => 
-                                        <option key={task.id} value={task.name}>{task.name}</option>
-                                        )}
+                                        {tasks.map(task => (
+                                        <option value={task.name}>{task.name}</option>
+                                        ))}
                                     </select>
+                                    
                                     <label>Description</label>
                                     <ReactQuill value={newDesc} onChange={setNewDesc} />
                                     <div className='row'>
@@ -520,10 +522,10 @@ function jobProfile({jobProps}) {
                             <div id="docs"  className={toggleState === 3 ? "content  activeContent" : "content"}>
                                 <h5>Documents</h5>
                                 <hr />
-                                <div>
+                                <div style={{textAlign:"center"}}>
                                     <div><h3>Job Forms</h3></div>
 
-                                    <div onClick={() => setIsOpenJSEA(true)} >JSEA, SWMS, Rescue Plan</div>
+                                    <div className='docs' onClick={() => setIsOpenJSEA(true)} >JSEA, SWMS, Rescue Plan</div>
                                     <div className='modal'>
                                         <Modal
                                             isOpen={modalIsOpenJSEA}
@@ -545,7 +547,7 @@ function jobProfile({jobProps}) {
                                         </Modal>
                                     </div>
 
-                                    <div onClick={() => setIsOpenDPR(true)}>Daily Progress Report</div>
+                                    <div className='docs' onClick={() => setIsOpenDPR(true)}>Daily Progress Report</div>
                                     <div className='modal'>
                                         <Modal
                                             isOpen={modalIsOpenDPR}
@@ -567,7 +569,7 @@ function jobProfile({jobProps}) {
                                         </Modal>
                                     </div>
 
-                                    <div onClick={() => setIsOpenTTR(true)}>Toolbox Talk Record</div>
+                                    <div className='docs' onClick={() => setIsOpenTTR(true)}>Toolbox Talk Record</div>
                                     <div className='modal'>
                                         <Modal
                                             isOpen={modalIsOpenTTR}
@@ -589,7 +591,7 @@ function jobProfile({jobProps}) {
                                         </Modal>
                                     </div>
 
-                                    <div onClick={() => setIsOpenRB(true)}>Resident Balconies</div>
+                                    <div className='docs' onClick={() => setIsOpenRB(true)}>Resident Balconies</div>
                                     <div className='modal'>
                                         <Modal
                                             isOpen={modalIsOpenRB}
@@ -611,7 +613,7 @@ function jobProfile({jobProps}) {
                                         </Modal>
                                     </div>
 
-                                    <div onClick={() => setIsOpenIR(true)}>Incident Report</div>
+                                    <div className='docs' onClick={() => setIsOpenIR(true)}>Incident Report</div>
                                     <div className='modal'>
                                         <Modal
                                             isOpen={modalIsOpenIR}
@@ -633,7 +635,7 @@ function jobProfile({jobProps}) {
                                         </Modal>
                                     </div>
 
-                                    <div onClick={() => setIsOpenST(true)}>Subcontractor Timesheet</div>
+                                    <div className='docs' onClick={() => setIsOpenST(true)}>Subcontractor Timesheet</div>
                                     <div className='modal'>
                                         <Modal
                                             isOpen={modalIsOpenST}
@@ -655,8 +657,8 @@ function jobProfile({jobProps}) {
                                         </Modal>
                                     </div>
 
-                                    <div><h3>Height Safety</h3></div>
-                                    <div onClick={() => setIsOpenHSIF(true)}>Height Safety Inspection Form</div>
+                                    <div style={{padding:"20px"}}><h3>Height Safety</h3></div>
+                                    <div className='docs' onClick={() => setIsOpenHSIF(true)}>Height Safety Inspection Form</div>
                                     <div className='modal'>
                                         <Modal
                                             isOpen={modalIsOpenHSIF}
@@ -678,9 +680,9 @@ function jobProfile({jobProps}) {
                                         </Modal>
                                     </div>
 
-                                    <div><h3>Sales & Estimating</h3></div>
+                                    <div style={{padding:"20px"}}><h3 style={{marginBottom:"10px"}}>Sales & Estimating</h3></div>
 
-                                    <div onClick={() => setIsOpenExQuote(true)}>External Quote</div>
+                                    <div className='docs' onClick={() => setIsOpenExQuote(true)}>External Quote</div>
                                     <div className='modal'>
                                         <Modal
                                             isOpen={modalIsOpenExQuote}
@@ -691,13 +693,67 @@ function jobProfile({jobProps}) {
                                         >
                                             <h2 ref={(_subtitle) => (subtitle = _subtitle)}>External Quote</h2>
                                             <div>
-                                                <h1>FORM HERE</h1>
+                                                <h5>Quote Information</h5>
+                                                <table>
+                                                    <tr>
+                                                        <td>Date:</td>
+                                                        <td>
+                                                            <div>{new Date(job.startDate.seconds * 1000).toLocaleDateString("en-US")}</div>
+                                                        </td>
+                                                        <td>Valid to:</td>
+                                                        <td>
+                                                            <div>{new Date(job.dueDate.seconds * 1000).toLocaleDateString("en-US")}</div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Client:</td>
+                                                        <td>
+                                                            <div>{job.client}</div>
+                                                        </td>
+                                                        <td>Contact:</td>
+                                                        <td>
+                                                            <div>{job.contact}</div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td className="quoteDesc">Description:</td>
+                                                        <td className='tdDesc'>
+                                                            <div>
+                                                                <div dangerouslySetInnerHTML={{ __html: job.description }}></div>
+                                                            </div>
+                                                            
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                <label>Budget:</label>
+                                                <div>Cost:</div>
+                                                <table>        
+                                                        <tr>
+                                                            <th>Name</th>
+                                                            <th>Start</th>
+                                                            <th>Due</th>
+                                                            <th>Estimated</th>
+                                                            <th>Actual</th>
+                                                            <th>Remaining</th>
+                                                        </tr>
+                                                        {job.tasks.map(task => (
+                                                            <tr>
+                                                                <td>{task.name}</td>
+                                                                <td>{new Date(task.startDate.seconds * 1000).toLocaleDateString("en-US")}</td>
+                                                                <td>{new Date(task.dueDate.seconds * 1000).toLocaleDateString("en-US")}</td>
+                                                                <td>{task.estimated}</td>
+                                                                <td>{task.actual}</td>
+                                                                <td>{task.remaining}</td>
+                                                            </tr>
+                                                        ))}
+                                                    </table>
+                                                
                                             </div>
                                             <button className='modalBtn' onClick={closeModal}>close</button>
                                         </Modal>
                                     </div>
 
-                                    <div onClick={() => setIsOpenInQuote(true)}>Internal Quote</div>
+                                    <div className='docs' onClick={() => setIsOpenInQuote(true)}>Internal Quote</div>
                                     <div className='modal'>
                                         <Modal
                                             isOpen={modalIsOpenInQuote}
@@ -914,6 +970,31 @@ function jobProfile({jobProps}) {
 
                 tr:nth-child(even) {
                     background-color: #dddddd;
+                }
+
+                .docs {
+                    transition: .3s;
+                }
+
+                .docs:hover {
+                    text-decoration: underline;
+                    color: blue;
+                    cursor: pointer;
+                }
+
+                .docs:focus {
+                    text-decoration: underline;
+                    color: blue;
+
+                }
+
+                .quoteDesc {
+                    vertical-align: baseline;
+                }
+
+                .tdDesc {
+                    text-align: left;
+                    font-size: 12px;
                 }
 
                 @media screen and (max-width: 990px) {
