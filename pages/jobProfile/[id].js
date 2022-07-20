@@ -27,6 +27,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import 'react-datepicker/dist/react-datepicker-cssmodules.css';
 import LoadingSpinner from '../../components/LoadingSpinner';
+import GeneratePDF from '../../components/GeneratePDF';
 
 require('react-datepicker/dist/react-datepicker.css')
 
@@ -72,7 +73,7 @@ const customStyles = {
   };
 
 
-function jobProfile({jobProps}) {
+function jobProfile({jobProps, id}) {
     const router = useRouter();
 
     const tasksCollectionRef = collection(db, "task");
@@ -692,64 +693,9 @@ function jobProfile({jobProps}) {
                                             contentLabel="Example Modal"
                                         >
                                             <h2 ref={(_subtitle) => (subtitle = _subtitle)}>External Quote</h2>
-                                            <div>
-                                                <h5>Quote Information</h5>
-                                                <table>
-                                                    <tr>
-                                                        <td>Date:</td>
-                                                        <td>
-                                                            <div>{new Date(job.startDate.seconds * 1000).toLocaleDateString("en-US")}</div>
-                                                        </td>
-                                                        <td>Valid to:</td>
-                                                        <td>
-                                                            <div>{new Date(job.dueDate.seconds * 1000).toLocaleDateString("en-US")}</div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Client:</td>
-                                                        <td>
-                                                            <div>{job.client}</div>
-                                                        </td>
-                                                        <td>Contact:</td>
-                                                        <td>
-                                                            <div>{job.contact}</div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td className="quoteDesc">Description:</td>
-                                                        <td className='tdDesc'>
-                                                            <div>
-                                                                <div dangerouslySetInnerHTML={{ __html: job.description }}></div>
-                                                            </div>
-                                                            
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                                <label>Budget:</label>
-                                                <div>Cost:</div>
-                                                <table>        
-                                                        <tr>
-                                                            <th>Name</th>
-                                                            <th>Start</th>
-                                                            <th>Due</th>
-                                                            <th>Estimated</th>
-                                                            <th>Actual</th>
-                                                            <th>Remaining</th>
-                                                        </tr>
-                                                        {job.tasks.map(task => (
-                                                            <tr>
-                                                                <td>{task.name}</td>
-                                                                <td>{new Date(task.startDate.seconds * 1000).toLocaleDateString("en-US")}</td>
-                                                                <td>{new Date(task.dueDate.seconds * 1000).toLocaleDateString("en-US")}</td>
-                                                                <td>{task.estimated}</td>
-                                                                <td>{task.actual}</td>
-                                                                <td>{task.remaining}</td>
-                                                            </tr>
-                                                        ))}
-                                                    </table>
-                                                
-                                            </div>
+                                            <GeneratePDF job={job} id="target" />
                                             <button className='modalBtn' onClick={closeModal}>close</button>
+                                            
                                         </Modal>
                                     </div>
 
