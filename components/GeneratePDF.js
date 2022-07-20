@@ -40,39 +40,46 @@ function GeneratePDF({job}) {
                         <div>{job.contact}</div>
                     </td>
                 </tr>
+            </table>
+            <table>
                 <tr>
                     <td className="quoteDesc">Description:</td>
-                    <td className='tdDesc'>
+                    <td className='tdDesc' style={{width:"100%"}}>
                         <div>
                             <div dangerouslySetInnerHTML={{ __html: job.description }}></div>
                         </div>
                     </td>
                 </tr>
+            </table>
+            <label>Budget:</label>
+            <div>Cost:</div>      
+                
+                
+            
+            <div className='tableWrapper'>
+                <table>
+                    <tr>
+                        <th>Name</th>
+                        <th>Start</th>
+                        <th>Due</th>
+                        <th>Estimated</th>
+                        <th>Actual</th>
+                        <th>Remaining</th>
+                    </tr>
+                {job.tasks.map(task => (
+                    <tr>
+                        <td>{task.name}</td>
+                        <td>{new Date(task.startDate.seconds * 1000).toLocaleDateString("en-US")}</td>
+                        <td>{new Date(task.dueDate.seconds * 1000).toLocaleDateString("en-US")}</td>
+                        <td>{task.estimated}</td>
+                        <td>{task.actual}</td>
+                        <td>{task.remaining}</td>
+                    </tr>
+                ))}
                 </table>
-                    <label>Budget:</label>
-                    <div>Cost:</div>
-                    <table>        
-                        <tr>
-                            <th>Name</th>
-                            <th>Start</th>
-                            <th>Due</th>
-                            <th>Estimated</th>
-                            <th>Actual</th>
-                            <th>Remaining</th>
-                        </tr>
-                        {job.tasks.map(task => (
-                            <tr>
-                                <td>{task.name}</td>
-                                <td>{new Date(task.startDate.seconds * 1000).toLocaleDateString("en-US")}</td>
-                                <td>{new Date(task.dueDate.seconds * 1000).toLocaleDateString("en-US")}</td>
-                                <td>{task.estimated}</td>
-                                <td>{task.actual}</td>
-                                <td>{task.remaining}</td>
-                            </tr>
-                        ))}
-                    </table>
+            </div>
         </div>
-        <button type="primary" onClick={generate}>Download PDF</button>
+        <button type="primary" onClick={generate} style={{marginBottom:"15px"}}>Download PDF</button>
         <style jsx>{`
         table {
                     border-collapse: collapse;
