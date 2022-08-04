@@ -1,16 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect } from 'react'
-import Link from 'next/dist/client/link'
+import React, { useState, useEffect } from 'react';
+import Link from 'next/dist/client/link';
 
 
-function TaskData({task}) {
+function CostData({cost}) {
 
   return (
     <>
         <tr>
-            <td>{task.name}</td>
-            <td>{task.baseRate}</td>
-            <td>{task.billableRate}</td>
+            <td>{cost.description}</td>
+            <td>{cost.supplier}</td>
+            <td>{cost.code}</td>
+            <td>{cost.unitCost}</td>
+            <td>{cost.unitPrice}</td>
         </tr>
         <style jsx>{`
             table {
@@ -31,9 +33,9 @@ function TaskData({task}) {
         `}</style>
         
 
-        </>
+    </>
     
   )
 }
 
-export default TaskData;
+export default CostData;

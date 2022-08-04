@@ -109,6 +109,7 @@ function jobProfile({jobProps, id}) {
     const [modalIsOpenHSIF, setIsOpenHSIF] = useState(false);
     const [modalIsOpenExQuote, setIsOpenExQuote] = useState(false);
     const [modalIsOpenInQuote, setIsOpenInQuote] = useState(false);
+    const [modalIsOpenQuoteCost, setIsOpenQuoteCost] = useState(false);
     const [imgNewId, setImgNewId] = useState("");
     const [newTaskName, setNewTaskName] = useState("");
     const [newDesc, setNewDesc] = useState("");
@@ -119,6 +120,8 @@ function jobProfile({jobProps, id}) {
     const [remaining, setRemaining] = useState(0);
     const [taskId, setTaskId] = useState("");
     const [isLoading, setIsLoading] = useState("");
+    const [quoteDesc, setQuoteDesc] = useState("");
+    const [qty, setQty] = useState(0);
 
   let subtitle;
 
@@ -144,6 +147,7 @@ function jobProfile({jobProps, id}) {
     setIsOpenHSIF(false);
     setIsOpenExQuote(false);
     setIsOpenInQuote(false);
+    setIsOpenQuoteCost(false);
   }
 
     //   UNIQUE ID
@@ -239,6 +243,20 @@ function jobProfile({jobProps, id}) {
                 estimated: est,
                 actual: actual,
                 remaining: remaining
+            })
+        });
+        window.location.reload(false);
+    }
+
+    // ADD QUOTE COST
+
+    async function addCost() {
+        const id = job.id;
+        const jobDoc = doc(db, "jobs", id);
+        await updateDoc(jobDoc, {
+            costs: arrayUnion({
+                description: quoteDesc,
+                quantity: qty
             })
         });
         window.location.reload(false);
@@ -462,6 +480,25 @@ function jobProfile({jobProps, id}) {
                                         
                                     </table>
                                 </div>
+                                <button onClick={() => setIsOpenQuoteCost(true)}>+ New Cost</button>
+                                <div className='modal'>
+                                        <Modal
+                                            isOpen={modalIsOpenQuoteCost}
+                                            onAfterOpen={afterOpenModal}
+                                            onRequestClose={closeModal}
+                                            style={customStyles}
+                                            contentLabel="Example Modal"
+                                        >
+                                            <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Edit Quote Cost</h2>
+                                            <button className='modalBtn' onClick={() => closeModal(true)}>close</button>
+                                            <label>Description:</label>
+                                            <input type="text" value={quoteDesc} onChange={(event) => {setQuoteDesc(event.target.value)}}  />
+                                            <label>Quantity:</label>
+                                            <input type="number" value={qty} onChange={(event) => {setQty(event.target.value)}}  />
+                                            <input type="submit" value="submit" onClick={addCost}/>
+                                            
+                                        </Modal>
+                                    </div>
 
                             </div>
 
@@ -693,8 +730,8 @@ function jobProfile({jobProps, id}) {
                                             contentLabel="Example Modal"
                                         >
                                             <h2 ref={(_subtitle) => (subtitle = _subtitle)}>External Quote</h2>
-                                            <GeneratePDF job={job} id="target" />
-                                            <button className='modalBtn' onClick={closeModal}>close</button>
+                                            <GeneratePDF job={job} id="target" closeModal={closeModal} />
+                                            
                                             
                                         </Modal>
                                     </div>

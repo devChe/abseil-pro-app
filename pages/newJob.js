@@ -344,6 +344,12 @@ function newJob() {
           margin-bottom: 15px;
         }
 
+        input:focus {
+            outline: none !important;
+            border:1px solid red;
+            box-shadow: 0 0 10px #719ECE;
+        }
+
         select {
           margin-bottom: 15px;
           width: 100%;

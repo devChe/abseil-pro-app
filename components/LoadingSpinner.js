@@ -25,7 +25,8 @@ function LoadingSpinner({loading}) {
             position: absolute;
             inset: 50% auto auto 50%;
             overflow: auto;
-            transform: translate(-50%, -50%);
+            transform: translate(50%, 50%);
+            background: #fff;
         }
     `}</style>
     </div>
