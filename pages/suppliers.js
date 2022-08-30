@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/jsx-key */
 /* eslint-disable react-hooks/rules-of-hooks */
-/* eslint-disable @next/next/link-passhref */
 import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
 import SupplierData from '../components/SupplierData';

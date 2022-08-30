@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/link-passhref */
 /* eslint-disable react/jsx-no-undef */
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState } from 'react';

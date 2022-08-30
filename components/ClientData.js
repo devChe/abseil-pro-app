@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/link-passhref */
 import React, {useState} from 'react'
 import Link from 'next/link'
 import { async } from '@firebase/util'

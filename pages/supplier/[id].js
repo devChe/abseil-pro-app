@@ -1,6 +1,5 @@
 /* eslint-disable react/jsx-no-target-blank */
 /* eslint-disable react/jsx-key */
-/* eslint-disable @next/next/link-passhref */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/rules-of-hooks */
 import Link from 'next/link';
