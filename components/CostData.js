@@ -15,6 +15,7 @@ function CostData({cost}) {
             <td>{cost.unitPrice}</td>
         </tr>
         <style jsx>{`
+            
             table {
                 font-family: arial, sans-serif;
                 border-collapse: collapse;

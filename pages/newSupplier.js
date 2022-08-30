@@ -77,6 +77,7 @@ function newSupplier() {
                     <input type="text" value={newWebsite} onChange={(e) => setNewWebite(e.target.value)} />
                 </div>
                 <h3>Edit Financial Information</h3>
+                <label>Zero Rated GST</label>
                 <select value={newZero} onChange={(e) => setNewZero(e.target.value)}>
                         <option>(Select)</option>
                         <option value="Yes">Yes</option>

@@ -1,26 +1,34 @@
 /* eslint-disable react/no-unknown-property */
 /* eslint-disable @next/next/no-sync-scripts */
-import Head from 'next/head'
-import Layout from '../components/Layout'
-import '../styles/globals.css'
-import '../src/config/firebase.config'
-import 'react-skeleton-css/styles/skeleton.2.0.4.css'
-import 'react-skeleton-css/styles/normalize.3.0.2.css'
-import { auth } from '../src/config/firebase.config'
-import { onAuthStateChanged, currentUser, signOut, signInWithEmailAndPassword } from 'firebase/auth';
+import React from "react";
+import ReactDOM from 'react-dom';
+import Head from "next/head";
+import Layout from "../components/Layout";
+import "../styles/globals.css";
+import "../src/config/firebase.config";
+import "react-skeleton-css/styles/skeleton.2.0.4.css";
+import "react-skeleton-css/styles/normalize.3.0.2.css";
+import { auth } from "../src/config/firebase.config";
+import {
+  onAuthStateChanged,
+  currentUser,
+  signOut,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import firebase from "firebase/app";
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { useRouter } from 'next/router'
-import { AuthCheck } from '../components/AuthCheck'
+import { useRouter } from "next/router";
+import { AuthCheck } from "../components/AuthCheck";
 import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css"
-import { config } from '@fortawesome/fontawesome-svg-core'
-import '@fortawesome/fontawesome-svg-core/styles.css'
-import "react-datepicker/dist/react-datepicker.css"
+import "slick-carousel/slick/slick-theme.css";
+import { config } from "@fortawesome/fontawesome-svg-core";
+import "@fortawesome/fontawesome-svg-core/styles.css";
+import "react-datepicker/dist/react-datepicker.css";
+import ErrorBoundary from "../components/ErrorBoundary";
 
-config.autoAddCss = false
+config.autoAddCss = false;
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
@@ -28,7 +36,7 @@ function MyApp({ Component, pageProps }) {
   useEffect(() => {
     AOS.init({
       offset: 200,
-      duration: 500
+      duration: 500,
     });
   }, []);
 
@@ -39,18 +47,22 @@ function MyApp({ Component, pageProps }) {
           <Head>
             <title>ABSEIL PRO SYSTEM MANAGEMENT APP</title>
             <meta name="description" content="Abseil Pro System" />
-            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <meta
+              name="viewport"
+              content="width=device-width, initial-scale=1"
+            />
             <link rel="icon" href="/favicon.ico" />
             <script src="https://use.fontawesome.com/e6c3f5247b.js" />
             <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4clmPx_bEwSwrVgprTEQYbRZgc7CKGcM&libraries=places" />
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/react-modal/3.14.3/react-modal.min.js"integrity="sha512-MY2jfK3DBnVzdS2V8MXo5lRtr0mNRroUI9hoLVv2/yL3vrJTam3VzASuKQ96fLEpyYIT4a8o7YgtUs5lPjiLVQ=="crossorigin="anonymous"referrerpolicy="no-referrer"/>
           </Head>
-          <div className='rightSideContent'>
-            <Component {...pageProps} />
+          <div className="rightSideContent">
+            <ErrorBoundary>
+              <Component {...pageProps} />
+            </ErrorBoundary>
           </div>
         </Layout>
       </AuthCheck>
-    )
+    );
   else {
     return (
       <>
@@ -59,13 +71,14 @@ function MyApp({ Component, pageProps }) {
           <meta name="description" content="Abreil Pro System" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
-        <div className='container' style={{ height: "90vh" }}>
-          <Component {...pageProps} />
+        <div className="container" style={{ height: "90vh" }}>
+          <ErrorBoundary>
+            <Component {...pageProps} />
+          </ErrorBoundary>
         </div>
       </>
-
-    )
+    );
   }
 }
 
-export default MyApp
+export default MyApp;

@@ -14,6 +14,9 @@ const business = () => {
       <div className='businessBtn'>
         <Link href={'suppliers'}><button className='btn'>Suppliers</button></Link>
       </div>
+      <div className='businessBtn'>
+        <Link href={'heightAndSafety'}><button className='btn'>Height and Safety List</button></Link>
+      </div>
       
       <style jsx>{`
           .businessBtn {

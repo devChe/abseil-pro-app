@@ -1,5 +1,4 @@
 /* eslint-disable react/jsx-key */
-/* eslint-disable @next/next/link-passhref */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/rules-of-hooks */
 import Link from 'next/link';
@@ -9,7 +8,7 @@ import { db } from '../../src/config/firebase.config'
 import { collection, doc, getDocs, getDoc, updateDoc, getItem } from 'firebase/firestore'
 
 export const getStaticPaths = async () => {
-    const snapshot = await getDocs(collection(db, 'clients'));
+    const snapshot = await getDocs(collection(db, 'heightSafety'));
     const paths = snapshot.docs.map(doc => {
         return {
             params: { id: doc.id.toString() }
@@ -23,25 +22,25 @@ export const getStaticPaths = async () => {
 
 export const getStaticProps = async (context) => {
     const id = context.params.id;
-    const docRef = doc(db, "clients", id);
+    const docRef = doc(db, "heightSafety", id);
     const docSnap = await getDoc(docRef);
-    const clientProps = docSnap.data();
-    clientProps.id = id;
+    const heightSafetyProps = docSnap.data();
+    heightSafetyProps.id = id;
     return {
-        props: { clientProps: JSON.stringify(clientProps) || null}
+        props: { heightSafetyProps: JSON.stringify(heightSafetyProps) || null}
     }
 }
 
-function clientProfile({clientProps}) {
+function heightAndSafetyProfile({heightSafetyProps}) {
     const router = useRouter();
 
     //so the data will go first to the fallback while loading is not done
     if(router.isFallback)
         return <div>...Loading</div>
         
-    const client = JSON.parse(clientProps);
+    const data = JSON.parse(heightSafetyProps);
 
-    const databaseRef = collection(db, 'clients')
+    const databaseRef = collection(db, 'heightSafety')
 
     const [edit, isEdit] = useState(false);
     const [newName, setNewName] = useState("");
@@ -50,10 +49,11 @@ function clientProfile({clientProps}) {
         isEdit(true);
     }
 
-    const updateClient = async (id, name) => {
-        const clientDoc = doc(db, "clients", id);
-        const newFields = { name: newName }
-        await updateDoc(clientDoc, newFields);
+    // Edit or Update Data
+    const updateHeightSafety = async (id, site_name) => {
+        const heightSafetyDoc = doc(db, "heightSafety", id);
+        const newFields = { site_name: newName }
+        await updateDoc(heightSafetyDoc, newFields);
         window.location.reload(false);
     }
     
@@ -62,14 +62,14 @@ function clientProfile({clientProps}) {
             {edit ? (
                 <div className='container'>
                     <label>Edit Name</label>
-                    <div><input type="text" placeholder={client.name} onChange={(event) => setNewName(event.target.value)} /></div>
-                    <button type="submit" onClick={() => {updateClient(client.id, client.name)}}>Save</button>
+                    <div><input type="text" placeholder={data.site_name} onChange={(event) => setNewName(event.target.value)} /></div>
+                    <button type="submit" onClick={() => {updateHeightSafety(data.id, data.site_name)}} style={{marginTop: "20px"}}>Save</button>
                 </div>
             ) : (
                 <div className='container'>
-                    <div>Client name: {client.name}</div>
-                    <div>Client phone: {client.phone}</div>
-                    <div>Client email: {client.email}</div> 
+                    <div>Site name: {data.site_name}</div>
+                    <div>Site Address: {data.site_address}</div>
+                    <div>Site email: {data.email}</div> 
                     <button onClick={editHandler}>Edit</button>
                 </div>
             )}
@@ -77,6 +77,6 @@ function clientProfile({clientProps}) {
     );
 }
  
-export default clientProfile;
+export default heightAndSafetyProfile;
 
 

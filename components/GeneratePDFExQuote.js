@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/alt-text */
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/jsx-key */
 import React, {useState} from 'react';
 import jsPDF from 'jspdf';
@@ -5,7 +7,7 @@ import dynamic from 'next/dynamic';
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import 'react-quill/dist/quill.snow.css';
 
-function GeneratePDF({job, closeModal}) {
+function GeneratePDFExQuote({job, closeModal}) {
     const [openModal, setOpenModal] = useState(false);
     const [startDate, setStartDate] = useState(`${new Date(job.startDate.seconds * 1000).toLocaleDateString("en-US")}`);
     const [dueDate, setDueDate] = useState(`${new Date(job.dueDate.seconds * 1000).toLocaleDateString("en-US")}`);
@@ -115,8 +117,6 @@ function GeneratePDF({job, closeModal}) {
                     <h1>ABSEIL PRO</h1>
                     <h4>{clientName}</h4>
                     <div dangerouslySetInnerHTML={{ __html: desc }}></div>
-                    
-                    
                 </div>
                 <button type="primary" onClick={generate} style={{marginBottom:"15px"}}>Download PDF</button>
                 <button type="primary" onClick={() => setOpenModal(false)} >Close</button>
@@ -207,4 +207,4 @@ function GeneratePDF({job, closeModal}) {
   )
 }
 
-export default GeneratePDF
+export default GeneratePDFExQuote
