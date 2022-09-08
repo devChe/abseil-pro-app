@@ -54,6 +54,8 @@ import "react-datepicker/dist/react-datepicker-cssmodules.css";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import GeneratePDF from "../../components/GeneratePDFExQuote";
 import HeightAndSafetyForm from "../../components/HeightAndSafetyForm";
+import HeightSafetyCertificate from "../../components/HeightSafetyCertificate";
+import HeightSafetyBody from "../../components/HeightSafetyBody";
 
 require("react-datepicker/dist/react-datepicker.css");
 
@@ -97,6 +99,21 @@ const customStyles = {
   },
 };
 
+const bodyCustomStyles = {
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+    zIndex: "99999",
+    background: "#202124",
+    width: "100vw",
+    height: "100vh",
+  },
+};
+
 
 
 function jobProfile({ jobProps, id }) {
@@ -134,6 +151,8 @@ function jobProfile({ jobProps, id }) {
   const [modalIsOpenIR, setIsOpenIR] = useState(false);
   const [modalIsOpenST, setIsOpenST] = useState(false);
   const [modalIsOpenHSIF, setIsOpenHSIF] = useState(false);
+  const [modalIsOpenHSIC, setIsOpenHSIC] = useState(false);
+  const [modalIsOpenHSBody, setIsOpenHSBody] = useState(false);
   const [modalIsOpenExQuote, setIsOpenExQuote] = useState(false);
   const [modalIsOpenInQuote, setIsOpenInQuote] = useState(false);
   const [modalIsOpenQuoteCost, setIsOpenQuoteCost] = useState(false);
@@ -232,6 +251,8 @@ function jobProfile({ jobProps, id }) {
     setIsOpenExQuote(false);
     setIsOpenInQuote(false);
     setIsOpenQuoteCost(false);
+    setIsOpenHSIC(false);
+    setIsOpenHSBody(false);
   }
 
   //   UNIQUE ID
@@ -328,6 +349,67 @@ function jobProfile({ jobProps, id }) {
     window.location.reload(false);
   }
 
+  // ADD HEIGHT AND SAFETY
+
+  async function addHeightSafety() {
+    const id = job.id;
+    const jobDoc = doc(db, "jobs", id);
+    await updateDoc(jobDoc, {
+            inspector_name: newInspector,
+            inspection_date: heightStartDate,
+            next_inspection_date: newInspectionDate,
+            email: heightEmail,
+            site_name: heightSiteName,
+            site_address: heightSiteAddress,
+            asset_group_1_qty: assetGroupOneQty,
+            asset_group_1_type: assetGrpOneType,
+            asset_group_1_inspection_type: assetGroupOneQty,
+            asset_group_1_rating: assetGrpOneRating,
+            asset_group_1_result: assetGrpOneResult,
+            asset_group_1_notes: assetGrpOneNotes,
+            asset_group_2_type: assetGrpTwoType,
+            asset_group_2_inspection_type: assetGrpTwoInspectionType,
+            asset_group_2_rating: assetGrpTwoRating,
+            asset_group_2_result: assetGrpTwoResult,
+            asset_group_2_notes: assetGrpTwoNotes,
+            asset_group_3_qty: assetGrp3Qty,
+            asset_grp_3_type: assetGrp3Type,
+            asset_grp_3_inspection_type: assetGrp3InspectionType,
+            asset_grp_3_rating: assetGrp3Rating,
+            asset_grp_3_result: assetGrp3Result,
+            asset_grp_3_notes: assetGrp3Notes,
+            asset_grp_4_qty: assetGrp4Qty,
+            asset_grp_4_type: assetGrp4Type,
+            asset_grp_4_inspection_type: assetGrp4InspectionType,
+            asset_grp_4_rating: assetGrp4Rating,
+            asset_grp_4_result: assetGrp4Result,
+            asset_grp_4_notes: assetGrp4Notes,
+            asset_grp_5_qty: assetGrp5Qty,
+            asset_grp_5_type: assetGrp5Type,
+            asset_grp_5_inspection_type: assetGrp5InspectionType,
+            asset_grp_5_rating: assetGrp5Rating,
+            asset_grp_5_result: assetGrp5Result,
+            asset_grp_5_notes: assetGrp5Notes,
+            asset_grp_6_qty: assetGrp6Qty,
+            asset_grp_6_type: assetGrp6Type,
+            asset_grp_6_inspection_type: assetGrp6InspectionType,
+            asset_grp_6_rating: assetGrp6Rating,
+            asset_grp_6_result: assetGrp6Result,
+            asset_grp_6_notes: assetGrp6Notes,
+            asset_grp_7_qty: assetGrp7Qty,
+            asset_grp_7_type: assetGrp7Type,
+            asset_grp_7_inspection_type: assetGrp7InspectionType,
+            asset_grp_7_rating: assetGrp7Rating,
+            asset_grp_7_result: assetGrp7Result,
+            asset_grp_7_notes: assetGrp7Notes,
+            asset_grp_8_qty: assetGrp8Qty,
+            asset_grp_8_inspection_type: assetGrp8InspectionType,
+            asset_grp_8_rating: assetGrp8Rating,
+            asset_grp_8_result: assetGrp8Result,
+            asset_grp_8_notes: assetGrp8Notes,
+    });
+  }
+
   // ADD QUOTE COST
 
   async function addCost() {
@@ -398,7 +480,7 @@ function jobProfile({ jobProps, id }) {
             asset_grp_8_result: assetGrp8Result,
             asset_grp_8_notes: assetGrp8Notes,
          });
-    
+        addHeightSafety();
         window.location.pathname="/jobs";
     
       }
@@ -1220,145 +1302,204 @@ function jobProfile({ jobProps, id }) {
               <div style={{ padding: "20px" }}>
                 <h3>Height Safety</h3>
               </div>
+
+              {/* HEIGHT SAFETY INSPECTION FORM */}
+
               <div className="docs" onClick={() => setIsOpenHSIF(true)}>
                 Height Safety Inspection Form
               </div>
               <div className="modal">
-                <Modal
-                  isOpen={modalIsOpenHSIF}
-                  onAfterOpen={afterOpenModal}
-                  onRequestClose={closeModal}
-                  style={customStyles}
-                  contentLabel="Example Modal"
-                >
-                  <h2 ref={(_subtitle) => (subtitle = _subtitle)}>
-                    Height Safety Inspection Form
-                  </h2>
-                  <hr></hr>
-                  
-                  <div>
-                    <HeightAndSafetyForm 
-                        newInspector={newInspector}
-                        setNewInspector={setNewInspector}
-                        heightStartDate={heightStartDate}
-                        setHeightStartDate={setHeightStartDate}
-                        newInspectionDate={newInspectionDate}
-                        setNewInspectionDate={setNewInspectionDate}
-                        heightSiteName={heightSiteName}
-                        setHeightSiteName={setHeightSiteName}
-                        heightEmail={heightEmail}
-                        setHeightEmail={setHeightEmail}
-                        createHeightSafety={createHeightSafety}
-                        startDate={startDate}
-                        endDate={endDate}
-                        other={other}
-                        setOther={setOther}
-                        heightSiteAddress={heightSiteAddress}
-                        setHeightSiteAddress={setHeightSiteAddress}
-                        assetGroupOneQty={assetGroupOneQty}
-                        setAssetGroupOneQty={setAssetGroupOneQty}
-                        assetGrpOneType={assetGrpOneType}
-                        setAssetGrpOneType={setAssetGrpOneType}
-                        assetGrpOneInspectionType={assetGrpOneInspectionType}
-                        setAssetGrpOneInspectionType={setAssetGrpOneInspectionType}
-                        assetGrpOneRating={assetGrpOneRating}
-                        setAssetGrpOneRating={setAssetGrpOneRating}
-                        assetGrpOneResult={assetGrpOneResult}
-                        setAssetGrpOneResult={setAssetGrpOneResult}
-                        assetGrpOneNotes={assetGrpOneNotes}
-                        setAssetGrpOneNotes={setAssetGrpOneNotes}
-                        assetGrpTwoQty={assetGrpTwoQty}
-                        setAssetGrpTwoQty={setAssetGrpTwoQty}
-                        assetGrpTwoType={assetGrpTwoType}
-                        setAssetGrpTwoType={setAssetGrpTwoType}
-                        assetGrpTwoInspectionType={assetGrpTwoInspectionType}
-                        setAssetGrpTwoInspectionType={setAssetGrpTwoInspectionType}
-                        assetGrpTwoRating={assetGrpTwoRating}
-                        setAssetGrpTwoRating={setAssetGrpTwoRating}
-                        assetGrpTwoResult={assetGrpTwoResult}
-                        setAssetGrpTwoResult={setAssetGrpTwoResult}
-                        assetGrpTwoNotes={assetGrpTwoNotes}
-                        setAssetGrpTwoNotes={setAssetGrpTwoNotes}
-                        assetGrp3Qty={assetGrp3Qty}
-                        setAssetGrp3Qty={setAssetGrp3Qty}
-                        assetGrp3Type={assetGrp3Type}
-                        setAssetGrp3Type={setAssetGrp3Type}
-                        assetGrp3InspectionType={assetGrp3InspectionType}
-                        setAssetGrp3InspectionType={setAssetGrp3InspectionType}
-                        assetGrp3Rating={assetGrp3Rating}
-                        setAssetGrp3Rating={setAssetGrp3Rating}
-                        assetGrp3Result={assetGrp3Result}
-                        setAssetGrp3Result={setAssetGrp3Result}
-                        assetGrp3Notes={assetGrp3Notes}
-                        setAssetGrp3Notes={setAssetGrp3Notes}
-                        assetGrp4Qty={assetGrp4Qty}
-                        setAssetGrp4Qty={setAssetGrp4Qty}
-                        assetGrp4Type={assetGrp4Type}
-                        setAssetGrp4Type={setAssetGrp4Type}
-                        assetGrp4InspectionType={assetGrp4InspectionType}
-                        setAssetGrp4InspectionType={setAssetGrp4InspectionType}
-                        assetGrp4Rating={assetGrp4Rating}
-                        setAssetGrp4Rating={setAssetGrp4Rating}
-                        assetGrp4Result={assetGrp4Result}
-                        setAssetGrp4Result={setAssetGrp4Result}
-                        assetGrp4Notes={assetGrp4Notes}
-                        setAssetGrp4Notes={setAssetGrp4Notes}
-                        assetGrp5Qty={assetGrp5Qty}
-                        setAssetGrp5Qty={setAssetGrp5Qty}
-                        assetGrp5Type={assetGrp5Type}
-                        setAssetGrp5Type={setAssetGrp5Type}
-                        assetGrp5InspectionType={assetGrp5InspectionType}
-                        setAssetGrp5InspectionType={setAssetGrp5InspectionType}
-                        assetGrp5Rating={assetGrp5Rating}
-                        setAssetGrp5Rating={setAssetGrp5Rating}
-                        assetGrp5Result={assetGrp5Result}
-                        setAssetGrp5Result={setAssetGrp5Result}
-                        assetGrp5Notes={assetGrp5Notes}
-                        setAssetGrp5Notes={setAssetGrp5Notes}
-                        assetGrp6Qty={assetGrp6Qty}
-                        setAssetGrp6Qty={setAssetGrp6Qty}
-                        assetGrp6Type={assetGrp6Type}
-                        setAssetGrp6Type={setAssetGrp6Type}
-                        assetGrp6InspectionType={assetGrp6InspectionType}
-                        setAssetGrp6InspectionType={setAssetGrp6InspectionType}
-                        assetGrp6Rating={assetGrp6Rating}
-                        setAssetGrp6Rating={setAssetGrp6Rating}
-                        assetGrp6Result={assetGrp6Result}
-                        setAssetGrp6Result={setAssetGrp6Result}
-                        assetGrp6Notes={assetGrp6Notes}
-                        setAssetGrp6Notes={setAssetGrp6Notes}
-                        assetGrp7Qty={assetGrp7Qty}
-                        setAssetGrp7Qty={setAssetGrp7Qty}
-                        assetGrp7Type={assetGrp7Type}
-                        setAssetGrp7Type={setAssetGrp7Type}
-                        assetGrp7InspectionType={assetGrp7InspectionType}
-                        setAssetGrp7InspectionType={setAssetGrp7InspectionType}
-                        assetGrp7Rating={assetGrp7Rating}
-                        setAssetGrp7Rating={setAssetGrp7Rating}
-                        assetGrp7Result={assetGrp7Result}
-                        setAssetGrp7Result={setAssetGrp7Result}
-                        assetGrp7Notes={assetGrp7Notes}
-                        setAssetGrp7Notes={setAssetGrp7Notes}
-                        assetGrp8Qty={assetGrp8Qty}
-                        setAssetGrp8Qty={setAssetGrp8Qty}
-                        assetGrp8Type={assetGrp8Type}
-                        setAssetGrp8Type={setAssetGrp8Type}
-                        assetGrp8InspectionType={assetGrp8InspectionType}
-                        setAssetGrp8InspectionType={setAssetGrp8InspectionType}
-                        assetGrp8Rating={assetGrp8Rating}
-                        setAssetGrp8Rating={setAssetGrp8Rating}
-                        assetGrp8Result={assetGrp8Result}
-                        setAssetGrp8Result={setAssetGrp8Result}
-                        assetGrp8Notes={assetGrp8Notes}
-                        setAssetGrp8Notes={setAssetGrp8Notes}
+                  <Modal
+                    isOpen={modalIsOpenHSIF}
+                    onAfterOpen={afterOpenModal}
+                    onRequestClose={closeModal}
+                    style={customStyles}
+                    contentLabel="Example Modal"
+                  >
+                    <h2 ref={(_subtitle) => (subtitle = _subtitle)}>
+                      Height Safety Inspection Form
+                    </h2>
+                    <hr></hr>
+                    
+                    <div>
+                      <HeightAndSafetyForm 
+                          newInspector={newInspector}
+                          setNewInspector={setNewInspector}
+                          heightStartDate={heightStartDate}
+                          setHeightStartDate={setHeightStartDate}
+                          newInspectionDate={newInspectionDate}
+                          setNewInspectionDate={setNewInspectionDate}
+                          heightSiteName={heightSiteName}
+                          setHeightSiteName={setHeightSiteName}
+                          heightEmail={heightEmail}
+                          setHeightEmail={setHeightEmail}
+                          createHeightSafety={createHeightSafety}
+                          startDate={startDate}
+                          endDate={endDate}
+                          other={other}
+                          setOther={setOther}
+                          heightSiteAddress={heightSiteAddress}
+                          setHeightSiteAddress={setHeightSiteAddress}
+                          assetGroupOneQty={assetGroupOneQty}
+                          setAssetGroupOneQty={setAssetGroupOneQty}
+                          assetGrpOneType={assetGrpOneType}
+                          setAssetGrpOneType={setAssetGrpOneType}
+                          assetGrpOneInspectionType={assetGrpOneInspectionType}
+                          setAssetGrpOneInspectionType={setAssetGrpOneInspectionType}
+                          assetGrpOneRating={assetGrpOneRating}
+                          setAssetGrpOneRating={setAssetGrpOneRating}
+                          assetGrpOneResult={assetGrpOneResult}
+                          setAssetGrpOneResult={setAssetGrpOneResult}
+                          assetGrpOneNotes={assetGrpOneNotes}
+                          setAssetGrpOneNotes={setAssetGrpOneNotes}
+                          assetGrpTwoQty={assetGrpTwoQty}
+                          setAssetGrpTwoQty={setAssetGrpTwoQty}
+                          assetGrpTwoType={assetGrpTwoType}
+                          setAssetGrpTwoType={setAssetGrpTwoType}
+                          assetGrpTwoInspectionType={assetGrpTwoInspectionType}
+                          setAssetGrpTwoInspectionType={setAssetGrpTwoInspectionType}
+                          assetGrpTwoRating={assetGrpTwoRating}
+                          setAssetGrpTwoRating={setAssetGrpTwoRating}
+                          assetGrpTwoResult={assetGrpTwoResult}
+                          setAssetGrpTwoResult={setAssetGrpTwoResult}
+                          assetGrpTwoNotes={assetGrpTwoNotes}
+                          setAssetGrpTwoNotes={setAssetGrpTwoNotes}
+                          assetGrp3Qty={assetGrp3Qty}
+                          setAssetGrp3Qty={setAssetGrp3Qty}
+                          assetGrp3Type={assetGrp3Type}
+                          setAssetGrp3Type={setAssetGrp3Type}
+                          assetGrp3InspectionType={assetGrp3InspectionType}
+                          setAssetGrp3InspectionType={setAssetGrp3InspectionType}
+                          assetGrp3Rating={assetGrp3Rating}
+                          setAssetGrp3Rating={setAssetGrp3Rating}
+                          assetGrp3Result={assetGrp3Result}
+                          setAssetGrp3Result={setAssetGrp3Result}
+                          assetGrp3Notes={assetGrp3Notes}
+                          setAssetGrp3Notes={setAssetGrp3Notes}
+                          assetGrp4Qty={assetGrp4Qty}
+                          setAssetGrp4Qty={setAssetGrp4Qty}
+                          assetGrp4Type={assetGrp4Type}
+                          setAssetGrp4Type={setAssetGrp4Type}
+                          assetGrp4InspectionType={assetGrp4InspectionType}
+                          setAssetGrp4InspectionType={setAssetGrp4InspectionType}
+                          assetGrp4Rating={assetGrp4Rating}
+                          setAssetGrp4Rating={setAssetGrp4Rating}
+                          assetGrp4Result={assetGrp4Result}
+                          setAssetGrp4Result={setAssetGrp4Result}
+                          assetGrp4Notes={assetGrp4Notes}
+                          setAssetGrp4Notes={setAssetGrp4Notes}
+                          assetGrp5Qty={assetGrp5Qty}
+                          setAssetGrp5Qty={setAssetGrp5Qty}
+                          assetGrp5Type={assetGrp5Type}
+                          setAssetGrp5Type={setAssetGrp5Type}
+                          assetGrp5InspectionType={assetGrp5InspectionType}
+                          setAssetGrp5InspectionType={setAssetGrp5InspectionType}
+                          assetGrp5Rating={assetGrp5Rating}
+                          setAssetGrp5Rating={setAssetGrp5Rating}
+                          assetGrp5Result={assetGrp5Result}
+                          setAssetGrp5Result={setAssetGrp5Result}
+                          assetGrp5Notes={assetGrp5Notes}
+                          setAssetGrp5Notes={setAssetGrp5Notes}
+                          assetGrp6Qty={assetGrp6Qty}
+                          setAssetGrp6Qty={setAssetGrp6Qty}
+                          assetGrp6Type={assetGrp6Type}
+                          setAssetGrp6Type={setAssetGrp6Type}
+                          assetGrp6InspectionType={assetGrp6InspectionType}
+                          setAssetGrp6InspectionType={setAssetGrp6InspectionType}
+                          assetGrp6Rating={assetGrp6Rating}
+                          setAssetGrp6Rating={setAssetGrp6Rating}
+                          assetGrp6Result={assetGrp6Result}
+                          setAssetGrp6Result={setAssetGrp6Result}
+                          assetGrp6Notes={assetGrp6Notes}
+                          setAssetGrp6Notes={setAssetGrp6Notes}
+                          assetGrp7Qty={assetGrp7Qty}
+                          setAssetGrp7Qty={setAssetGrp7Qty}
+                          assetGrp7Type={assetGrp7Type}
+                          setAssetGrp7Type={setAssetGrp7Type}
+                          assetGrp7InspectionType={assetGrp7InspectionType}
+                          setAssetGrp7InspectionType={setAssetGrp7InspectionType}
+                          assetGrp7Rating={assetGrp7Rating}
+                          setAssetGrp7Rating={setAssetGrp7Rating}
+                          assetGrp7Result={assetGrp7Result}
+                          setAssetGrp7Result={setAssetGrp7Result}
+                          assetGrp7Notes={assetGrp7Notes}
+                          setAssetGrp7Notes={setAssetGrp7Notes}
+                          assetGrp8Qty={assetGrp8Qty}
+                          setAssetGrp8Qty={setAssetGrp8Qty}
+                          assetGrp8Type={assetGrp8Type}
+                          setAssetGrp8Type={setAssetGrp8Type}
+                          assetGrp8InspectionType={assetGrp8InspectionType}
+                          setAssetGrp8InspectionType={setAssetGrp8InspectionType}
+                          assetGrp8Rating={assetGrp8Rating}
+                          setAssetGrp8Rating={setAssetGrp8Rating}
+                          assetGrp8Result={assetGrp8Result}
+                          setAssetGrp8Result={setAssetGrp8Result}
+                          assetGrp8Notes={assetGrp8Notes}
+                          setAssetGrp8Notes={setAssetGrp8Notes}
 
-                     />
-                  </div>
+                      />
+                    </div>
 
-                  <button className="modalBtn heightSafetyBtn" onClick={closeModal}>
-                    close
-                  </button>
-                </Modal>
+                    <button className="modalBtn heightSafetyBtn" onClick={closeModal}>
+                      close
+                    </button>
+                  </Modal>
+              </div>
+
+              {/* HEIGHT SAFETY INSPECTION CERTIFICATE */}
+
+              <div className="docs" onClick={() => setIsOpenHSIC(true)}>
+                Height Safety Inspection Certificate
+              </div>
+              <div className="modal">
+                  <Modal
+                    isOpen={modalIsOpenHSIC}
+                    onAfterOpen={afterOpenModal}
+                    onRequestClose={closeModal}
+                    style={customStyles}
+                    contentLabel="Example Modal"
+                  >
+                    
+                    <h2 ref={(_subtitle) => (subtitle = _subtitle)}>
+                      
+                    </h2>
+                    
+                    <div>
+                      <HeightSafetyCertificate job={job} />
+                    </div>
+
+                    <button className="modalBtn heightSafetyBtn" onClick={closeModal}>
+                      close
+                    </button>
+                  </Modal>
+              </div>
+
+              {/* BODY */}
+
+              <div className="docs" onClick={() => setIsOpenHSBody(true)}>
+                Height Safety - Body
+              </div>
+              <div className="modal">
+                  <Modal
+                    isOpen={modalIsOpenHSBody}
+                    onAfterOpen={afterOpenModal}
+                    onRequestClose={closeModal}
+                    style={bodyCustomStyles}
+                    contentLabel="Example Modal"
+                  >
+                    
+                    <h2 ref={(_subtitle) => (subtitle = _subtitle)}>
+                      
+                    </h2>
+                    
+                    <div>
+                      <HeightSafetyBody job={job} />
+                    </div>
+
+                    <button className="modalBtn heightSafetyBtn" onClick={closeModal}>
+                      close
+                    </button>
+                  </Modal>
               </div>
 
               <div style={{ padding: "20px" }}>
@@ -1633,6 +1774,10 @@ function jobProfile({ jobProps, id }) {
 
         .hide {
           display: none;
+        }
+
+        .modalBtn {
+          background: #ffff;
         }
 
         .heightSafetyBtn {
