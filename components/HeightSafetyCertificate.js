@@ -61,13 +61,13 @@ function HeightSafetyCertificate({job, dateLength}) {
                 <div style={{fontSize:"40px", paddingTop:"40px"}}>
                     Inspection Date
                 </div>
-                <div style={{background:"#FF9900",color:"#ffff",fontSize:"50px"}}>
+                <div style={{background:"#FF9900",color:"#ffff",fontSize:"50px",paddingLeft:"10px"}}>
                     {!inspectionDate ? "DD / MM / YYYY" : dateFormat(inspectionDate, "dd mmm yyyy")}
                 </div>
                 <div style={{fontSize:"40px", paddingTop:"40px"}}>
                     Next Inspection Due
                 </div>
-                <div style={{background:"#FF9900",color:"#ffff",fontSize:"50px", marginBottom:"50px"}}>
+                <div style={{background:"#FF9900",color:"#ffff",fontSize:"50px", marginBottom:"50px",paddingLeft:"10px"}}>
                     {!nextInspectionDue ? "DD / MM / YYYY" : dateFormat(nextInspectionDue, "dd mmm yyyy")}
                 </div>
             </div>
