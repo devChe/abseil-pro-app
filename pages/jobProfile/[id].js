@@ -56,6 +56,8 @@ import GeneratePDF from "../../components/GeneratePDFExQuote";
 import HeightAndSafetyForm from "../../components/HeightAndSafetyForm";
 import HeightSafetyCertificate from "../../components/HeightSafetyCertificate";
 import HeightSafetyBody from "../../components/HeightSafetyBody";
+import InspectionSummary from "../../components/InspectionSummary";
+import InstalledRecord from "../../components/InstalledRecord";
 
 require("react-datepicker/dist/react-datepicker.css");
 
@@ -119,7 +121,7 @@ const bodyCustomStyles = {
 function jobProfile({ jobProps, id }) {
   const router = useRouter();
 
-  const tasksCollectionRef = collection(db, "task");
+  const tasksCollectionRef = collection(db, "tasks");
 
   const staffCollectionRef = collection(db, "staff");
 
@@ -153,6 +155,8 @@ function jobProfile({ jobProps, id }) {
   const [modalIsOpenHSIF, setIsOpenHSIF] = useState(false);
   const [modalIsOpenHSIC, setIsOpenHSIC] = useState(false);
   const [modalIsOpenHSBody, setIsOpenHSBody] = useState(false);
+  const [modalIsOpenHSInspectionSummary, setIsOpenHSInspectionSummary] = useState(false);
+  const [modalIsOpenHSInstalled, setIsOpenHSInstalled] = useState(false);
   const [modalIsOpenExQuote, setIsOpenExQuote] = useState(false);
   const [modalIsOpenInQuote, setIsOpenInQuote] = useState(false);
   const [modalIsOpenQuoteCost, setIsOpenQuoteCost] = useState(false);
@@ -253,6 +257,8 @@ function jobProfile({ jobProps, id }) {
     setIsOpenQuoteCost(false);
     setIsOpenHSIC(false);
     setIsOpenHSBody(false);
+    setIsOpenHSInspectionSummary(false);
+    setIsOpenHSInstalled(false);
   }
 
   //   UNIQUE ID
@@ -700,7 +706,7 @@ function jobProfile({ jobProps, id }) {
               <label>Template</label>
               <select value={newTaskName} onChange={handleTaskChange}>
                 <option>Choose Template...</option>
-                {tasks.map((task) => (
+                {tasks.map(task => (
                   <option value={task.name}>{task.name}</option>
                 ))}
               </select>
@@ -1501,6 +1507,68 @@ function jobProfile({ jobProps, id }) {
                     </button>
                   </Modal>
               </div>
+
+              {/* INSPECTION SUMMARY */}
+
+              <div className="docs" onClick={() => setIsOpenHSInspectionSummary(true)}>
+                Inspection Summary
+              </div>
+              <div className="modal">
+                  <Modal
+                    isOpen={modalIsOpenHSInspectionSummary}
+                    onAfterOpen={afterOpenModal}
+                    onRequestClose={closeModal}
+                    style={customStyles}
+                    contentLabel="Example Modal"
+                  >
+                    
+                    <h2 ref={(_subtitle) => (subtitle = _subtitle)}>
+                      
+                    </h2>
+                    
+                    <div>
+                      <InspectionSummary job={job} />
+                    </div>
+
+                    <button className="modalBtn heightSafetyBtn" onClick={closeModal}>
+                      close
+                    </button>
+                  </Modal>
+              </div>
+
+              {/* INSTALLED RECORD */}
+
+              <div className="docs" onClick={() => setIsOpenHSInstalled(true)}>
+                Inspection Summary
+              </div>
+              <div className="modal">
+                  <Modal
+                    isOpen={modalIsOpenHSInstalled}
+                    onAfterOpen={afterOpenModal}
+                    onRequestClose={closeModal}
+                    style={customStyles}
+                    contentLabel="Example Modal"
+                  >
+                    
+                    <h2 ref={(_subtitle) => (subtitle = _subtitle)}>
+                      
+                    </h2>
+                    
+                    <div>
+                      <InstalledRecord job={job} />
+                    </div>
+
+                    <button className="modalBtn heightSafetyBtn" onClick={closeModal}>
+                      close
+                    </button>
+                  </Modal>
+              </div>
+
+
+
+
+
+
 
               <div style={{ padding: "20px" }}>
                 <h3 style={{ marginBottom: "10px" }}>Sales & Estimating</h3>

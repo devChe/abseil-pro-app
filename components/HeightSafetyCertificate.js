@@ -17,17 +17,19 @@ function HeightSafetyCertificate({job, dateLength}) {
             { scale: quality }
         ).then(canvas => {
             // Document of 210mm wide and 297mm high
-            const pdf = new jsPDF('p', 'mm', [297, 210]);
-            pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 1, 3, 208, 294);
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            pdf.addImage(canvas.toDataURL('image/jpeg'), 'JPEG', 1, 5, 208, 280, 'someAlias', 'FAST');
             pdf.save("height_safety_certificate.pdf");
         });
     }
+
+    
 
 
   return (
     <>
         <div id="target">
-            <div>
+            <div className='mainWrapper'>
                 <div className='titleHeader'>
                     <img src="/LOGO_CERT.png" style={{display:"block",width:"443px",height:"69px"}}/>
                     <div className='contactInfo' style={{textAlign:"right"}}>
@@ -70,8 +72,21 @@ function HeightSafetyCertificate({job, dateLength}) {
                 </div>
             </div>
         </div>
-        <button type="primary" onClick={generate} style={{marginBottom:"15px"}}>Download PDF</button>
+        <div style={{textAlign:"center", padding:"30px 20px"}}>
+        <button
+          type="primary"
+          onClick={generate}
+          style={{ marginBottom: "15px" }}
+        >
+          Download PDF
+        </button>
+      </div>
         <style jsx>{`
+            .mainWrapper {
+                width: 99%
+                margin: 20px auto;
+            }
+
             .titleHeader {
                 display: flex;
                 justify-content: space-between;
@@ -87,6 +102,10 @@ function HeightSafetyCertificate({job, dateLength}) {
             }
 
             @media screen and (max-width: 990px) {
+                .mainWrapper {
+                    width: 100%;
+                }
+
                 .titleHeader {
                     display: block!important;
                     width: 100%;
