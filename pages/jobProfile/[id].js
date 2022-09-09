@@ -1539,7 +1539,7 @@ function jobProfile({ jobProps, id }) {
               {/* INSTALLED RECORD */}
 
               <div className="docs" onClick={() => setIsOpenHSInstalled(true)}>
-                Inspection Summary
+                Installed Record
               </div>
               <div className="modal">
                   <Modal
