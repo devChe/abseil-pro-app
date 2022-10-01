@@ -66,7 +66,7 @@ function newJob() {
             setClients(data.docs.map((doc) => ({...doc.data(), id: doc.id })))
         }
         getClients();
-    }, [])
+    }, []) 
     
 
     useEffect(() => {
