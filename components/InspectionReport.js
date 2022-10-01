@@ -6,7 +6,7 @@ import jsPDF from 'jspdf';
 import Image from 'next/image'
 import html2canvas from 'html2canvas';
 
-function InspectionSummary({job, dateLength}) {
+function InspectionReport({job, dateLength}) {
     
     const inspectionDate = `${!job.inspection_date ? "" : new Date(job.inspection_date.seconds * 1000).toLocaleDateString("en-US")}`;
     const nextInspectionDue = `${!job.next_inspection_date ? "" : new Date(job.next_inspection_date.seconds * 1000).toLocaleDateString("en-US")}`;
@@ -43,7 +43,7 @@ function InspectionSummary({job, dateLength}) {
                     </div>
                 </div>
                 <div>
-                    <h2>Inspection Summary</h2>
+                    <h2>Inspection Report</h2>
                 </div>
                 <table className='flexBox'>
                     <tr>
@@ -83,62 +83,6 @@ function InspectionSummary({job, dateLength}) {
                         <td>{job.asset_group_1_rating}</td>
                         <td>{job.asset_group_1_notes}</td>
                         <td className='result'>{job.asset_group_1_result}</td>
-                    </tr>
-                    <tr>
-                        <td>{job.asset_group_2_qty}</td>
-                        <td>{job.asset_group_2_type}</td>
-                        <td>{job.asset_group_2_inspection_type}</td>
-                        <td>{job.asset_group_2_rating}</td>
-                        <td>{job.asset_group_2_notes}</td>
-                        <td className='result'>{job.asset_group_2_result}</td>
-                    </tr>
-                    <tr>
-                        <td>{job.asset_group_3_qty}</td>
-                        <td>{job.asset_grp_3_type}</td>
-                        <td>{job.asset_grp_3_inspection_type}</td>
-                        <td>{job.asset_grp_3_rating}</td>
-                        <td>{job.asset_grp_3_notes}</td>
-                        <td className='result'>{job.asset_grp_3_result}</td>
-                    </tr>
-                    <tr>
-                        <td>{job.asset_grp_4_qty}</td>
-                        <td>{job.asset_grp_4_type}</td>
-                        <td>{job.asset_grp_4_inspection_type}</td>
-                        <td>{job.asset_grp_4_rating}</td>
-                        <td>{job.asset_grp_4_notes}</td>
-                        <td className='result'>{job.asset_grp_4_result}</td>
-                    </tr>
-                    <tr>
-                        <td>{job.asset_grp_5_qty}</td>
-                        <td>{job.asset_grp_5_type}</td>
-                        <td>{job.asset_grp_5_inspection_type}</td>
-                        <td>{job.asset_grp_5_rating}</td>
-                        <td>{job.asset_grp_5_notes}</td>
-                        <td className='result'>{job.asset_grp_5_result}</td>
-                    </tr>
-                    <tr>
-                        <td>{job.asset_grp_6_qty}</td>
-                        <td>{job.asset_grp_6_type}</td>
-                        <td>{job.asset_grp_6_inspection_type}</td>
-                        <td>{job.asset_grp_6_rating}</td>
-                        <td>{job.asset_grp_6_notes}</td>
-                        <td className='result'>{job.asset_grp_6_result}</td>
-                    </tr>
-                    <tr>
-                        <td>{job.asset_grp_7_qty}</td>
-                        <td>{job.asset_grp_7_type}</td>
-                        <td>{job.asset_grp_7_inspection_type}</td>
-                        <td>{job.asset_grp_7_rating}</td>
-                        <td>{job.asset_grp_7_notes}</td>
-                        <td className='result'>{job.asset_grp_7_result}</td>
-                    </tr>
-                    <tr>
-                        <td>{job.asset_grp_8_qty}</td>
-                        <td>{job.asset_grp_8_type}</td>
-                        <td>{job.asset_grp_8_inspection_type}</td>
-                        <td>{job.asset_grp_8_rating}</td>
-                        <td>{job.asset_grp_8_notes}</td>
-                        <td className='result'>{job.asset_grp_8_result}</td>
                     </tr>
                 </table>
             </div>
@@ -212,4 +156,4 @@ function InspectionSummary({job, dateLength}) {
   )
 }
 
-export default InspectionSummary
+export default InspectionReport

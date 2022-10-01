@@ -54,7 +54,7 @@ function newJob() {
 
   const staffCollectionRef = collection(db, "staff");
 
-  const tempCollectionRef = collection(db, "jobTemplate");
+  const tempCollectionRef = collection(db, "jobTemplates");
 
   const usersRef = collection(db, "users");
 

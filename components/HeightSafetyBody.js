@@ -7,17 +7,18 @@ import Image from "next/image";
 import html2canvas from "html2canvas";
 
 function HeightSafetyBody({ job }) {
+
   const generate = () => {
-    const quality = 1; // Higher the better but larger file
-    html2canvas(document.querySelector("#target"), { scale: quality }).then(
-      (canvas) => {
+    const quality = 8 // Higher the better but larger file
+    html2canvas(document.querySelector('#target'),
+        { scale: quality }
+    ).then(canvas => {
         // Document of 210mm wide and 297mm high
-        const pdf = new jsPDF("p", "mm", [297, 210]);
-        pdf.addImage(canvas.toDataURL("image/png"), "PNG", 1, 3, 208, 294);
-        pdf.save("filename.pdf");
-      }
-    );
-  };
+        const pdf = new jsPDF('p', 'mm', 'letter');
+        pdf.addImage(canvas.toDataURL('image/jpeg'), 'JPEG', 1, 3, 208, 280);
+        pdf.save("height_safety_body.pdf");
+    });
+  }
 
   return (
     <>

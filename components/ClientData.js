@@ -20,15 +20,14 @@ const ClientData = ({client}) => {
   return (
     <>
       <tr key={client.id} >
-        <Link href="clientProfile/[id]" as={`clientProfile/${client.id}`}><td style={{textAlign:"center"}}>{client.name}</td></Link>
+        <Link href="clientProfile/[id]" as={`clientProfile/${client.id}`}><td>{client.name}</td></Link>
         <Link href="clientProfile/[id]" as={`clientProfile/${client.id}`}><td>{client.phone}</td></Link>
         <Link href="clientProfile/[id]" as={`clientProfile/${client.id}`}><td>{client.email}</td></Link>
-        <td><FontAwesomeIcon icon={faTrashCan} onClick={() => {deleteClient(client.id)}} width="35" className='trashIcon' /></td>
+        <td style={{textAlign:"center"}}><FontAwesomeIcon icon={faTrashCan} onClick={() => {deleteClient(client.id)}} width="35" className='trashIcon' /></td>
       </tr>
       <style jsx>{`
           td, th {
             border: 1px solid #dddddd;
-            text-align: center;
             padding: 8px;
             white-space: nowrap;
           }

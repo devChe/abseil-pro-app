@@ -2,7 +2,10 @@ import React from 'react'
 
 const reports = () => {
   return (
-    <h1>Reports</h1>
+    <div style={{height:"100vh"}}>
+      <h1>Reports</h1>
+    </div>
+    
   )
 }
 

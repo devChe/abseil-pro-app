@@ -12,14 +12,14 @@ function HeightSafetyCertificate({job, dateLength}) {
     const nextInspectionDue = `${!job.next_inspection_date ? "" : new Date(job.next_inspection_date.seconds * 1000).toLocaleDateString("en-US")}`;
 
     const generate = () => {
-        const quality = 1 // Higher the better but larger file
+        const quality = 8 // Higher the better but larger file
         html2canvas(document.querySelector('#target'),
             { scale: quality }
         ).then(canvas => {
             // Document of 210mm wide and 297mm high
-            const pdf = new jsPDF('p', 'mm', 'a4');
-            pdf.addImage(canvas.toDataURL('image/jpeg'), 'JPEG', 1, 5, 208, 280, 'someAlias', 'FAST');
-            pdf.save("height_safety_certificate.pdf");
+            const pdf = new jsPDF('p', 'mm', 'letter');
+            pdf.addImage(canvas.toDataURL('image/jpeg'), 'JPEG', 1, 5, 208, 200, 'someAlias', 'FAST');
+            pdf.save("HEIGHT_SAFETY_CERT.pdf");
         });
     }
 
@@ -83,8 +83,10 @@ function HeightSafetyCertificate({job, dateLength}) {
       </div>
         <style jsx>{`
             .mainWrapper {
-                width: 99%
+                width: 80%;
                 margin: 20px auto;
+                background: #ffff;
+                padding: 20px;
             }
 
             .titleHeader {

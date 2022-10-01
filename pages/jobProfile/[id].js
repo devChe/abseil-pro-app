@@ -57,7 +57,8 @@ import HeightAndSafetyForm from "../../components/HeightAndSafetyForm";
 import HeightSafetyCertificate from "../../components/HeightSafetyCertificate";
 import HeightSafetyBody from "../../components/HeightSafetyBody";
 import InspectionSummary from "../../components/InspectionSummary";
-import InstalledRecord from "../../components/InstalledRecord";
+import HeightSafetyAssetMap from "../../components/HeightSafetyAssetMap";
+import InspectionReport from "../../components/InspectionReport";
 
 require("react-datepicker/dist/react-datepicker.css");
 
@@ -156,7 +157,8 @@ function jobProfile({ jobProps, id }) {
   const [modalIsOpenHSIC, setIsOpenHSIC] = useState(false);
   const [modalIsOpenHSBody, setIsOpenHSBody] = useState(false);
   const [modalIsOpenHSInspectionSummary, setIsOpenHSInspectionSummary] = useState(false);
-  const [modalIsOpenHSInstalled, setIsOpenHSInstalled] = useState(false);
+  const [modalIsOpenHSAssetMap, setIsOpenHSAssetMap] = useState(false);
+  const [modalIsOpenInspectionReport, setIsOpenInspectionReport] = useState(false);
   const [modalIsOpenExQuote, setIsOpenExQuote] = useState(false);
   const [modalIsOpenInQuote, setIsOpenInQuote] = useState(false);
   const [modalIsOpenQuoteCost, setIsOpenQuoteCost] = useState(false);
@@ -258,7 +260,8 @@ function jobProfile({ jobProps, id }) {
     setIsOpenHSIC(false);
     setIsOpenHSBody(false);
     setIsOpenHSInspectionSummary(false);
-    setIsOpenHSInstalled(false);
+    setIsOpenHSAssetMap(false);
+    setIsOpenInspectionReport(false);
   }
 
   //   UNIQUE ID
@@ -373,6 +376,7 @@ function jobProfile({ jobProps, id }) {
             asset_group_1_rating: assetGrpOneRating,
             asset_group_1_result: assetGrpOneResult,
             asset_group_1_notes: assetGrpOneNotes,
+            asset_group_2_qty: assetGrpTwoQty,
             asset_group_2_type: assetGrpTwoType,
             asset_group_2_inspection_type: assetGrpTwoInspectionType,
             asset_group_2_rating: assetGrpTwoRating,
@@ -409,6 +413,7 @@ function jobProfile({ jobProps, id }) {
             asset_grp_7_result: assetGrp7Result,
             asset_grp_7_notes: assetGrp7Notes,
             asset_grp_8_qty: assetGrp8Qty,
+            asset_grp_8_type: assetGrp8Type,
             asset_grp_8_inspection_type: assetGrp8InspectionType,
             asset_grp_8_rating: assetGrp8Rating,
             asset_grp_8_result: assetGrp8Result,
@@ -1462,7 +1467,7 @@ function jobProfile({ jobProps, id }) {
                     isOpen={modalIsOpenHSIC}
                     onAfterOpen={afterOpenModal}
                     onRequestClose={closeModal}
-                    style={customStyles}
+                    style={bodyCustomStyles}
                     contentLabel="Example Modal"
                   >
                     
@@ -1518,7 +1523,7 @@ function jobProfile({ jobProps, id }) {
                     isOpen={modalIsOpenHSInspectionSummary}
                     onAfterOpen={afterOpenModal}
                     onRequestClose={closeModal}
-                    style={customStyles}
+                    style={bodyCustomStyles}
                     contentLabel="Example Modal"
                   >
                     
@@ -1536,17 +1541,17 @@ function jobProfile({ jobProps, id }) {
                   </Modal>
               </div>
 
-              {/* INSTALLED RECORD */}
+              {/* HEIGHT SAFETY ASSET MAP */}
 
-              <div className="docs" onClick={() => setIsOpenHSInstalled(true)}>
-                Installed Record
+              <div className="docs" onClick={() => setIsOpenHSAssetMap(true)}>
+                Height Safety Asset Map
               </div>
               <div className="modal">
                   <Modal
-                    isOpen={modalIsOpenHSInstalled}
+                    isOpen={modalIsOpenHSAssetMap}
                     onAfterOpen={afterOpenModal}
                     onRequestClose={closeModal}
-                    style={customStyles}
+                    style={bodyCustomStyles}
                     contentLabel="Example Modal"
                   >
                     
@@ -1555,7 +1560,36 @@ function jobProfile({ jobProps, id }) {
                     </h2>
                     
                     <div>
-                      <InstalledRecord job={job} />
+                      <HeightSafetyAssetMap job={job} />
+                    </div>
+
+                    <button className="modalBtn heightSafetyBtn" onClick={closeModal}>
+                      close
+                    </button>
+                  </Modal>
+              </div>
+
+
+              {/* HEIGHT INSPECTION REPORT */}
+
+              <div className="docs" onClick={() => setIsOpenInspectionReport(true)}>
+                Height Inspection Report
+              </div>
+              <div className="modal">
+                  <Modal
+                    isOpen={modalIsOpenInspectionReport}
+                    onAfterOpen={afterOpenModal}
+                    onRequestClose={closeModal}
+                    style={bodyCustomStyles}
+                    contentLabel="Example Modal"
+                  >
+                    
+                    <h2 ref={(_subtitle) => (subtitle = _subtitle)}>
+                      
+                    </h2>
+                    
+                    <div>
+                      <InspectionReport job={job} />
                     </div>
 
                     <button className="modalBtn heightSafetyBtn" onClick={closeModal}>
@@ -1718,7 +1752,7 @@ function jobProfile({ jobProps, id }) {
         .tabs {
           padding: 15px;
           text-align: center;
-          width: 50%;
+          width: 20%;
           background: rgba(128, 128, 128, 0.075);
           cursor: pointer;
           border-bottom: 1px solid rgba(0, 0, 0, 0.274);
