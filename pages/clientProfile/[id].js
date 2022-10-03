@@ -75,8 +75,9 @@ function clientProfile({clientProps}) {
 
     const updateClient = async (id, name) => {
         const clientDoc = doc(db, "clients", id);
-        const newFields = { name: newName }
-        await updateDoc(clientDoc, newFields);
+        await updateDoc(clientDoc, {
+            name: newFields
+        });
         window.location.reload(false);
     }
 
