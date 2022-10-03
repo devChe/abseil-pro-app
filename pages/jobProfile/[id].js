@@ -59,6 +59,8 @@ import HeightSafetyBody from "../../components/HeightSafetyBody";
 import InspectionSummary from "../../components/InspectionSummary";
 import HeightSafetyAssetMap from "../../components/HeightSafetyAssetMap";
 import InspectionReport from "../../components/InspectionReport";
+import dateFormat, { masks } from "dateformat";
+import EditJob from "../../components/EditJob";
 
 require("react-datepicker/dist/react-datepicker.css");
 
@@ -132,6 +134,9 @@ function jobProfile({ jobProps, id }) {
   if (router.isFallback) return <div>...Loading</div>;
 
   const job = JSON.parse(jobProps);
+
+  const START_DATE = `${!job.startDate ? "" : new Date(job.startDate.seconds * 1000).toLocaleDateString("en-US")}`;
+  const DUE_DATE = `${!job.dueDate ? "" : new Date(job.dueDate.seconds * 1000).toLocaleDateString("en-US")}`;
 
   const [jobs, setJobs] = useState([]);
   const [staff, setStaff] = useState([]);
@@ -229,6 +234,21 @@ function jobProfile({ jobProps, id }) {
   const [assetGrp8Rating, setAssetGrp8Rating] = useState("");
   const [assetGrp8Result, setAssetGrp8Result] = useState("");
   const [assetGrp8Notes, setAssetGrp8Notes] = useState("");
+
+  const [updateClientName, setUpdateClientName] = useState(`${job.client}`);
+  const [updateContact, setUpdateContact] = useState(`${job.contact}`);
+  const [updateName, setUpdateName] = useState(`${job.name}`);
+  const [updateDesc, setUpdateDesc] = useState(`${job.description}`);
+  const [updateBudget, setUpdateBudget] = useState(`${job.budget}`);
+  const [updateState, setUpdateState] = useState(`${job.state}`);
+  const [updateSiteAddress, setUpdateSiteAddress] = useState(`${job.siteAddress}`);
+  const [updateStartDate, setupdateStartDate] = useState(new Date());
+  const [updateDueDate, setUpdateDueDate] = useState(new Date());
+  const [updatePriority, setUpdatePriority] = useState(`${job.priority}`);
+  const [updateAccMngr, setUpdateAccMngr] = useState(`${job.accountManager}`);
+  const [updateManager, setUpdateManager] = useState(`${job.manager}`);
+  const [updateTeam, setUpdateTeam] = useState("");
+
 
   let subtitle;
 
@@ -504,12 +524,46 @@ function jobProfile({ jobProps, id }) {
 
   // EDIT AND UPDATE JOB FUNCTION
 
-  const updateJob = async (id, name) => {
+  // async function updateJob() {
+  //   const id = job.id;
+  //   const jobDoc = doc(db, "jobs", id);
+  //   await updateDoc(jobDoc, {
+  //     client: updateClientName,
+  //     contact: updateContact,
+  //     name: updateName,
+  //     description: updateDesc,
+  //     budget: updateBudget,
+  //     state: updateState,
+  //     site_address: updateSiteAddress,
+  //     startDate: updateStartDate,
+  //     dueDate: updateDueDate,
+  //     priority: updatePriority,
+  //     accountManager: updateAccMngr,
+  //     manager: updateManager,
+  //     staff: updateTeam.split(",").map(staff => doc(db, "users", staff)),
+  //   });
+  //   window.location.reload(false);
+  // };
+
+  const updateJob = async (id, client, contact, name, description,budget,state, site_address,startDate,dueDate,priority,accountManager,manager,staff) => {
     const jobDoc = doc(db, "jobs", id);
-    const newFields = { client: newClient };
-    await updateDoc(jobDoc, newFields);
+    await updateDoc(jobDoc, {
+          client: updateClientName,
+          contact: updateContact,
+          name: updateName,
+          description: updateDesc,
+          budget: updateBudget,
+          state: updateState,
+          site_address: updateSiteAddress,
+          startDate: updateStartDate,
+          dueDate: updateDueDate,
+          priority: updatePriority,
+          accountManager: updateAccMngr,
+          manager: updateManager,
+          staff: updateTeam.split(",").map(staff => doc(db, "users", staff)),
+    });
     window.location.reload(false);
-  };
+}
 
   // GET THE IDS OF STAFF
 
@@ -554,25 +608,37 @@ function jobProfile({ jobProps, id }) {
   return (
     <>
       {edit ? (
-        <div className="container">
-          <label>Edit Name</label>
-          <div>
-            <input
-              type="text"
-              placeholder={job.client}
-              onChange={(event) => {
-                setNewClient(event.target.value);
-              }}
-            />
-          </div>
-          <button
-            type="submit"
-            onClick={() => {
-              updateJob(job.id, job.client);
-            }}
-          >
-            Save
-          </button>
+        <div>
+          <EditJob
+            job={job}
+            updateJob={updateJob}
+            updateClientName={updateClientName}
+            setUpdateClientName={setUpdateClientName}
+            updateContact={updateContact}
+            setUpdateContact={setUpdateContact}
+            updateName={updateName}
+            setUpdateName={setUpdateName}
+            updateDesc={updateDesc}
+            setUpdateDesc={setUpdateDesc}
+            updateBudget={updateBudget}
+            setUpdateBudget={setUpdateBudget}
+            updateState={updateState}
+            setUpdateState={setUpdateState}
+            updateSiteAddress={updateSiteAddress}
+            setUpdateSiteAddress={setUpdateSiteAddress}
+            updateStartDate={updateStartDate}
+            setupdateStartDate={setupdateStartDate}
+            updateDueDate={updateDueDate}
+            setUpdateDueDate={setUpdateDueDate}
+            updatePriority={updatePriority}
+            setUpdatePriority={setUpdatePriority}
+            updateAccMngr={updateAccMngr}
+            setUpdateAccMngr={setUpdateAccMngr}
+            updateManager={updateManager}
+            setUpdateManager={setUpdateManager}
+            updateTeam={updateTeam}
+            setUpdateTeam={setUpdateTeam}
+           />
         </div>
       ) : (
         <div className="wrapper">
@@ -653,28 +719,42 @@ function jobProfile({ jobProps, id }) {
               Description
             </h4>
             <div
+              className="descriptionWrapper"
               style={{
                 background: "#ffff",
                 padding: "15px",
+                marginBottom: "20px",
                 overflow: "scroll",
                 height: "300px",
                 border: "1px solid #ecec",
+                fontSize:"12px"
               }}
             >
               <div dangerouslySetInnerHTML={{ __html: job.description }}></div>
             </div>
+            <div>
+              <label>Budget:</label>
+              <p>{job.budget}</p>
+            </div>
+            <div>
+              <label>State:</label>
+              <p>{job.state}</p>
+            </div>
+
             <hr />
             <h4>Schedule Information</h4>
             <label>Start Date:</label>
             <p>
-              {new Date(job.startDate.seconds * 1000).toLocaleDateString(
+              {/* {new Date(job.startDate.seconds * 1000).toLocaleDateString(
                 "en-US"
-              )}
+              )} */}
+              {!START_DATE ? "DD/MM/YYYY" : dateFormat(START_DATE, "dd mmm yyyy")}
             </p>
 
-            <label>Start Date:</label>
+            <label>Due Date:</label>
             <p>
-              {new Date(job.dueDate.seconds * 1000).toLocaleDateString("en-US")}
+              {/* {new Date(job.dueDate.seconds * 1000).toLocaleDateString("en-US")} */}
+              {!DUE_DATE ? "DD/MM/YYYY" : dateFormat(DUE_DATE, "dd mmm yyyy")}
             </p>
 
             <label>Priority:</label>
@@ -1653,6 +1733,10 @@ function jobProfile({ jobProps, id }) {
         </div>
       )}
       <style jsx>{`
+        .descriptionWrapper div p {
+          margin-bottom: 0; 
+        }
+
         .wrapper {
           position: relative;
         }

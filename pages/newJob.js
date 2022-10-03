@@ -6,6 +6,7 @@
 import DatePicker from "react-datepicker"; 
 import "react-datepicker/dist/react-datepicker.css";
 import 'react-datepicker/dist/react-datepicker-cssmodules.css';
+import dateFormat, { masks } from "dateformat";
 import React, {useState, useEffect, useMemo } from 'react'
 import { collection, addDoc, getDocs, query, orderBy, doc  } from 'firebase/firestore';
 import { db, storage  } from '../src/config/firebase.config'
@@ -33,6 +34,7 @@ function newJob() {
   const [newClient, setNewClient] = useState("");
   const [newContact, setNewContact] = useState("");
   const [newDesc, setNewDesc] = useState("");
+  const [newBudget, setNewBudget] = useState("");
   const [image, setImage] = useState(null);
   const [imgUrl, setImgUrl] = useState("");
   const [newState, setNewState] = useState("");
@@ -140,6 +142,7 @@ function newJob() {
       name: name,
       contact: Number(newContact), 
       description: newDesc,
+      budget: newBudget,
       startDate: startDate,
       dueDate: endDate,
       priority: newPriority,
@@ -219,6 +222,8 @@ function newJob() {
       <input type="text" value={name} onChange={(event) => setName(event.target.value)}/>
       <label>Description</label>
       <ReactQuill value={newDesc} onChange={setNewDesc} />
+      <label>Budget</label>
+      <input type="text" value={newBudget} onChange={e => setNewBudget(e.target.value)} />
       <label>State</label>
       <select value={newState} onChange={(event) => setNewState(event.target.value)} >
         <option>Choose State...</option>
