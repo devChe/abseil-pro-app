@@ -53,11 +53,31 @@ function EditJob({
     updateManager,
     setUpdateManager,
     updateTeam,
-    setUpdateTeam
+    setUpdateTeam,
+    edit,
+    isEdit
 }){
 
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
+    const [staff, setStaff] = useState([]);
+    const [isToggle, setIsToggle] = useState(false);
+    
+
+    const staffCollectionRef = collection(db, "staff");
+
+    useEffect(() => {
+        const getStaff = async () => {
+            const q = query(staffCollectionRef, orderBy("name"));
+            const data = await getDocs(q);
+            setStaff(data.docs.map((doc) => ({...doc.data(), id: doc.id })));
+          }
+          getStaff();
+      }, [])
+
+      const options = staff.map(team => (
+        { label: `${team.name}`, value: `${team.id}` }
+      ))
     
   return (
     <>
@@ -97,9 +117,15 @@ function EditJob({
                     </div>
                     <div style={{padding:"20px 0"}}>
                         <label>State:</label>
-                        <div>
-                            <input type="text" value={updateState} onChange={e => setUpdateState(e.target.value)} width="100%" />
-                        </div>
+                        <select value={updateState} onChange={(event) => setUpdateState(event.target.value)} >
+                            <option>Choose State...</option>
+                            <option value="Planned">Planned</option>
+                            <option value="Scheduled">Scheduled</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="On Hold">On Hold</option>
+                            <option value="Ready to Invoice">Ready to Invoice</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
                     </div>
                     <div style={{padding:"20px 0"}}>
                         <label>Site Address:</label>
@@ -139,30 +165,75 @@ function EditJob({
                         />
                         </div>
                     </div>
+                    <div style={{padding:"20px 0"}}>
+                        <label>Priority:</label>
+                        <select value={updatePriority} onChange={(event) => setUpdatePriority(event.target.value)}>
+                            <option>Choose Priority...</option>
+                            <option value="Immediate">Immediate</option>
+                            <option value="High">High</option>
+                            <option value="Normal">Normal</option>
+                            <option value="Low">Low</option>
+                        </select>
+                    </div>
+                    <div style={{padding:"20px 0"}}>
+                        <label>Account Manager</label>
+                        <select value={updateAccMngr} onChange={(event) => setUpdateAccMngr(event.target.value)}>
+                        <option>Choose Account Manager...</option>
+                        {staff.map(mngr => (
+                            <option value={mngr.name}>{mngr.name}</option>
+                        ))}
+                        </select>
+                    </div>
+                    <div style={{padding:"20px 0"}}>
+                        <label>Manager</label>
+                        <select value={updateManager} onChange={(event) => setUpdateManager(event.target.value)}>
+                        <option>Choose Manager</option>
+                        {staff.map(mngr => (
+                            <option value={mngr.name}>{mngr.name}</option>
+                        ))}
+                        </select>
+                    </div>
+                    
+                    {isToggle ? (
+                        <div style={{padding:"20px 0"}}>
+                            <label>Staff</label>
+                            <MultiSelect
+                                onChange={(val) => setUpdateTeam(val)}
+                                options={options}
+                                value={updateTeam}
+                            />
+                        </div>
+                    ) : (
+                        <button type="button" onClick={e => setIsToggle(true)}>Change Team</button>
+                        )
+                    }
+                    
                 </div>
-                <button
-                    type="submit"
-                    onClick={() => {updateJob(
-                        job.id,
-                        job.client,
-                        job.contact,
-                        job.name,
-                        job.description,
-                        job.budget,
-                        job.state,
-                        job.site_address,
-                        job.startDate,
-                        job.dueDate,
-                        job.priority,
-                        job.accountManager,
-                        job.manager,
-                        job.staff
-                    )}}
+                <div style={{
+                    padding: "20px 0",
+                    textAlign: "center"    
+                }} 
                 >
-                    Save
-                </button>
+                    <div style={{display:"flex",justifyContent:"center",gap:"20px"}}>
+                        <button
+                            type="submit"
+                            onClick={() => {updateJob(
+                                job.id
+                            )}}
+                        >
+                            Save
+                        </button>
+                        <button type="submit" onClick={() => isEdit(false)}>Cancel</button>
+                    </div>
+                    
+                </div>
             </div>
         </div>
+        <style jsx>{`
+            input, select {
+                width: 100%;
+            }
+        `}</style>
     </>
   )
 }

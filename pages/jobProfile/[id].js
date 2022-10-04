@@ -241,14 +241,13 @@ function jobProfile({ jobProps, id }) {
   const [updateDesc, setUpdateDesc] = useState(`${job.description}`);
   const [updateBudget, setUpdateBudget] = useState(`${job.budget}`);
   const [updateState, setUpdateState] = useState(`${job.state}`);
-  const [updateSiteAddress, setUpdateSiteAddress] = useState(`${job.siteAddress}`);
+  const [updateSiteAddress, setUpdateSiteAddress] = useState(`${job.site_address}`);
   const [updateStartDate, setupdateStartDate] = useState(new Date());
   const [updateDueDate, setUpdateDueDate] = useState(new Date());
   const [updatePriority, setUpdatePriority] = useState(`${job.priority}`);
   const [updateAccMngr, setUpdateAccMngr] = useState(`${job.accountManager}`);
   const [updateManager, setUpdateManager] = useState(`${job.manager}`);
-  const [updateTeam, setUpdateTeam] = useState("");
-
+  const [updateTeam, setUpdateTeam] = useState(`${job.staff}`);
 
   let subtitle;
 
@@ -524,30 +523,16 @@ function jobProfile({ jobProps, id }) {
 
   // EDIT AND UPDATE JOB FUNCTION
 
-  // async function updateJob() {
-  //   const id = job.id;
-  //   const jobDoc = doc(db, "jobs", id);
-  //   await updateDoc(jobDoc, {
-  //     client: updateClientName,
-  //     contact: updateContact,
-  //     name: updateName,
-  //     description: updateDesc,
-  //     budget: updateBudget,
-  //     state: updateState,
-  //     site_address: updateSiteAddress,
-  //     startDate: updateStartDate,
-  //     dueDate: updateDueDate,
-  //     priority: updatePriority,
-  //     accountManager: updateAccMngr,
-  //     manager: updateManager,
-  //     staff: updateTeam.split(",").map(staff => doc(db, "users", staff)),
-  //   });
+  // const updateClient = async (id, name) => {
+  //   const clientDoc = doc(db, "suppliers", id);
+  //   const newFields = { name: newName }
+  //   await updateDoc(clientDoc, newFields);
   //   window.location.reload(false);
-  // };
+  // }
 
-  const updateJob = async (id, client, contact, name, description,budget,state, site_address,startDate,dueDate,priority,accountManager,manager,staff) => {
+  const updateJob = async (id) => {
     const jobDoc = doc(db, "jobs", id);
-    await updateDoc(jobDoc, {
+    const newFields = {
           client: updateClientName,
           contact: updateContact,
           name: updateName,
@@ -561,7 +546,8 @@ function jobProfile({ jobProps, id }) {
           accountManager: updateAccMngr,
           manager: updateManager,
           staff: updateTeam.split(",").map(staff => doc(db, "users", staff)),
-    });
+    }
+    await updateDoc(jobDoc, newFields);
     window.location.reload(false);
 }
 
@@ -612,6 +598,8 @@ function jobProfile({ jobProps, id }) {
           <EditJob
             job={job}
             updateJob={updateJob}
+            edit={edit}
+            isEdit={isEdit}
             updateClientName={updateClientName}
             setUpdateClientName={setUpdateClientName}
             updateContact={updateContact}
@@ -647,11 +635,9 @@ function jobProfile({ jobProps, id }) {
               <span style={{ color: "blue" }}>{job.jobNumber}</span> -{" "}
               {job.name}
             </h4>
-            <div className="editBtn">
-              <div>Edit</div>
+            <div className="editBtn" onClick={() => isEdit("true")}>
               <FontAwesomeIcon
                 icon={faPenToSquare}
-                onClick={() => isEdit("true")}
                 className="editIcon"
               />
             </div>
@@ -677,7 +663,7 @@ function jobProfile({ jobProps, id }) {
                   <FontAwesomeIcon icon={faLocationDot} />
                 </div>
                 <div>
-                  <div className="location">{job.siteAddress}</div>
+                  <div className="location">{job.site_address}</div>
                   <a href={job.locationURL} target="_blank" className="goMap">
                     Get directions
                   </a>
@@ -776,7 +762,7 @@ function jobProfile({ jobProps, id }) {
             <hr />
 
             <h4>Tasks</h4>
-            <button onClick={() => openModal(job.id)}>+ New Task</button>
+            <button onClick={() => openModal(job.id)} style={{margin:"20px 0"}}>+ New Task</button>
             <Modal
               isOpen={modalIsOpen === job.id}
               onAfterOpen={afterOpenModal}
@@ -1753,6 +1739,11 @@ function jobProfile({ jobProps, id }) {
           gap: 15px;
           align-items: center;
           font-size: 23px;
+          cursor: pointer
+        }
+
+        .editBtn:hover {
+          color: green;
         }
 
         .editIcon {
@@ -1928,6 +1919,7 @@ function jobProfile({ jobProps, id }) {
           border: 1px solid #dddddd;
           text-align: center;
           padding: 8px;
+          white-space: nowrap;
         }
 
         tr:nth-child(even) {
