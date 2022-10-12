@@ -6,8 +6,8 @@ import Head from "next/head";
 import Layout from "../components/Layout";
 import "../styles/globals.css";
 import "../src/config/firebase.config";
-import "react-skeleton-css/styles/skeleton.2.0.4.css";
-import "react-skeleton-css/styles/normalize.3.0.2.css";
+// import "react-skeleton-css/styles/skeleton.2.0.4.css";
+// import "react-skeleton-css/styles/normalize.3.0.2.css";
 import { auth } from "../src/config/firebase.config";
 import {
   onAuthStateChanged,

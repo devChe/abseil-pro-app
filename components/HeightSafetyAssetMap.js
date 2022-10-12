@@ -20,16 +20,25 @@ function HeightSafetyAssetMap({job, dateLength}) {
     const nextInspectionDue = `${!job.next_inspection_date ? "" : new Date(job.next_inspection_date.seconds * 1000).toLocaleDateString("en-US")}`;
 
     const generate = () => {
-        const quality = 8 // Higher the better but larger file
-        html2canvas(document.querySelector('#target'),
-            { scale: quality }
-        ).then(canvas => {
-            // Document of 210mm wide and 297mm high
-            const pdf = new jsPDF('p', 'mm', 'letter');
-            pdf.addImage(canvas.toDataURL('image/jpeg'), 'JPEG', 1, 5, 208, 200, 'someAlias', 'FAST');
-            pdf.save("inspection_summary.pdf");
-        });
-    }
+      const quality = 8 // Higher the better but larger file
+      html2canvas(document.querySelector('#target'),
+          { scale: quality }
+      ).then(canvas => {
+          // Document of 210mm wide and 297mm high
+          const pdf = new jsPDF('p', 'mm', 'letter');
+          pdf.addImage(canvas.toDataURL('image/jpeg'), 'JPEG', 1, 5, 208, 200, 'someAlias', 'FAST');
+          pdf.save("asset_map.pdf");
+      });
+  }
+
+    // const generate = () => {
+    //   html2canvas(document.querySelector('#target')).then((canvas) => {
+    //     const base64image = canvas.toDataURL('image/jpeg');
+
+    //     const pdf = new jsPDF('p', 'px', [1600, 1131]);
+    //     pdf.addImage(base64image, 'PNG', 15, 15, 1110, 381);
+    //   })
+    // }
 
     // UPLOAD MAP IMAGE
 
@@ -64,7 +73,7 @@ function HeightSafetyAssetMap({job, dateLength}) {
     <>
       <div id="target">
         <div className="wrapper">
-          <div className="titleHeader">
+          <div className="titleHeader" style={{pageBreakAfter:"always"}}>
             <img
               src="/LOGO_CERT.png"
               style={{ display: "block", width: "443px", height: "69px" }}

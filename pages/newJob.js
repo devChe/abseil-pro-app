@@ -142,6 +142,7 @@ function newJob() {
       name: name,
       contact: Number(newContact), 
       description: newDesc,
+      site_address: address,
       budget: newBudget,
       startDate: startDate,
       dueDate: endDate,

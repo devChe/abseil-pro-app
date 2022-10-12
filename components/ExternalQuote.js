@@ -1,13 +1,12 @@
-/* eslint-disable jsx-a11y/alt-text */
-/* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/jsx-key */
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 import jsPDF from 'jspdf';
 import dynamic from 'next/dynamic';
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import 'react-quill/dist/quill.snow.css';
+import ExternalQuoteToPrint from './ExternalQuoteToPrint';
 
-function GeneratePDFExQuote({job, closeModal}) {
+function ExternalQuote({job, closeModal}) {
     const [openModal, setOpenModal] = useState(false);
     const [startDate, setStartDate] = useState(`${new Date(job.startDate.seconds * 1000).toLocaleDateString("en-US")}`);
     const [dueDate, setDueDate] = useState(`${new Date(job.dueDate.seconds * 1000).toLocaleDateString("en-US")}`);
@@ -15,21 +14,11 @@ function GeneratePDFExQuote({job, closeModal}) {
     const [contact, setContact] = useState(`${job.contact}`);
     const [desc, setDesc] = useState(`${job.description}`);
 
-
-    const generate = () => {
-        const doc = new jsPDF("p","pt","a4");
-
-        doc.html(document.querySelector('#target'), {
-            callback: function(pdf) {
-                pdf.save("client-quotation.pdf");
-            }
-        })
-    }
-
   return (
     
     <div>
-        {!openModal && <div>
+        {!openModal && 
+        <div>
             <h5>Quote Information</h5>
             <div>
                 <label>Date:</label>
@@ -48,26 +37,7 @@ function GeneratePDFExQuote({job, closeModal}) {
                 <div>
                     <input value={contact} onChange={(e) => setClientName(e.target.value)} />
                 </div>
-                {/* <tr>
-                    <td>Date:</td>
-                    <td>
-                        <div>{new Date(job.startDate.seconds * 1000).toLocaleDateString("en-US")}</div>
-                    </td>
-                    <td>Valid to:</td>
-                    <td>
-                        <div>{new Date(job.dueDate.seconds * 1000).toLocaleDateString("en-US")}</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Client:</td>
-                    <td>
-                        <div><input value={clientName} onChange={handleChange} /></div>
-                    </td>
-                    <td>Contact:</td>
-                    <td>
-                        <div>{job.contact}</div>
-                    </td>
-                </tr> */}
+                
             </div>
             <div>
                 <label>Description:</label>
@@ -91,9 +61,9 @@ function GeneratePDFExQuote({job, closeModal}) {
                         <th>Actual</th>
                         <th>Remaining</th>
                     </tr>
-                {job.tasks.map(task => (
+                {job.tasks && job.tasks.map(task => (
                     <tr>
-                        <td>{task.name}</td>
+                        <td>{console.log(task.name)}</td>
                         <td>{new Date(task.startDate.seconds * 1000).toLocaleDateString("en-US")}</td>
                         <td>{new Date(task.dueDate.seconds * 1000).toLocaleDateString("en-US")}</td>
                         <td>{task.estimated}</td>
@@ -104,22 +74,24 @@ function GeneratePDFExQuote({job, closeModal}) {
                 </table>
             </div>
             <div style={{textAlign:"center", display:"flex", justifyContent:"center", alignItems:"center", gap:"15px", marginBottom:"50px"}}>
-            <button type="primary" onClick={() => setOpenModal(true)}>Print View</button>
-            <button className='modalBtn' onClick={closeModal}>close</button>
-        </div>
+                <button type="primary" onClick={() => setOpenModal(true)}>Print View</button>
+                <button className='modalBtn' onClick={closeModal}>close</button>
+            </div>
         </div>}
         
         
         {openModal && 
          <div className='preview modalBackground'>
             <div className='modalContainer'>
-                <div id="target" style={{padding: "20px"}}>
-                    <h1>ABSEIL PRO</h1>
-                    <h4>{clientName}</h4>
-                    <div dangerouslySetInnerHTML={{ __html: desc }}></div>
-                </div>
-                <button type="primary" onClick={generate} style={{marginBottom:"15px"}}>Download PDF</button>
-                <button type="primary" onClick={() => setOpenModal(false)} >Close</button>
+
+                <ExternalQuoteToPrint
+                    job={job} 
+                    startDate={startDate}
+                    dueDate={dueDate}
+                    clientName={clientName}
+                    contact={contact}
+                    desc={desc}  
+                />
             </div>
             
          </div> 
@@ -129,6 +101,12 @@ function GeneratePDFExQuote({job, closeModal}) {
                 .tableWrapper {
                     overflow-x: auto;
                 }
+
+                .titleHeader {
+                    display: flex;
+                    justify-content: space-between;
+                }
+
                 table {
                     border-collapse: collapse;
                     border-spacing: 0;
@@ -202,9 +180,14 @@ function GeneratePDFExQuote({job, closeModal}) {
                     line-height: 28px; 
                 }
 
+                p {
+                    margin: 0;
+                    font-size: 12px;
+                }
+
         `}</style>
     </div>
   )
 }
 
-export default GeneratePDFExQuote
+export default ExternalQuote

@@ -52,7 +52,6 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "react-datepicker/dist/react-datepicker-cssmodules.css";
 import LoadingSpinner from "../../components/LoadingSpinner";
-import GeneratePDF from "../../components/GeneratePDFExQuote";
 import HeightAndSafetyForm from "../../components/HeightAndSafetyForm";
 import HeightSafetyCertificate from "../../components/HeightSafetyCertificate";
 import HeightSafetyBody from "../../components/HeightSafetyBody";
@@ -61,6 +60,8 @@ import HeightSafetyAssetMap from "../../components/HeightSafetyAssetMap";
 import InspectionReport from "../../components/InspectionReport";
 import dateFormat, { masks } from "dateformat";
 import EditJob from "../../components/EditJob";
+import { global } from "styled-jsx/css";
+import ExternalQuote from "../../components/ExternalQuote";
 
 require("react-datepicker/dist/react-datepicker.css");
 
@@ -1688,7 +1689,7 @@ function jobProfile({ jobProps, id }) {
                   <h2 ref={(_subtitle) => (subtitle = _subtitle)}>
                     External Quote
                   </h2>
-                  <GeneratePDF job={job} id="target" closeModal={closeModal} />
+                  <ExternalQuote job={job} id="target" closeModal={closeModal} />
                 </Modal>
               </div>
 
@@ -1719,10 +1720,9 @@ function jobProfile({ jobProps, id }) {
         </div>
       )}
       <style jsx>{`
-        .descriptionWrapper div p {
-          margin-bottom: 0; 
-        }
-
+      <pre><code>p {
+          margin-bottom: 0;
+        }</code></pre>
         .wrapper {
           position: relative;
         }
