@@ -1482,18 +1482,39 @@ function HeightAndSafetyForm({
         </div>
       </div>
       <style jsx>{`
-        
+        .heightAndSafetyWrapper {
+          background: white;
+          width: 50%;
+          padding: 20px;
+          margin: 0 auto;
+        }
+
         .radioBtn > div {
             display:flex;
             gap: 15px;
         }
 
-        input[type="email"],input[type="submit"],input[type="text"], inpu[type="radio"], select {
+        input[type="email"],input[type="submit"],input[type="text"], select {
           width: 100%;
+          height: 30px;
         }
 
         .button-primary {
           margin: 15px 0;
+        }
+
+        hr {
+          border-color: snow;
+        }
+
+        label {
+          font-weight: 500;
+        }
+
+        @media screen and (max-width: 990px) {
+          .heightAndSafetyWrapper {
+            width: 100%;
+          }
         }
     `}</style>
     </>

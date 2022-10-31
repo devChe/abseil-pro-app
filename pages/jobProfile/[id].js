@@ -62,6 +62,11 @@ import dateFormat, { masks } from "dateformat";
 import EditJob from "../../components/EditJob";
 import { global } from "styled-jsx/css";
 import ExternalQuote from "../../components/ExternalQuote";
+import HeightAndSafetyToPrint from "../../components/HeightAndSafetyToPrint";
+import HeightAndSafetyImages from "../../components/HeightAndSafetyImages";
+import DisqusThread from "../../components/DisqusThread";
+
+
 
 require("react-datepicker/dist/react-datepicker.css");
 
@@ -105,6 +110,37 @@ const customStyles = {
   },
 };
 
+
+const toPrintCustomStyles = {
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+    zIndex: "99999",
+    background: "#202124",
+    width: "100vw",
+    height: "100vh",
+  },
+};
+
+const heightSafetyFormCustomStyles = {
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+    zIndex: "99999",
+    background: "#F6F7F9",
+    width: "100%",
+    height: "100vh",
+  },
+};
+
 const bodyCustomStyles = {
   content: {
     top: "50%",
@@ -125,6 +161,8 @@ const bodyCustomStyles = {
 function jobProfile({ jobProps, id }) {
   const router = useRouter();
 
+  
+
   const tasksCollectionRef = collection(db, "tasks");
 
   const staffCollectionRef = collection(db, "staff");
@@ -135,6 +173,14 @@ function jobProfile({ jobProps, id }) {
   if (router.isFallback) return <div>...Loading</div>;
 
   const job = JSON.parse(jobProps);
+
+  const showDisqusComment = () => {
+    return (
+        <>
+         <DisqusThread id = { job.id } path = { job.id } title = { job.client } />
+        </>
+    )
+}
 
   const START_DATE = `${!job.startDate ? "" : new Date(job.startDate.seconds * 1000).toLocaleDateString("en-US")}`;
   const DUE_DATE = `${!job.dueDate ? "" : new Date(job.dueDate.seconds * 1000).toLocaleDateString("en-US")}`;
@@ -168,6 +214,8 @@ function jobProfile({ jobProps, id }) {
   const [modalIsOpenExQuote, setIsOpenExQuote] = useState(false);
   const [modalIsOpenInQuote, setIsOpenInQuote] = useState(false);
   const [modalIsOpenQuoteCost, setIsOpenQuoteCost] = useState(false);
+  const [modalIsOpenPrintDocs, setIsOpenPrintDocs] = useState(false);
+  const [modalIsOpenImages, setIsOpenImages] = useState(false);
   const [imgNewId, setImgNewId] = useState("");
   const [newTaskName, setNewTaskName] = useState("");
   const [newDesc, setNewDesc] = useState("");
@@ -282,6 +330,8 @@ function jobProfile({ jobProps, id }) {
     setIsOpenHSInspectionSummary(false);
     setIsOpenHSAssetMap(false);
     setIsOpenInspectionReport(false);
+    setIsOpenPrintDocs(false);
+    setIsOpenImages(false);
   }
 
   //   UNIQUE ID
@@ -592,6 +642,13 @@ function jobProfile({ jobProps, id }) {
     });
   };
 
+  const disqusShortname = "abseil"
+    const disqusConfig = {
+      url: "http://localhost:3000",
+      identifier: "article-id",
+      title: "Title of Your Article"
+    }
+
   return (
     <>
       {edit ? (
@@ -702,9 +759,9 @@ function jobProfile({ jobProps, id }) {
             className={toggleState === 1 ? "content  activeContent" : "content"}
             style={{ overflowX: "auto" }}
           >
-            <h4 style={{ paddingBottom: "15px", paddingTop: "20px" }}>
+            <h2 style={{ paddingBottom: "15px", paddingTop: "20px" }}>
               Description
-            </h4>
+            </h2>
             <div
               className="descriptionWrapper"
               style={{
@@ -729,7 +786,7 @@ function jobProfile({ jobProps, id }) {
             </div>
 
             <hr />
-            <h4>Schedule Information</h4>
+            <h2>Schedule Information</h2>
             <label>Start Date:</label>
             <p>
               {/* {new Date(job.startDate.seconds * 1000).toLocaleDateString(
@@ -762,7 +819,11 @@ function jobProfile({ jobProps, id }) {
 
             <hr />
 
-            <h4>Tasks</h4>
+            <div className="disqusWrapper">
+                {showDisqusComment()}
+            </div>  
+
+            {/* <h4>Tasks</h4>
             <button onClick={() => openModal(job.id)} style={{margin:"20px 0"}}>+ New Task</button>
             <Modal
               isOpen={modalIsOpen === job.id}
@@ -772,20 +833,20 @@ function jobProfile({ jobProps, id }) {
               contentLabel="Example Modal"
             >
               <h2 ref={(_subtitle) => (subtitle = _subtitle)}>TASK FORM</h2>
-              <button className="modalBtn" onClick={closeModal}>
-                close
-              </button>
-              <label>Template</label>
-              <select value={newTaskName} onChange={handleTaskChange}>
-                <option>Choose Template...</option>
-                {tasks.map(task => (
-                  <option value={task.name}>{task.name}</option>
-                ))}
-              </select>
-
-              <label>Description</label>
-              <ReactQuill value={newDesc} onChange={setNewDesc} />
-              <div className="row">
+              <div className="taskField">
+                <label>Template</label><br/>
+                <select value={newTaskName} onChange={handleTaskChange}>
+                  <option>Choose Template...</option>
+                  {tasks.map(task => (
+                    <option value={task.name}>{task.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="taskField">
+                <label>Description</label><br/>
+                <ReactQuill value={newDesc} onChange={setNewDesc} />
+              </div>
+              <div className="taskField" style={{display:"flex",justifyContent:"space-between"}}>
                 <div className="startDate six columns">
                   <label>Start Date</label>
                   <DatePicker
@@ -794,7 +855,7 @@ function jobProfile({ jobProps, id }) {
                     startDate={startDate}
                     endDate={endDate}
                     onChange={(date) => setStartDate(date)}
-                    className="six columns"
+                    className="datePickerClass"
                     dateFormat={"dd/MM/yyyy"}
                     isClearable
                     placeholderText="I have been cleared!"
@@ -809,38 +870,48 @@ function jobProfile({ jobProps, id }) {
                     endDate={endDate}
                     minDate={startDate}
                     onChange={(date) => setEndDate(date)}
-                    className="six columns"
+                    className="datePickerClass"
                     dateFormat={"dd/MM/yyyy"}
                     isClearable
                     placeholderText="I have been cleared!"
                   />
                 </div>
               </div>
-              <label>Estimated</label>
-              <input
-                type="number"
-                value={est}
-                onChange={(event) => {
-                  setEst(event.target.value);
-                }}
-              />
-              <label>Actual</label>
-              <input
-                type="number"
-                value={actual}
-                onChange={(event) => {
-                  setActual(event.target.value);
-                }}
-              />
-              <label>Remaining</label>
-              <input
-                type="number"
-                value={remaining}
-                onChange={(event) => {
-                  setRemaining(event.target.value);
-                }}
-              />
-              <input type="submit" value="submit" onClick={addTask} />
+              <div className="taskField">
+                <label>Estimated</label><br/>
+                <input
+                  type="number"
+                  value={est}
+                  onChange={(event) => {
+                    setEst(event.target.value);
+                  }}
+                />
+              </div>
+              <div className="taskField">
+                <label>Actual</label><br/>
+                <input
+                  type="number"
+                  value={actual}
+                  onChange={(event) => {
+                    setActual(event.target.value);
+                  }}
+                />
+              </div>
+              <div className="taskField">
+                <label>Remaining</label><br/>
+                <input
+                  type="number"
+                  value={remaining}
+                  onChange={(event) => {
+                    setRemaining(event.target.value);
+                  }}
+                />
+              </div>
+              <div style={{display:"flex"}}>
+                <input type="submit" value="submit" onClick={addTask} />
+                <input type="submit" value="Cancel" onClick={closeModal} />
+              </div>
+              
             </Modal>
             <div className="tableWrapper">
               <table>
@@ -875,8 +946,8 @@ function jobProfile({ jobProps, id }) {
                   <di>UPLOAD TASKS</di>
                 )}
               </table>
-            </div>
-            <button onClick={() => setIsOpenQuoteCost(true)}>+ New Cost</button>
+            </div> */}
+            {/* <button onClick={() => setIsOpenQuoteCost(true)}>+ New Cost</button>
             <div className="modal">
               <Modal
                 isOpen={modalIsOpenQuoteCost}
@@ -909,7 +980,7 @@ function jobProfile({ jobProps, id }) {
                 />
                 <input type="submit" value="submit" onClick={addCost} />
               </Modal>
-            </div>
+            </div> */}
           </div>
 
           <div
@@ -1026,6 +1097,7 @@ function jobProfile({ jobProps, id }) {
           </div>
           <div
             id="docs"
+            style={{paddingBottom: "50px"}}
             className={toggleState === 3 ? "content  activeContent" : "content"}
           >
             <h5>Documents</h5>
@@ -1391,7 +1463,7 @@ function jobProfile({ jobProps, id }) {
                     isOpen={modalIsOpenHSIF}
                     onAfterOpen={afterOpenModal}
                     onRequestClose={closeModal}
-                    style={customStyles}
+                    style={heightSafetyFormCustomStyles}
                     contentLabel="Example Modal"
                   >
                     <h2 ref={(_subtitle) => (subtitle = _subtitle)}>
@@ -1665,10 +1737,64 @@ function jobProfile({ jobProps, id }) {
                   </Modal>
               </div>
 
+              {/* IMAGES */}
+              <div className="docs" onClick={() => setIsOpenImages(true)}>
+                Images
+              </div>
+              <div className="modal">
+                  <Modal
+                    isOpen={modalIsOpenImages}
+                    onAfterOpen={afterOpenModal}
+                    onRequestClose={closeModal}
+                    style={customStyles}
+                    contentLabel="Example Modal"
+                  >
+                    
+                    <h2 ref={(_subtitle) => (subtitle = _subtitle)}>
+                      Images
+                    </h2>
+                    
+                    <div>
+                      <HeightAndSafetyImages job={job} />
+                    </div>
+
+                    <button className="modalBtn heightSafetyBtn" onClick={closeModal}>
+                      close
+                    </button>
+                  </Modal>
+              </div>
 
 
 
 
+
+              {/* PRINT DOCUMENTS */}
+
+              <div className="docs" onClick={() => setIsOpenPrintDocs(true)}>
+                PRINT HEIGHT AND SAFETY DOCS
+              </div>
+              <div className="modal">
+                  <Modal
+                    isOpen={modalIsOpenPrintDocs}
+                    onAfterOpen={afterOpenModal}
+                    onRequestClose={closeModal}
+                    style={toPrintCustomStyles}
+                    contentLabel="Example Modal"
+                  >
+                    
+                    <h2 ref={(_subtitle) => (subtitle = _subtitle)}>
+                      
+                    </h2>
+                    
+                    <div>
+                      <HeightAndSafetyToPrint job={job} />
+                    </div>
+
+                    <button className="modalBtn heightSafetyBtn" onClick={closeModal}>
+                      close
+                    </button>
+                  </Modal>
+              </div>
 
 
               <div style={{ padding: "20px" }}>
@@ -1716,6 +1842,10 @@ function jobProfile({ jobProps, id }) {
                 </Modal>
               </div>
             </div>
+
+
+
+
           </div>
         </div>
       )}
@@ -1960,6 +2090,19 @@ function jobProfile({ jobProps, id }) {
 
         .heightSafetyBtn {
           margin-bottom: 100px;
+        }
+
+        label {
+          font-weight: bold;
+        }
+
+        .taskField {
+          padding: 8px 0;
+        }
+
+        input, select {
+          height: 25px;
+          border: 1px solid #e6eaec;
         }
 
         @media screen and (max-width: 990px) {
