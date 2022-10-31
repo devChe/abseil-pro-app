@@ -141,7 +141,6 @@ function ExternalQuote({job, closeModal}) {
         <div>
           <h5>Quote Information</h5>
           <div>
-            
             <label>Date:</label>
             <div>
               <input
