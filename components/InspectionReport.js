@@ -136,14 +136,16 @@ function InspectionReport({ job, dateLength }) {
   }
 
   useEffect(() => {
-    var qty = job.inspectionReport.map((res) => res.qty)
-    var largest = qty[0];
+    var qty = job.inspectionReport?.map((res) => res.qty)
+    var largest = qty ? qty[0] : "";
 
+    if(qty) {
     for (var i = 0; i < qty.length; i++) {
       if (largest < qty[i] ) {
           largest = qty[i];
       }
     }
+  }
     console.log(largest);
     if(!largest) {
       setQuantity(1);

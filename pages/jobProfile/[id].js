@@ -1771,7 +1771,7 @@ function jobProfile({ jobProps, id }) {
               {/* PRINT DOCUMENTS */}
 
               <div className="docs" onClick={() => setIsOpenPrintDocs(true)}>
-                PRINT HEIGHT AND SAFETY DOCS
+                PRINT HEIGHT SAFETY DOCS
               </div>
               <div className="modal">
                   <Modal

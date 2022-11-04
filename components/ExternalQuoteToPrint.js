@@ -30,10 +30,6 @@ function ExternalQuoteToPrint({
 
   const totalArray = selectedTasks.map((selected) => selected.total);
 
-  // const jobNameSelected = job.quoteTasks.filter((f) => f.name.includes(selectedTasks)).map((sel) => (
-  //   sel.total
-  // ))
-
   let sum = 0;
 
   for (const value of totalArray) {
