@@ -31,6 +31,7 @@
     "react-multiple-select-dropdown-lite": "^2.0.5",
     "react-places-autocomplete": "^7.3.0",
     "react-quill": "^2.0.0",
+    "react-responsive-modal": "^6.2.0",
     "react-skeleton-css": "^1.1.0",
     "react-slick": "^0.28.1",
     "react-to-print": "^2.14.7",

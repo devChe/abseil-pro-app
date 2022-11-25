@@ -1,7 +1,8 @@
+/* eslint-disable react/jsx-no-undef */
 /* eslint-disable react/no-unknown-property */
 /* eslint-disable @next/next/no-sync-scripts */
 import React from "react";
-import ReactDOM from 'react-dom';
+import ReactDOM from "react-dom";
 import Head from "next/head";
 import Layout from "../components/Layout";
 import "../styles/globals.css";
@@ -27,6 +28,31 @@ import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import "react-datepicker/dist/react-datepicker.css";
 import ErrorBoundary from "../components/ErrorBoundary";
+import JobContextProvider from "../context/jobContext";
+import LoadingSpinner from "../components/LoadingSpinner";
+
+function Loading() {
+  const router = useRouter();
+
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+      const handleStart = (url) => (url !== router.asPath) && setLoading(true);
+      const handleComplete = (url) => (url === router.asPath) && setLoading(false);
+
+      router.events.on('routeChangeStart', handleStart)
+      router.events.on('routeChangeComplete', handleComplete)
+      router.events.on('routeChangeError', handleComplete)
+
+      return () => {
+          router.events.off('routeChangeStart', handleStart)
+          router.events.off('routeChangeComplete', handleComplete)
+          router.events.off('routeChangeError', handleComplete)
+      }
+  })
+  
+  return loading && (<LoadingSpinner />);
+}
 
 config.autoAddCss = false;
 
@@ -57,7 +83,9 @@ function MyApp({ Component, pageProps }) {
           </Head>
           <div className="rightSideContent">
             <ErrorBoundary>
-              <Component {...pageProps} />
+              <JobContextProvider>
+                <Loading/><Component {...pageProps} />
+              </JobContextProvider>
             </ErrorBoundary>
           </div>
         </Layout>
@@ -73,7 +101,9 @@ function MyApp({ Component, pageProps }) {
         </Head>
         <div className="container" style={{ height: "90vh" }}>
           <ErrorBoundary>
-            <Component {...pageProps} />
+            <JobContextProvider>
+              <Component {...pageProps} />
+            </JobContextProvider>
           </ErrorBoundary>
         </div>
       </>

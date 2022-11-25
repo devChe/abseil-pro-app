@@ -67,7 +67,36 @@ function EditQuoteTask({
 
   return (
     <>
-      <tr>
+      <div className="container">
+        <div className="contentForm">
+          <div>
+            <input type="text" value={newName} onChange={e => setNewName(e.target.value)}/>
+          </div>
+          <div>
+            <input type="text" value={newTime} onChange={e => setNewTime(e.target.value)}/>
+          </div>
+          <div>
+            <input type="text" value={newBaseRate} onChange={e => setNewBaseRate(e.target.value)}/>
+          </div>
+          <div>
+            <input type="text" value={newCost} onChange={e => setNewCost(e.target.value)}/>
+          </div>
+          <div>
+            <input type="text" value={newBillableRate} onChange={e => setNewBillableRate(e.target.value)}/>
+          </div>
+          <div>
+            <input type="text" value={newTotal} onChange={e => setNewTotal(e.target.value)}/>
+          </div>
+          <div style={{ textAlign: "left", width:"max-content" }}>
+            <ReactQuill value={newNote} onChange={setNewNote} height="50%" />
+          </div>
+          <div style={{display:"flex"}}>
+            <div className="btn" onClick={() => {updateQuoteTask(job.id,index)}}>Save</div>
+            <div className="btn" onClick={() => setIsEdit(false)}>Cancel</div>
+          </div>
+        </div>
+      </div>
+      {/* <tr>
         <td style={{ whiteSpace: "nowrap", textAlign: "left" }}>
           <input type="text" value={newName} onChange={e => setNewName(e.target.value)}/>
         </td>
@@ -91,7 +120,26 @@ function EditQuoteTask({
           .btn {
             cursor: pointer;
           }
-      `}</style>
+      `}</style> */}
+      <style jsx>{`
+          .container {
+            position: fixed;
+            background-color: rgba(255, 255, 255, 0.25);
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 999;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s;
+          }
+
+          .container:target {
+            opacity: 1;
+            pointer-events: auto;
+          }
+        `}</style>
     </>
   );
 }

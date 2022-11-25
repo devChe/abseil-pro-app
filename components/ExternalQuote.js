@@ -166,8 +166,10 @@ function ExternalQuote({ job, closeModal }) {
       }),
     }).then(() => {
       refreshData();
-      setTaskModal(false);
+      
     });
+
+    setTaskModal(false);
   }
 
   // ADD ARRAY OF COST
@@ -423,6 +425,72 @@ function ExternalQuote({ job, closeModal }) {
               {job.quoteTasks &&
                 job.quoteTasks.map((quoteTask, index) => (
                   <>
+                        <tr>
+                          <td>
+                            <input
+                              type="checkbox"
+                              onChange={(e) =>
+                                handleSelecTask(e, quoteTask.id)
+                              }
+                            />
+                          </td>
+                          <td
+                            key={quoteTask.id}
+                            style={{ whiteSpace: "nowrap", textAlign: "left" }}
+                          >
+                            <strong>{quoteTask.name}</strong>
+                          </td>
+                          <td key={quoteTask.id}>{quoteTask.time}</td>
+                          <td key={quoteTask.id}>{dollarUSLocale.format(quoteTask.baseRate)}</td>
+                          <td key={quoteTask.id}>{dollarUSLocale.format(quoteTask.cost)}</td>
+                          <td key={quoteTask.id}>{dollarUSLocale.format(quoteTask.billableRate)}</td>
+                          <td key={quoteTask.id}>{dollarUSLocale.format(quoteTask.total)}</td>
+                          <td>
+                            <a
+                              style={{ cursor: "pointer" }}
+                              onClick={() => {
+                                editHandler(quoteTask.id);
+                              }}
+                            >
+                              Edit
+                            </a>
+                          </td>
+                        </tr>
+                        <tr
+                          style={{
+                            textAlign: "left",
+                            borderBottom: "1px solid #ececec",
+                            padding: "15px",
+                          }}
+                        >
+                          <td></td>
+                          <td
+                            style={{
+                              textAlign: "left",
+                              padding: "15px 15px 15px 0",
+                            }}
+                          >
+                            <div
+                              dangerouslySetInnerHTML={{
+                                __html: quoteTask.note,
+                              }}
+                            ></div>
+                          </td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                        </tr>
+                        {isEdit === quoteTask.id ? ( <EditQuoteTask job={job} index={index} quoteTask={quoteTask} setIsEdit={setIsEdit} /> ) : ("")}
+                      </>
+                      
+                ))
+              }
+              {/* {job.quoteTasks &&
+                job.quoteTasks.map((quoteTask, index) => (
+                  <>
                     {isEdit === quoteTask.id ? (
                       <EditQuoteTask
                         job={job}
@@ -437,7 +505,7 @@ function ExternalQuote({ job, closeModal }) {
                             <input
                               type="checkbox"
                               onChange={(e) =>
-                                handleSelectCost(e, quoteTask.id)
+                                handleSelecTask(e, quoteTask.id)
                               }
                             />
                           </td>
@@ -448,10 +516,10 @@ function ExternalQuote({ job, closeModal }) {
                             <strong>{quoteTask.name}</strong>
                           </td>
                           <td key={quoteTask.id}>{quoteTask.time}</td>
-                          <td key={quoteTask.id}>{dollarUSLocale.format(quoteTask.baseRate) + ".00"}</td>
-                          <td key={quoteTask.id}>{dollarUSLocale.format(quoteTask.cost) + ".00"}</td>
-                          <td key={quoteTask.id}>{dollarUSLocale.format(quoteTask.billableRate) + ".00"}</td>
-                          <td key={quoteTask.id}>{dollarUSLocale.format(quoteTask.total) + ".00"}</td>
+                          <td key={quoteTask.id}>{dollarUSLocale.format(quoteTask.baseRate)}</td>
+                          <td key={quoteTask.id}>{dollarUSLocale.format(quoteTask.cost)}</td>
+                          <td key={quoteTask.id}>{dollarUSLocale.format(quoteTask.billableRate)}</td>
+                          <td key={quoteTask.id}>{dollarUSLocale.format(quoteTask.total)}</td>
                           <td>
                             <a
                               style={{ cursor: "pointer" }}
@@ -493,7 +561,7 @@ function ExternalQuote({ job, closeModal }) {
                       </>
                     )}
                   </>
-                ))}
+                ))} */}
               <tr>
                 <td></td>
                 <td></td>
@@ -508,11 +576,11 @@ function ExternalQuote({ job, closeModal }) {
                 </td>
                 <td></td>
                 <td>
-                  <strong>{dollarUSLocale.format(sumCosts) + ".00"}</strong>
+                  <strong>{dollarUSLocale.format(sumCosts)}</strong>
                 </td>
                 <td></td>
                 <td>
-                  <strong>{sumTasksTotal + ".00"}</strong>
+                  <strong>{dollarUSLocale.format(sumTasksTotal)}</strong>
                 </td>
               </tr>
             </table>
@@ -704,7 +772,7 @@ function ExternalQuote({ job, closeModal }) {
                           <td>
                             <input
                               type="checkbox"
-                              onChange={(e) => handleSelecTask(e, quoteCost.id)}
+                              onChange={(e) => handleSelectCost(e, quoteCost.id)}
                             />
                           </td>
                           <td
@@ -758,9 +826,9 @@ function ExternalQuote({ job, closeModal }) {
                   <td></td>
                   <td></td>
                   <td></td>
-                  <td><strong>{dollarUSLocale.format(sumCostsCost) + ".00"}</strong></td>
+                  <td><strong>{dollarUSLocale.format(sumCostsCost)}</strong></td>
                   <td></td>
-                  <td><strong>{dollarUSLocale.format(sumCostsTotal) + ".00"}</strong></td>
+                  <td><strong>{dollarUSLocale.format(sumCostsTotal)}</strong></td>
                   <td></td>
                 </tr>
             </table>
@@ -794,11 +862,11 @@ function ExternalQuote({ job, closeModal }) {
             <tr className="folders">
               <td style={{ textAlign: "left" }}>Total</td>
               <td style={{ textAlign: "right" }}>
-                <strong>{(sumCosts + sumCostsCost) + ((sumCosts + sumCostsCost) * 0.10)}</strong>
+                <strong>{dollarUSLocale.format((sumCosts + sumCostsCost) + ((sumCosts + sumCostsCost) * 0.10))}</strong>
               </td>
 
               <td style={{ textAlign: "right" }}>
-                <strong>{(sumTasksTotal + sumCostsTotal) + ((sumTasksTotal + sumCostsTotal) * 0.10)}</strong>
+                <strong>{dollarUSLocale.format((sumTasksTotal + sumCostsTotal) + ((sumTasksTotal + sumCostsTotal) * 0.10))}</strong>
               </td>
             </tr>
             <tr className="folders">
@@ -809,7 +877,7 @@ function ExternalQuote({ job, closeModal }) {
             <tr className="folders">
               <td style={{ textAlign: "left" }}>Gross Profit %</td>
               <td></td>
-              <td style={{ textAlign: "right" }}>{(((sumTasksTotal + sumCostsTotal) - (sumCosts + sumCostsCost))/(sumTasksTotal + sumCostsTotal)*100).toFixed(2)}</td>
+              <td style={{ textAlign: "right" }}>{dollarUSLocale.format((((sumTasksTotal + sumCostsTotal) - (sumCosts + sumCostsCost))/(sumTasksTotal + sumCostsTotal)*100).toFixed(2))}</td>
             </tr>
           </table>
 
@@ -839,15 +907,14 @@ function ExternalQuote({ job, closeModal }) {
             <ExternalQuoteToPrint
               job={job}
               selectedTasks={selectedTasks}
+              selectedCosts={selectedCosts}
               startDate={startDate}
               dueDate={dueDate}
               clientName={clientName}
               siteAddress={siteAddress}
-              taskNameRadio={taskNameRadio}
               quoteTaskName={quoteTaskName}
               contact={contact}
               desc={desc}
-              gst={gst}
             />
           </div>
         </div>
@@ -918,7 +985,7 @@ function ExternalQuote({ job, closeModal }) {
         }
 
         .modalBackground {
-          width: 100vw;
+          width: 100%;
           background-color: rgba(200, 200, 200);
           position: fixed;
           display: flex;

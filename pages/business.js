@@ -26,6 +26,9 @@ const business = () => {
           <div className='businessBtn'>
             <Link href={'jobTemplate'}><button className='btn'>Job Template</button></Link>
           </div>
+          <div className='businessBtn'>
+            <Link href={'quotes'}><button className='btn'>Quotes</button></Link>
+          </div>
         </div>
       </div>
       

@@ -46,7 +46,8 @@ function newJob() {
   const [newMngr, setNewMngr] = useState("");
   const [newTeam, setNewTeam] = useState("");
   const [temps, setTemps] = useState([]);
-  const [jobUniId, setJobUniId] = useState("0000");
+  const [jobUniId, setJobUniId] = useState("0");
+  const [initialNumber, setInitialNumber] = useState(Number(0));
   const [address, setAddress] = useState("");
   const [coordinates, setCoordinates] = useState({lat: null, lng: null})
 
@@ -75,7 +76,18 @@ function newJob() {
       const getJobs = async () => {
           const q = query(jobsCollectionRef, orderBy("name"));
           const data = await getDocs(q);
-          setJobs(data.docs.map((doc) => ({...doc.data(), id: doc.id })))
+          const res = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+          setJobs(res);
+          const jobNumbers = res.map((job) => job.number);
+          console.log("array ng number", jobNumbers);
+          const largest = Math.max(...jobNumbers);
+          console.log("LARGE NUMBER", largest);
+          const sum = largest + 1;
+          console.log("LARGE NUMBER PLUS 1", sum);
+          const jobNumber = sum.toString().padStart('5', 0);
+          setJobUniId('J' + jobNumber);
+          setInitialNumber(sum);
+          
       }
       getJobs();
     }, [])
@@ -136,7 +148,8 @@ function newJob() {
   const createJob = async () => {
     
     await addDoc(jobsCollectionRef, {
-      jobNumber: "J" + jobUniId,
+      jobNumber: jobUniId === 'J-Infinity' ? 'J00001' : jobUniId,
+      number: jobUniId === 'J-Infinity' ? (Number(1)) : Number(initialNumber),
       imageUrl: url, 
       client: newClient,
       name: name,
@@ -157,23 +170,8 @@ function newJob() {
     window.location.pathname="/jobs";
 
   }
-
-  const uniId = () => {
-    const d = new Date()
-    const day = d.getDate().toString()
-    const month = d.getMonth().toString()
-    const yr = d.getFullYear().toString()
-    const hr = d.getHours().toString()
-    const min = d.getMinutes().toString()
-    const sec = d.getSeconds().toString()
-    const formattedDate = month + day + yr + hr + min + sec
-    setJobUniId(formattedDate);
-  }
-
-  useEffect(() => {
-    setJobUniId(uniId);
-  }, [])
-
+ 
+  
   const options = staff.map(team => (
     { label: `${team.name}`, value: `${team.id}` }
   ))
@@ -182,7 +180,7 @@ function newJob() {
   return (
     <div className='wrapper'>
       <div>
-        <h5>{"J" + jobUniId}</h5>
+        <h5>{jobUniId === "J-Infinity" ? "J00001" : jobUniId}</h5>
         <h1>Job Information</h1>
       </div>
       <hr />

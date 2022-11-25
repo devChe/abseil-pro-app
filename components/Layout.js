@@ -19,6 +19,7 @@ function Layout({children}) {
 
           .rightSide {
             flex: 1;
+            min-height: 100vh;
           }
 
           @media screen and (min-width: 991px) {

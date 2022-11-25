@@ -8,7 +8,7 @@
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { db, storage } from "../../src/config/firebase.config";
+import { db, storage } from "../../../src/config/firebase.config";
 import {
   collection,
   doc,
@@ -42,7 +42,7 @@ import {
   faPenToSquare,
   faClose,
 } from "@fortawesome/free-solid-svg-icons";
-import ImgMultipleUpload from "../../components/ImgMultipleUpload";
+import ImgMultipleUpload from "../../../components/ImgMultipleUpload";
 import ReactDOM from "react-dom";
 import Modal from "react-modal";
 import dynamic from "next/dynamic";
@@ -51,22 +51,20 @@ import "react-quill/dist/quill.snow.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "react-datepicker/dist/react-datepicker-cssmodules.css";
-import LoadingSpinner from "../../components/LoadingSpinner";
-import HeightAndSafetyForm from "../../components/HeightAndSafetyForm";
-import HeightSafetyCertificate from "../../components/HeightSafetyCertificate";
-import HeightSafetyBody from "../../components/HeightSafetyBody";
-import InspectionSummary from "../../components/InspectionSummary";
-import HeightSafetyAssetMap from "../../components/HeightSafetyAssetMap";
-import InspectionReport from "../../components/InspectionReport";
+import LoadingSpinner from "../../../components/LoadingSpinner";
+import HeightAndSafetyForm from "../../../components/HeightAndSafetyForm";
+import HeightSafetyCertificate from "../../../components/HeightSafetyCertificate";
+import HeightSafetyBody from "../../../components/HeightSafetyBody";
+import InspectionSummary from "../../../components/InspectionSummary";
+import HeightSafetyAssetMap from "../../../components/HeightSafetyAssetMap";
+import InspectionReport from "../../../components/InspectionReport";
 import dateFormat, { masks } from "dateformat";
-import EditJob from "../../components/EditJob";
+import EditJob from "../../../components/EditJob";
 import { global } from "styled-jsx/css";
-import ExternalQuote from "../../components/ExternalQuote";
-import HeightAndSafetyToPrint from "../../components/HeightAndSafetyToPrint";
-import HeightAndSafetyImages from "../../components/HeightAndSafetyImages";
-import DisqusThread from "../../components/DisqusThread";
-
-
+import ExternalQuote from "../../../components/ExternalQuote";
+import HeightAndSafetyToPrint from "../../../components/HeightAndSafetyToPrint";
+import HeightAndSafetyImages from "../../../components/HeightAndSafetyImages";
+import DisqusThread from "../../../components/DisqusThread";
 
 require("react-datepicker/dist/react-datepicker.css");
 
@@ -104,8 +102,7 @@ const customStyles = {
     marginRight: "-50%",
     transform: "translate(-50%, -50%)",
     zIndex: "99999",
-    background: "#F6F7F9",
-    width: "100vw",
+    width: "100%",
     height: "100vh",
   },
 };
@@ -121,7 +118,7 @@ const toPrintCustomStyles = {
     transform: "translate(-50%, -50%)",
     zIndex: "99999",
     background: "#202124",
-    width: "100vw",
+    width: "100%",
     height: "100vh",
   },
 };
@@ -135,7 +132,6 @@ const heightSafetyFormCustomStyles = {
     marginRight: "-50%",
     transform: "translate(-50%, -50%)",
     zIndex: "99999",
-    background: "#F6F7F9",
     width: "100%",
     height: "100vh",
   },
@@ -151,7 +147,7 @@ const bodyCustomStyles = {
     transform: "translate(-50%, -50%)",
     zIndex: "99999",
     background: "#202124",
-    width: "100vw",
+    width: "100%",
     height: "100vh",
   },
 };
@@ -622,12 +618,12 @@ function jobProfile({ jobProps, id }) {
     setImageName(e.target.value);
   };
 
-  const handleTaskChange = (e) => {
-    console.log(e.target.value);
-    const selectedTask = tasks.find((task) => task.name === e.target.value);
-    setNewDesc(selectedTask.description);
-    setNewTaskName(selectedTask.name);
-  };
+  // const handleTaskChange = (e) => {
+  //   console.log(e.target.value);
+  //   const selectedTask = tasks.find((task) => task.name === e.target.value);
+  //   setNewDesc(selectedTask.description);
+  //   setNewTaskName(selectedTask.name);
+  // };
 
   const handleUpload = () => {
     if (image == null) return;
@@ -689,10 +685,10 @@ function jobProfile({ jobProps, id }) {
       ) : (
         <div className="wrapper">
           <div className="jobNameWrapper">
-            <h4>
+            <h2>
               <span style={{ color: "blue" }}>{job.jobNumber}</span> -{" "}
               {job.name}
-            </h4>
+            </h2>
             <div className="editBtn" onClick={() => isEdit("true")}>
               <FontAwesomeIcon
                 icon={faPenToSquare}
@@ -815,7 +811,8 @@ function jobProfile({ jobProps, id }) {
               .filter((f) => array2.includes(f.id))
               .map((f) => (
                 <li>{f.name}</li>
-              ))}
+              ))
+            }
 
             <hr />
 
@@ -1801,7 +1798,7 @@ function jobProfile({ jobProps, id }) {
                 <h3 style={{ marginBottom: "10px" }}>Sales & Estimating</h3>
               </div>
 
-              <div className="docs" onClick={() => setIsOpenExQuote(true)}>
+              {/* <div className="docs" onClick={() => setIsOpenExQuote(true)}>
                 External Quote
               </div>
               <div className="modal">
@@ -1817,7 +1814,9 @@ function jobProfile({ jobProps, id }) {
                   </h2>
                   <ExternalQuote job={job} id="target" closeModal={closeModal} />
                 </Modal>
-              </div>
+              </div> */}
+
+<Link  href="[id]/[externalId]" as={`${job.id}/${job.jobNumber}`}>External Quote</Link>
 
               <div className="docs" onClick={() => setIsOpenInQuote(true)}>
                 Internal Quote

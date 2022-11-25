@@ -15,6 +15,10 @@ function LoadingSpinner({loading}) {
             }
         }
 
+        .spinner-container {
+          background: #ffff;
+        }
+
         .loading-spinner {
             width: 50px;
             height: 50px;
@@ -27,6 +31,7 @@ function LoadingSpinner({loading}) {
             overflow: auto;
             transform: translate(50%, 50%);
             background: #fff;
+            z-index: 9999;
         }
     `}</style>
     </div>
