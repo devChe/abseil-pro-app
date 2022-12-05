@@ -78,7 +78,7 @@ import { v4 } from "uuid";
     const [newCode, setNewCode] = useState("");
     const [newTax, setNewTax] = useState("");
     const [newNotes, setNewNotes] = useState("");
-  
+    const [isChecked, setIsChecked] = useState(true);
     const [userId, setUserId] = useState('');
     const [loading, setLoading] = useState(false);
   
@@ -172,7 +172,7 @@ import { v4 } from "uuid";
   
     const handleSelectTask = (e, id) => {
       const taskSelected = job.data.quoteTasks.find((task) => task.id === id);
-  
+      
       if (e.target.checked) {
         setSelectedTasks((prev) => [...prev, taskSelected]);
       } else {
@@ -569,7 +569,9 @@ import { v4 } from "uuid";
                     <td>
                       <input
                         type="checkbox"
+                        onClick={(e => setIsChecked(true))}
                         onChange={(e) => handleSelectTask(e, task.id)}
+                        defaultChecked={isChecked}
                       />
                     </td>
                     <td style={{ textAlign: "left", fontWeight: "500" }}>
@@ -943,7 +945,7 @@ import { v4 } from "uuid";
                 <td></td>
                 <td style={{ textAlign: "right" }}>
                   {dollarUSLocale.format(
-                    costTotal + sumOfQuoteCost - (sumOfTotal + sumOfQuoteTotal)
+                    (sumOfTotal + sumOfQuoteTotal) - (costTotal + sumOfQuoteCost)
                   )}
                 </td>
               </tr>

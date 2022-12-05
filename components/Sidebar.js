@@ -24,6 +24,8 @@ const Sidebar = () => {
             <Link href="/jobs"><a>Jobs</a></Link>
             <Link href="/business"><a>Business</a></Link>
             <Link href="/reports"><a>Reports</a></Link>
+            <Link href="/employees"><a>Employees</a></Link>
+            <Link href="/quotes"><a>Quote</a></Link>
         </div>
         <div className='mobileLogo' style={{display:'none'}}>ABSEIL PRO</div>
         <div>
@@ -36,6 +38,8 @@ const Sidebar = () => {
                 <Link href="/jobs"><a>Jobs</a></Link>
                 <Link href="/business"><a>Business</a></Link>
                 <Link href="/reports"><a>Reports</a></Link>
+                <Link href="/employees"><a>Employees</a></Link>
+                <Link href="/quotes"><a>Quote</a></Link>
             </div>
         </div>
         

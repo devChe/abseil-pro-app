@@ -65,13 +65,16 @@ function Tabs() {
             <div id="clients" className={toggleState === 1 ? "content  activeContent" : "content"} style={{overflowX:"auto"}}>
                 <h5>Clients</h5>
                 <div>
-                    <table>
-                        <tr>
-                            <th>Name</th>
-                            <th>Phone</th>
-                            <th>Email</th>
-                            <th>Action</th>
-                        </tr>
+                    <table className='styled-table'>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        
                         {searchResult && searchResult.length > 0 ? (
                             searchResult.map((client) => (
                                 <ClientData client={client} />
@@ -179,21 +182,36 @@ function Tabs() {
                 overflow-x: auto;
             }
 
-            table {
+            .styled-table {
                 border-collapse: collapse;
-                border-spacing: 0;
-                width: 100%;
-                margin: 0 0 50px;
+                margin: 25px 0;
+                font-size: 1em;
+                font-family: sans-serif;
+                min-width: 100%;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
             }
 
-            td, th {
-                border: 1px solid #dddddd;
-                text-align: center;
-                padding: 8px;
+            .styled-table thead tr {
+                background-color: #009879;
+                color: #ffffff;
+                text-align: left;
             }
 
-            tr:nth-child(even) {
-                background-color: #dddddd;
+            .styled-table th,
+            .styled-table td {
+                padding: 12px 15px;
+            }
+
+            .styled-table tbody tr {
+                border-bottom: 1px solid #dddddd;
+            }
+
+            .styled-table tbody tr:nth-of-type(even) {
+                background-color: #f3f3f3;
+            }
+
+            .styled-table tbody tr:last-of-type {
+                border-bottom: 2px solid #009879;
             }
 
             .isMobile {
