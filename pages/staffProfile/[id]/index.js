@@ -30,7 +30,7 @@ export const getStaticProps = async (context) => {
     }
 }
 
-const StaffProfile = ({staffProps}) => {
+function StaffProfile({staffProps}) {
     const router = useRouter();
 
     const staff = JSON.parse(staffProps);
