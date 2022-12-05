@@ -6,30 +6,55 @@ import React from 'react'
 import { db } from '../../../src/config/firebase.config';
 
 
-export const getStaticPaths = async () => {
-    const snapshot = await getDocs(collection(db, 'employees'));
-    const paths = snapshot.docs.map(doc => {
-        return {
-            params: { id: doc.id.toString() }
-        }
-    })
-    return {
-        paths,
-        fallback: true
-    }
-}
+// export const getStaticPaths = async () => {
+//     const snapshot = await getDocs(collection(db, 'employees'));
+//     const paths = snapshot.docs.map(doc => {
+//         return {
+//             params: { id: doc.id.toString() }
+//         }
+//     })
+//     return {
+//         paths,
+//         fallback: true
+//     }
+// }
 
-export const getStaticProps = async (context) => {
+// export const getStaticProps = async (context) => {
+//     const id = context.params.id;
+//     const docRef = doc(db, "employees", id);
+//     const docSnap = await getDoc(docRef);
+//     const staffProps = docSnap.data();
+//     staffProps.id = id;
+//     return {
+//         props: { staffProps: JSON.stringify(staffProps) || null},
+//         revalidate: 1,
+//     }
+// }
+export const getStaticPaths = async () => {
+    const snapshot = await getDocs(collection(db, "employees"));
+    const paths = snapshot.docs.map((doc) => {
+      return {
+        params: { id: doc.id.toString() },
+      };
+    });
+    return {
+      paths,
+      fallback: true,
+    };
+  };
+  
+  export const getStaticProps = async (context) => {
     const id = context.params.id;
     const docRef = doc(db, "employees", id);
     const docSnap = await getDoc(docRef);
     const staffProps = docSnap.data();
     staffProps.id = id;
     return {
-        props: { staffProps: JSON.stringify(staffProps) || null},
-        revalidate: 1,
-    }
-}
+      props: { staffProps: JSON.stringify(staffProps) || null },
+      revalidate: 1,
+    };
+  };
+
 
 function StaffProfile({staffProps}) {
     const router = useRouter();
