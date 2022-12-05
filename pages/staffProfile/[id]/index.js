@@ -26,7 +26,8 @@ export const getStaticProps = async (context) => {
     const staffProps = docSnap.data();
     staffProps.id = id;
     return {
-        props: { staffProps: JSON.stringify(staffProps) || null}
+        props: { staffProps: JSON.stringify(staffProps) || null},
+        revalidate: 1,
     }
 }
 
