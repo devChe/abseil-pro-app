@@ -59,9 +59,9 @@ export const getStaticPaths = async () => {
 function StaffProfile({staffProps}) {
     const router = useRouter();
 
-    const data = staffProps.trim();
+    if (router.isFallback) return <div>...Loading</div>;
 
-    const staff = JSON.parse(data);
+    const staff = JSON.parse(staffProps);
 
   return (
     <div>
