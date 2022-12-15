@@ -217,6 +217,8 @@ function jobProfile({ jobProps, id }) {
   const [newDesc, setNewDesc] = useState("");
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
+  const [startTime, setStartTime] = useState("0:00");
+  const [endTime, setEndTime] = useState("0:00");
   const [est, setEst] = useState(0);
   const [actual, setActual] = useState(0);
   const [remaining, setRemaining] = useState(0);
@@ -231,6 +233,9 @@ function jobProfile({ jobProps, id }) {
   const [heightSiteName, setHeightSiteName] = useState("");
   const [heightEmail, setHeightEmail] = useState("");
   const [heightSiteAddress, setHeightSiteAddress] = useState("");
+  const [timeDate, setTimeDate] = useState(new Date());
+
+
   const [assetGroupOneQty, setAssetGroupOneQty] = useState("");
   const [assetGrpOneType, setAssetGrpOneType] = useState("");
   const [assetGrpOneInspectionType, setAssetGrpOneInspectionType] = useState("");
@@ -293,6 +298,8 @@ function jobProfile({ jobProps, id }) {
   const [updateAccMngr, setUpdateAccMngr] = useState(`${job.accountManager}`);
   const [updateManager, setUpdateManager] = useState(`${job.manager}`);
   const [updateTeam, setUpdateTeam] = useState(`${job.staff}`);
+
+  const [timeSheetNotes, setTimeSheetNotes] = useState("");
 
   let subtitle;
 
@@ -680,7 +687,7 @@ function jobProfile({ jobProps, id }) {
             setUpdateManager={setUpdateManager}
             updateTeam={updateTeam}
             setUpdateTeam={setUpdateTeam}
-           />
+          />
         </div>
       ) : (
         <div className="wrapper">
@@ -690,10 +697,7 @@ function jobProfile({ jobProps, id }) {
               {job.name}
             </h2>
             <div className="editBtn" onClick={() => isEdit("true")}>
-              <FontAwesomeIcon
-                icon={faPenToSquare}
-                className="editIcon"
-              />
+              <FontAwesomeIcon icon={faPenToSquare} className="editIcon" />
             </div>
           </div>
           <div className="heroImage">
@@ -748,6 +752,18 @@ function jobProfile({ jobProps, id }) {
             >
               Documents
             </div>
+            <div
+              className={toggleState === 4 ? "tabs activeTabs" : "tabs"}
+              onClick={() => toggleTab(4)}
+            >
+              Time Sheet
+            </div>
+            <div
+              className={toggleState === 5 ? "tabs activeTabs" : "tabs"}
+              onClick={() => toggleTab(5)}
+            >
+              Financial
+            </div>
           </div>
 
           <div
@@ -767,7 +783,7 @@ function jobProfile({ jobProps, id }) {
                 overflow: "scroll",
                 height: "300px",
                 border: "1px solid #ecec",
-                fontSize:"12px"
+                fontSize: "12px",
               }}
             >
               <div dangerouslySetInnerHTML={{ __html: job.description }}></div>
@@ -788,7 +804,9 @@ function jobProfile({ jobProps, id }) {
               {/* {new Date(job.startDate.seconds * 1000).toLocaleDateString(
                 "en-US"
               )} */}
-              {!START_DATE ? "DD/MM/YYYY" : dateFormat(START_DATE, "dd mmm yyyy")}
+              {!START_DATE
+                ? "DD/MM/YYYY"
+                : dateFormat(START_DATE, "dd mmm yyyy")}
             </p>
 
             <label>Due Date:</label>
@@ -811,14 +829,11 @@ function jobProfile({ jobProps, id }) {
               .filter((f) => array2.includes(f.id))
               .map((f) => (
                 <li>{f.name}</li>
-              ))
-            }
+              ))}
 
             <hr />
 
-            <div className="disqusWrapper">
-                {showDisqusComment()}
-            </div>  
+            <div className="disqusWrapper">{showDisqusComment()}</div>
 
             {/* <h4>Tasks</h4>
             <button onClick={() => openModal(job.id)} style={{margin:"20px 0"}}>+ New Task</button>
@@ -1094,7 +1109,7 @@ function jobProfile({ jobProps, id }) {
           </div>
           <div
             id="docs"
-            style={{paddingBottom: "50px"}}
+            style={{ paddingBottom: "50px" }}
             className={toggleState === 3 ? "content  activeContent" : "content"}
           >
             <h5>Documents</h5>
@@ -1456,141 +1471,147 @@ function jobProfile({ jobProps, id }) {
                 Height Safety Inspection Form
               </div>
               <div className="modal">
-                  <Modal
-                    isOpen={modalIsOpenHSIF}
-                    onAfterOpen={afterOpenModal}
-                    onRequestClose={closeModal}
-                    style={heightSafetyFormCustomStyles}
-                    contentLabel="Example Modal"
+                <Modal
+                  isOpen={modalIsOpenHSIF}
+                  onAfterOpen={afterOpenModal}
+                  onRequestClose={closeModal}
+                  style={heightSafetyFormCustomStyles}
+                  contentLabel="Example Modal"
+                >
+                  <h2 ref={(_subtitle) => (subtitle = _subtitle)}>
+                    Height Safety Inspection Form
+                  </h2>
+                  <hr></hr>
+
+                  <div>
+                    <HeightAndSafetyForm
+                      newInspector={newInspector}
+                      setNewInspector={setNewInspector}
+                      heightStartDate={heightStartDate}
+                      setHeightStartDate={setHeightStartDate}
+                      newInspectionDate={newInspectionDate}
+                      setNewInspectionDate={setNewInspectionDate}
+                      heightSiteName={heightSiteName}
+                      setHeightSiteName={setHeightSiteName}
+                      heightEmail={heightEmail}
+                      setHeightEmail={setHeightEmail}
+                      createHeightSafety={createHeightSafety}
+                      startDate={startDate}
+                      endDate={endDate}
+                      other={other}
+                      setOther={setOther}
+                      heightSiteAddress={heightSiteAddress}
+                      setHeightSiteAddress={setHeightSiteAddress}
+                      assetGroupOneQty={assetGroupOneQty}
+                      setAssetGroupOneQty={setAssetGroupOneQty}
+                      assetGrpOneType={assetGrpOneType}
+                      setAssetGrpOneType={setAssetGrpOneType}
+                      assetGrpOneInspectionType={assetGrpOneInspectionType}
+                      setAssetGrpOneInspectionType={
+                        setAssetGrpOneInspectionType
+                      }
+                      assetGrpOneRating={assetGrpOneRating}
+                      setAssetGrpOneRating={setAssetGrpOneRating}
+                      assetGrpOneResult={assetGrpOneResult}
+                      setAssetGrpOneResult={setAssetGrpOneResult}
+                      assetGrpOneNotes={assetGrpOneNotes}
+                      setAssetGrpOneNotes={setAssetGrpOneNotes}
+                      assetGrpTwoQty={assetGrpTwoQty}
+                      setAssetGrpTwoQty={setAssetGrpTwoQty}
+                      assetGrpTwoType={assetGrpTwoType}
+                      setAssetGrpTwoType={setAssetGrpTwoType}
+                      assetGrpTwoInspectionType={assetGrpTwoInspectionType}
+                      setAssetGrpTwoInspectionType={
+                        setAssetGrpTwoInspectionType
+                      }
+                      assetGrpTwoRating={assetGrpTwoRating}
+                      setAssetGrpTwoRating={setAssetGrpTwoRating}
+                      assetGrpTwoResult={assetGrpTwoResult}
+                      setAssetGrpTwoResult={setAssetGrpTwoResult}
+                      assetGrpTwoNotes={assetGrpTwoNotes}
+                      setAssetGrpTwoNotes={setAssetGrpTwoNotes}
+                      assetGrp3Qty={assetGrp3Qty}
+                      setAssetGrp3Qty={setAssetGrp3Qty}
+                      assetGrp3Type={assetGrp3Type}
+                      setAssetGrp3Type={setAssetGrp3Type}
+                      assetGrp3InspectionType={assetGrp3InspectionType}
+                      setAssetGrp3InspectionType={setAssetGrp3InspectionType}
+                      assetGrp3Rating={assetGrp3Rating}
+                      setAssetGrp3Rating={setAssetGrp3Rating}
+                      assetGrp3Result={assetGrp3Result}
+                      setAssetGrp3Result={setAssetGrp3Result}
+                      assetGrp3Notes={assetGrp3Notes}
+                      setAssetGrp3Notes={setAssetGrp3Notes}
+                      assetGrp4Qty={assetGrp4Qty}
+                      setAssetGrp4Qty={setAssetGrp4Qty}
+                      assetGrp4Type={assetGrp4Type}
+                      setAssetGrp4Type={setAssetGrp4Type}
+                      assetGrp4InspectionType={assetGrp4InspectionType}
+                      setAssetGrp4InspectionType={setAssetGrp4InspectionType}
+                      assetGrp4Rating={assetGrp4Rating}
+                      setAssetGrp4Rating={setAssetGrp4Rating}
+                      assetGrp4Result={assetGrp4Result}
+                      setAssetGrp4Result={setAssetGrp4Result}
+                      assetGrp4Notes={assetGrp4Notes}
+                      setAssetGrp4Notes={setAssetGrp4Notes}
+                      assetGrp5Qty={assetGrp5Qty}
+                      setAssetGrp5Qty={setAssetGrp5Qty}
+                      assetGrp5Type={assetGrp5Type}
+                      setAssetGrp5Type={setAssetGrp5Type}
+                      assetGrp5InspectionType={assetGrp5InspectionType}
+                      setAssetGrp5InspectionType={setAssetGrp5InspectionType}
+                      assetGrp5Rating={assetGrp5Rating}
+                      setAssetGrp5Rating={setAssetGrp5Rating}
+                      assetGrp5Result={assetGrp5Result}
+                      setAssetGrp5Result={setAssetGrp5Result}
+                      assetGrp5Notes={assetGrp5Notes}
+                      setAssetGrp5Notes={setAssetGrp5Notes}
+                      assetGrp6Qty={assetGrp6Qty}
+                      setAssetGrp6Qty={setAssetGrp6Qty}
+                      assetGrp6Type={assetGrp6Type}
+                      setAssetGrp6Type={setAssetGrp6Type}
+                      assetGrp6InspectionType={assetGrp6InspectionType}
+                      setAssetGrp6InspectionType={setAssetGrp6InspectionType}
+                      assetGrp6Rating={assetGrp6Rating}
+                      setAssetGrp6Rating={setAssetGrp6Rating}
+                      assetGrp6Result={assetGrp6Result}
+                      setAssetGrp6Result={setAssetGrp6Result}
+                      assetGrp6Notes={assetGrp6Notes}
+                      setAssetGrp6Notes={setAssetGrp6Notes}
+                      assetGrp7Qty={assetGrp7Qty}
+                      setAssetGrp7Qty={setAssetGrp7Qty}
+                      assetGrp7Type={assetGrp7Type}
+                      setAssetGrp7Type={setAssetGrp7Type}
+                      assetGrp7InspectionType={assetGrp7InspectionType}
+                      setAssetGrp7InspectionType={setAssetGrp7InspectionType}
+                      assetGrp7Rating={assetGrp7Rating}
+                      setAssetGrp7Rating={setAssetGrp7Rating}
+                      assetGrp7Result={assetGrp7Result}
+                      setAssetGrp7Result={setAssetGrp7Result}
+                      assetGrp7Notes={assetGrp7Notes}
+                      setAssetGrp7Notes={setAssetGrp7Notes}
+                      assetGrp8Qty={assetGrp8Qty}
+                      setAssetGrp8Qty={setAssetGrp8Qty}
+                      assetGrp8Type={assetGrp8Type}
+                      setAssetGrp8Type={setAssetGrp8Type}
+                      assetGrp8InspectionType={assetGrp8InspectionType}
+                      setAssetGrp8InspectionType={setAssetGrp8InspectionType}
+                      assetGrp8Rating={assetGrp8Rating}
+                      setAssetGrp8Rating={setAssetGrp8Rating}
+                      assetGrp8Result={assetGrp8Result}
+                      setAssetGrp8Result={setAssetGrp8Result}
+                      assetGrp8Notes={assetGrp8Notes}
+                      setAssetGrp8Notes={setAssetGrp8Notes}
+                    />
+                  </div>
+
+                  <button
+                    className="modalBtn heightSafetyBtn"
+                    onClick={closeModal}
                   >
-                    <h2 ref={(_subtitle) => (subtitle = _subtitle)}>
-                      Height Safety Inspection Form
-                    </h2>
-                    <hr></hr>
-                    
-                    <div>
-                      <HeightAndSafetyForm 
-                          newInspector={newInspector}
-                          setNewInspector={setNewInspector}
-                          heightStartDate={heightStartDate}
-                          setHeightStartDate={setHeightStartDate}
-                          newInspectionDate={newInspectionDate}
-                          setNewInspectionDate={setNewInspectionDate}
-                          heightSiteName={heightSiteName}
-                          setHeightSiteName={setHeightSiteName}
-                          heightEmail={heightEmail}
-                          setHeightEmail={setHeightEmail}
-                          createHeightSafety={createHeightSafety}
-                          startDate={startDate}
-                          endDate={endDate}
-                          other={other}
-                          setOther={setOther}
-                          heightSiteAddress={heightSiteAddress}
-                          setHeightSiteAddress={setHeightSiteAddress}
-                          assetGroupOneQty={assetGroupOneQty}
-                          setAssetGroupOneQty={setAssetGroupOneQty}
-                          assetGrpOneType={assetGrpOneType}
-                          setAssetGrpOneType={setAssetGrpOneType}
-                          assetGrpOneInspectionType={assetGrpOneInspectionType}
-                          setAssetGrpOneInspectionType={setAssetGrpOneInspectionType}
-                          assetGrpOneRating={assetGrpOneRating}
-                          setAssetGrpOneRating={setAssetGrpOneRating}
-                          assetGrpOneResult={assetGrpOneResult}
-                          setAssetGrpOneResult={setAssetGrpOneResult}
-                          assetGrpOneNotes={assetGrpOneNotes}
-                          setAssetGrpOneNotes={setAssetGrpOneNotes}
-                          assetGrpTwoQty={assetGrpTwoQty}
-                          setAssetGrpTwoQty={setAssetGrpTwoQty}
-                          assetGrpTwoType={assetGrpTwoType}
-                          setAssetGrpTwoType={setAssetGrpTwoType}
-                          assetGrpTwoInspectionType={assetGrpTwoInspectionType}
-                          setAssetGrpTwoInspectionType={setAssetGrpTwoInspectionType}
-                          assetGrpTwoRating={assetGrpTwoRating}
-                          setAssetGrpTwoRating={setAssetGrpTwoRating}
-                          assetGrpTwoResult={assetGrpTwoResult}
-                          setAssetGrpTwoResult={setAssetGrpTwoResult}
-                          assetGrpTwoNotes={assetGrpTwoNotes}
-                          setAssetGrpTwoNotes={setAssetGrpTwoNotes}
-                          assetGrp3Qty={assetGrp3Qty}
-                          setAssetGrp3Qty={setAssetGrp3Qty}
-                          assetGrp3Type={assetGrp3Type}
-                          setAssetGrp3Type={setAssetGrp3Type}
-                          assetGrp3InspectionType={assetGrp3InspectionType}
-                          setAssetGrp3InspectionType={setAssetGrp3InspectionType}
-                          assetGrp3Rating={assetGrp3Rating}
-                          setAssetGrp3Rating={setAssetGrp3Rating}
-                          assetGrp3Result={assetGrp3Result}
-                          setAssetGrp3Result={setAssetGrp3Result}
-                          assetGrp3Notes={assetGrp3Notes}
-                          setAssetGrp3Notes={setAssetGrp3Notes}
-                          assetGrp4Qty={assetGrp4Qty}
-                          setAssetGrp4Qty={setAssetGrp4Qty}
-                          assetGrp4Type={assetGrp4Type}
-                          setAssetGrp4Type={setAssetGrp4Type}
-                          assetGrp4InspectionType={assetGrp4InspectionType}
-                          setAssetGrp4InspectionType={setAssetGrp4InspectionType}
-                          assetGrp4Rating={assetGrp4Rating}
-                          setAssetGrp4Rating={setAssetGrp4Rating}
-                          assetGrp4Result={assetGrp4Result}
-                          setAssetGrp4Result={setAssetGrp4Result}
-                          assetGrp4Notes={assetGrp4Notes}
-                          setAssetGrp4Notes={setAssetGrp4Notes}
-                          assetGrp5Qty={assetGrp5Qty}
-                          setAssetGrp5Qty={setAssetGrp5Qty}
-                          assetGrp5Type={assetGrp5Type}
-                          setAssetGrp5Type={setAssetGrp5Type}
-                          assetGrp5InspectionType={assetGrp5InspectionType}
-                          setAssetGrp5InspectionType={setAssetGrp5InspectionType}
-                          assetGrp5Rating={assetGrp5Rating}
-                          setAssetGrp5Rating={setAssetGrp5Rating}
-                          assetGrp5Result={assetGrp5Result}
-                          setAssetGrp5Result={setAssetGrp5Result}
-                          assetGrp5Notes={assetGrp5Notes}
-                          setAssetGrp5Notes={setAssetGrp5Notes}
-                          assetGrp6Qty={assetGrp6Qty}
-                          setAssetGrp6Qty={setAssetGrp6Qty}
-                          assetGrp6Type={assetGrp6Type}
-                          setAssetGrp6Type={setAssetGrp6Type}
-                          assetGrp6InspectionType={assetGrp6InspectionType}
-                          setAssetGrp6InspectionType={setAssetGrp6InspectionType}
-                          assetGrp6Rating={assetGrp6Rating}
-                          setAssetGrp6Rating={setAssetGrp6Rating}
-                          assetGrp6Result={assetGrp6Result}
-                          setAssetGrp6Result={setAssetGrp6Result}
-                          assetGrp6Notes={assetGrp6Notes}
-                          setAssetGrp6Notes={setAssetGrp6Notes}
-                          assetGrp7Qty={assetGrp7Qty}
-                          setAssetGrp7Qty={setAssetGrp7Qty}
-                          assetGrp7Type={assetGrp7Type}
-                          setAssetGrp7Type={setAssetGrp7Type}
-                          assetGrp7InspectionType={assetGrp7InspectionType}
-                          setAssetGrp7InspectionType={setAssetGrp7InspectionType}
-                          assetGrp7Rating={assetGrp7Rating}
-                          setAssetGrp7Rating={setAssetGrp7Rating}
-                          assetGrp7Result={assetGrp7Result}
-                          setAssetGrp7Result={setAssetGrp7Result}
-                          assetGrp7Notes={assetGrp7Notes}
-                          setAssetGrp7Notes={setAssetGrp7Notes}
-                          assetGrp8Qty={assetGrp8Qty}
-                          setAssetGrp8Qty={setAssetGrp8Qty}
-                          assetGrp8Type={assetGrp8Type}
-                          setAssetGrp8Type={setAssetGrp8Type}
-                          assetGrp8InspectionType={assetGrp8InspectionType}
-                          setAssetGrp8InspectionType={setAssetGrp8InspectionType}
-                          assetGrp8Rating={assetGrp8Rating}
-                          setAssetGrp8Rating={setAssetGrp8Rating}
-                          assetGrp8Result={assetGrp8Result}
-                          setAssetGrp8Result={setAssetGrp8Result}
-                          assetGrp8Notes={assetGrp8Notes}
-                          setAssetGrp8Notes={setAssetGrp8Notes}
-
-                      />
-                    </div>
-
-                    <button className="modalBtn heightSafetyBtn" onClick={closeModal}>
-                      close
-                    </button>
-                  </Modal>
+                    close
+                  </button>
+                </Modal>
               </div>
 
               {/* HEIGHT SAFETY INSPECTION CERTIFICATE */}
@@ -1599,26 +1620,26 @@ function jobProfile({ jobProps, id }) {
                 Height Safety Inspection Certificate
               </div>
               <div className="modal">
-                  <Modal
-                    isOpen={modalIsOpenHSIC}
-                    onAfterOpen={afterOpenModal}
-                    onRequestClose={closeModal}
-                    style={bodyCustomStyles}
-                    contentLabel="Example Modal"
-                  >
-                    
-                    <h2 ref={(_subtitle) => (subtitle = _subtitle)}>
-                      
-                    </h2>
-                    
-                    <div>
-                      <HeightSafetyCertificate job={job} />
-                    </div>
+                <Modal
+                  isOpen={modalIsOpenHSIC}
+                  onAfterOpen={afterOpenModal}
+                  onRequestClose={closeModal}
+                  style={bodyCustomStyles}
+                  contentLabel="Example Modal"
+                >
+                  <h2 ref={(_subtitle) => (subtitle = _subtitle)}></h2>
 
-                    <button className="modalBtn heightSafetyBtn" onClick={closeModal}>
-                      close
-                    </button>
-                  </Modal>
+                  <div>
+                    <HeightSafetyCertificate job={job} />
+                  </div>
+
+                  <button
+                    className="modalBtn heightSafetyBtn"
+                    onClick={closeModal}
+                  >
+                    close
+                  </button>
+                </Modal>
               </div>
 
               {/* BODY */}
@@ -1627,54 +1648,57 @@ function jobProfile({ jobProps, id }) {
                 Height Safety - Body
               </div>
               <div className="modal">
-                  <Modal
-                    isOpen={modalIsOpenHSBody}
-                    onAfterOpen={afterOpenModal}
-                    onRequestClose={closeModal}
-                    style={bodyCustomStyles}
-                    contentLabel="Example Modal"
-                  >
-                    
-                    <h2 ref={(_subtitle) => (subtitle = _subtitle)}>
-                      
-                    </h2>
-                    
-                    <div>
-                      <HeightSafetyBody job={job} />
-                    </div>
+                <Modal
+                  isOpen={modalIsOpenHSBody}
+                  onAfterOpen={afterOpenModal}
+                  onRequestClose={closeModal}
+                  style={bodyCustomStyles}
+                  contentLabel="Example Modal"
+                >
+                  <h2 ref={(_subtitle) => (subtitle = _subtitle)}></h2>
 
-                    <button className="modalBtn heightSafetyBtn" onClick={closeModal}>
-                      close
-                    </button>
-                  </Modal>
+                  <div>
+                    <HeightSafetyBody job={job} />
+                  </div>
+
+                  <button
+                    className="modalBtn heightSafetyBtn"
+                    onClick={closeModal}
+                  >
+                    close
+                  </button>
+                </Modal>
               </div>
 
               {/* INSPECTION SUMMARY */}
 
-              <div className="docs" onClick={() => setIsOpenHSInspectionSummary(true)}>
+              <div
+                className="docs"
+                onClick={() => setIsOpenHSInspectionSummary(true)}
+              >
                 Inspection Summary
               </div>
               <div className="modal">
-                  <Modal
-                    isOpen={modalIsOpenHSInspectionSummary}
-                    onAfterOpen={afterOpenModal}
-                    onRequestClose={closeModal}
-                    style={bodyCustomStyles}
-                    contentLabel="Example Modal"
-                  >
-                    
-                    <h2 ref={(_subtitle) => (subtitle = _subtitle)}>
-                      
-                    </h2>
-                    
-                    <div>
-                      <InspectionSummary job={job} />
-                    </div>
+                <Modal
+                  isOpen={modalIsOpenHSInspectionSummary}
+                  onAfterOpen={afterOpenModal}
+                  onRequestClose={closeModal}
+                  style={bodyCustomStyles}
+                  contentLabel="Example Modal"
+                >
+                  <h2 ref={(_subtitle) => (subtitle = _subtitle)}></h2>
 
-                    <button className="modalBtn heightSafetyBtn" onClick={closeModal}>
-                      close
-                    </button>
-                  </Modal>
+                  <div>
+                    <InspectionSummary job={job} />
+                  </div>
+
+                  <button
+                    className="modalBtn heightSafetyBtn"
+                    onClick={closeModal}
+                  >
+                    close
+                  </button>
+                </Modal>
               </div>
 
               {/* HEIGHT SAFETY ASSET MAP */}
@@ -1683,55 +1707,57 @@ function jobProfile({ jobProps, id }) {
                 Height Safety Asset Map
               </div>
               <div className="modal">
-                  <Modal
-                    isOpen={modalIsOpenHSAssetMap}
-                    onAfterOpen={afterOpenModal}
-                    onRequestClose={closeModal}
-                    style={bodyCustomStyles}
-                    contentLabel="Example Modal"
+                <Modal
+                  isOpen={modalIsOpenHSAssetMap}
+                  onAfterOpen={afterOpenModal}
+                  onRequestClose={closeModal}
+                  style={bodyCustomStyles}
+                  contentLabel="Example Modal"
+                >
+                  <h2 ref={(_subtitle) => (subtitle = _subtitle)}></h2>
+
+                  <div>
+                    <HeightSafetyAssetMap job={job} />
+                  </div>
+
+                  <button
+                    className="modalBtn heightSafetyBtn"
+                    onClick={closeModal}
                   >
-                    
-                    <h2 ref={(_subtitle) => (subtitle = _subtitle)}>
-                      
-                    </h2>
-                    
-                    <div>
-                      <HeightSafetyAssetMap job={job} />
-                    </div>
-
-                    <button className="modalBtn heightSafetyBtn" onClick={closeModal}>
-                      close
-                    </button>
-                  </Modal>
+                    close
+                  </button>
+                </Modal>
               </div>
-
 
               {/* HEIGHT INSPECTION REPORT */}
 
-              <div className="docs" onClick={() => setIsOpenInspectionReport(true)}>
+              <div
+                className="docs"
+                onClick={() => setIsOpenInspectionReport(true)}
+              >
                 Height Inspection Report
               </div>
               <div className="modal">
-                  <Modal
-                    isOpen={modalIsOpenInspectionReport}
-                    onAfterOpen={afterOpenModal}
-                    onRequestClose={closeModal}
-                    style={bodyCustomStyles}
-                    contentLabel="Example Modal"
-                  >
-                    
-                    <h2 ref={(_subtitle) => (subtitle = _subtitle)}>
-                      
-                    </h2>
-                    
-                    <div>
-                      <InspectionReport job={job} />
-                    </div>
+                <Modal
+                  isOpen={modalIsOpenInspectionReport}
+                  onAfterOpen={afterOpenModal}
+                  onRequestClose={closeModal}
+                  style={bodyCustomStyles}
+                  contentLabel="Example Modal"
+                >
+                  <h2 ref={(_subtitle) => (subtitle = _subtitle)}></h2>
 
-                    <button className="modalBtn heightSafetyBtn" onClick={closeModal}>
-                      close
-                    </button>
-                  </Modal>
+                  <div>
+                    <InspectionReport job={job} />
+                  </div>
+
+                  <button
+                    className="modalBtn heightSafetyBtn"
+                    onClick={closeModal}
+                  >
+                    close
+                  </button>
+                </Modal>
               </div>
 
               {/* IMAGES */}
@@ -1739,31 +1765,27 @@ function jobProfile({ jobProps, id }) {
                 Images
               </div>
               <div className="modal">
-                  <Modal
-                    isOpen={modalIsOpenImages}
-                    onAfterOpen={afterOpenModal}
-                    onRequestClose={closeModal}
-                    style={customStyles}
-                    contentLabel="Example Modal"
+                <Modal
+                  isOpen={modalIsOpenImages}
+                  onAfterOpen={afterOpenModal}
+                  onRequestClose={closeModal}
+                  style={customStyles}
+                  contentLabel="Example Modal"
+                >
+                  <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Images</h2>
+
+                  <div>
+                    <HeightAndSafetyImages job={job} />
+                  </div>
+
+                  <button
+                    className="modalBtn heightSafetyBtn"
+                    onClick={closeModal}
                   >
-                    
-                    <h2 ref={(_subtitle) => (subtitle = _subtitle)}>
-                      Images
-                    </h2>
-                    
-                    <div>
-                      <HeightAndSafetyImages job={job} />
-                    </div>
-
-                    <button className="modalBtn heightSafetyBtn" onClick={closeModal}>
-                      close
-                    </button>
-                  </Modal>
+                    close
+                  </button>
+                </Modal>
               </div>
-
-
-
-
 
               {/* PRINT DOCUMENTS */}
 
@@ -1771,28 +1793,27 @@ function jobProfile({ jobProps, id }) {
                 PRINT HEIGHT SAFETY DOCS
               </div>
               <div className="modal">
-                  <Modal
-                    isOpen={modalIsOpenPrintDocs}
-                    onAfterOpen={afterOpenModal}
-                    onRequestClose={closeModal}
-                    style={toPrintCustomStyles}
-                    contentLabel="Example Modal"
+                <Modal
+                  isOpen={modalIsOpenPrintDocs}
+                  onAfterOpen={afterOpenModal}
+                  onRequestClose={closeModal}
+                  style={toPrintCustomStyles}
+                  contentLabel="Example Modal"
+                >
+                  <h2 ref={(_subtitle) => (subtitle = _subtitle)}></h2>
+
+                  <div>
+                    <HeightAndSafetyToPrint job={job} />
+                  </div>
+
+                  <button
+                    className="modalBtn heightSafetyBtn"
+                    onClick={closeModal}
                   >
-                    
-                    <h2 ref={(_subtitle) => (subtitle = _subtitle)}>
-                      
-                    </h2>
-                    
-                    <div>
-                      <HeightAndSafetyToPrint job={job} />
-                    </div>
-
-                    <button className="modalBtn heightSafetyBtn" onClick={closeModal}>
-                      close
-                    </button>
-                  </Modal>
+                    close
+                  </button>
+                </Modal>
               </div>
-
 
               <div style={{ padding: "20px" }}>
                 <h3 style={{ marginBottom: "10px" }}>Sales & Estimating</h3>
@@ -1816,7 +1837,9 @@ function jobProfile({ jobProps, id }) {
                 </Modal>
               </div> */}
 
-<Link  href="[id]/[externalId]" as={`${job.id}/${job.jobNumber}`}>External Quote</Link>
+              <Link href="[id]/[externalId]" as={`${job.id}/${job.jobNumber}`}>
+                External Quote
+              </Link>
 
               <div className="docs" onClick={() => setIsOpenInQuote(true)}>
                 Internal Quote
@@ -1842,17 +1865,104 @@ function jobProfile({ jobProps, id }) {
               </div>
             </div>
 
-
-
-
+            
           </div>
+          <div
+              id="timesheet"
+              style={{ paddingBottom: "50px" }}
+              className={
+                toggleState === 4 ? "content  activeContent" : "content"
+              }
+            >
+              <div>
+                <h1>Time Sheet Information</h1>
+                <table>
+                  <tr>
+                    <td className="editLabel">
+                      <label>Date:</label>
+                    </td>
+                    <td className="editCell">
+                      <DatePicker selected={timeDate} onChange={(date) => setTimeDate(date)} />
+                    </td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <label>Staff:</label>
+                    </td>
+                    <td>
+                      <select>
+                        <option>Choose Staff...</option>
+                        {staff
+                        .filter((f) => array2.includes(f.id))
+                        .map((f) => (
+                          <option value={f.name}>{f.name}</option>
+                        ))}
+                      </select>
+                    </td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td className="editLabel">
+                      <label>Task:</label>
+                    </td>
+                    <td>
+                      <select>
+                        <option>Choose Task...</option>
+                        {job.quoteTasks.map((task) => (
+                          <option value={task.name}>{task.name}</option>
+                        ))}
+                      </select>
+                    </td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td><label>Start Time:</label></td>
+                    <td>
+                      <input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} />
+                    </td>
+                    <td>
+                      <label>Finish Time:</label>
+                    </td>
+                    <td>
+                      <input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <label>Notes:</label>
+                    </td>
+                    <td colSpan={3}>
+                      <ReactQuill value={timeSheetNotes} onChange={setTimeSheetNotes} />
+                    </td>
+                  </tr>
+                </table>
+                <button type="submit">Save</button>
+                <button type="submit">Cancel</button>
+              </div>
+            </div>
+            <div
+              id="timesheet"
+              style={{ paddingBottom: "50px" }}
+              className={
+                toggleState === 5 ? "content  activeContent" : "content"
+              }
+            >
+              <div>
+                <h1>Financial</h1>
+                
+              </div>
+            </div>
         </div>
       )}
       <style jsx>{`
-      <pre><code>p {
+        <pre > <code > p {
           margin-bottom: 0;
-        }</code></pre>
-        .wrapper {
+        }
+        </code > </pre > .wrapper {
           position: relative;
         }
 
@@ -1868,7 +1978,7 @@ function jobProfile({ jobProps, id }) {
           gap: 15px;
           align-items: center;
           font-size: 23px;
-          cursor: pointer
+          cursor: pointer;
         }
 
         .editBtn:hover {
@@ -2099,9 +2209,24 @@ function jobProfile({ jobProps, id }) {
           padding: 8px 0;
         }
 
-        input, select {
+        input,
+        select {
           height: 25px;
           border: 1px solid #e6eaec;
+        }
+
+        .editLabel {
+          width: 170px;
+          padding-left: 0;
+          font-weight: bold;
+          color: #333;
+        }
+  
+        .editCell {
+          width: 200px;
+          padding-top: 7px;
+          padding-bottom: 7px;
+          vertical-align: top;
         }
 
         @media screen and (max-width: 990px) {

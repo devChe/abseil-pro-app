@@ -109,22 +109,6 @@ import { v4 } from "uuid";
     const tempsCollectionRef = collection(db, "jobTemplates");
     const tasksCollectionRef = collection(db, "tasks");
     const quotesCollectionRef = collection(db, "quotes");
-  
-    // useEffect(() => {
-    //   const getJob = async () => {
-    //     const url = window.location.href;
-    //     const lastSegment = url.split("/").pop();
-    //     const q = query(jobsCollectionRef, where("jobNumber", "==", lastSegment));
-    //     const data = await getDocs(q);
-    //     const res = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-    //     setJob(res[0]);
-    //     setClientName(res[0].client);
-    //     setContactPerson(res[0].contactPerson);
-    //     setDate(new Date(res[0].startDate.seconds * 1000).toLocaleDateString("en-US"));
-    //     setValidDate(new Date(res[0].dueDate.seconds * 1000).toLocaleDateString("en-US"));
-    //   };
-    //   getJob();
-    // }, []);
 
     useEffect(() => {
       setLoading(true);

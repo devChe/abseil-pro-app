@@ -32,7 +32,7 @@ function JobTabs() {
 
     useEffect(() => {
         const getJobs = async () => {
-            const q = query(jobsCollectionRef, orderBy("startDate"));
+            const q = query(jobsCollectionRef, orderBy("jobNumber"));
             const data = await getDocs(q);
             const res = data.docs.map((doc) => ({...doc.data(), id: doc.id })); 
             setJobs(res);

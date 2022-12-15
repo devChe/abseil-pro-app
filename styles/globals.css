@@ -28,6 +28,12 @@ a {
   width: 95%;
 }
 
+.newQuoteDate {
+  border: 1px solid #cccccc;
+  outline: none;
+  padding: 5px;
+}
+
 @media screen and (min-width: 991px) {
   
 }

@@ -162,8 +162,32 @@ function Tabs() {
             }
 
             button {
-                border: none;
-            }
+            padding: 8px 12px;
+            margin-left: 0;
+            margin-top: 0;
+            margin-right: 0;
+            display: inline-block;
+            background: #fff;
+            background: linear-gradient(to bottom, #fff, #e6eaec);
+            border-radius: 3px;
+            border-width: 1px;
+            border-style: solid;
+            border-color: #ccc;
+            box-shadow: 0 0 0 1px inset rgb(255 255 255 / 30%);
+            color: #048abb;
+            font-size: 12px;
+            font-weight: bold;
+            text-decoration: none;
+            height: auto;
+            top: auto;
+          }
+  
+          button:hover {
+            text-decoration: none;
+            background: linear-gradient(to bottom, #fcfcfc, #e0e5e8);
+            border-color: #0382b3;
+          }
+
             .contentTabs {
                 flex-grow : 1;
             }

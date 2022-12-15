@@ -21,7 +21,8 @@ const newClient = () => {
 
   const createClient = async () => {
     await addDoc(clientsCollectionRef, { 
-      name: newName, 
+      name: newName,
+      slug: newName.split(' ').join('_'),
       phone: Number(newPhone),
       email: newEmail, 
       website: newWebsite,
@@ -51,7 +52,7 @@ const newClient = () => {
               </div>
               <div>
                 <label>Contact Number</label>
-                <input onChange={(event) => {setNewPhone(event.target.value)}} />
+                <input type="number" onChange={(event) => {setNewPhone(event.target.value)}} />
               </div>
               <div>
                 <label>Email</label>
@@ -59,7 +60,7 @@ const newClient = () => {
               </div>
               <div>
                 <label>Website</label>
-                <input onChange={(event) => {setNewWebsite(event.target.value)}} />
+                <input type="url" onChange={(event) => {setNewWebsite(event.target.value)}} />
               </div>
               <div>
                 <label>Physical Address</label>
