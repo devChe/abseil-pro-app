@@ -1911,7 +1911,7 @@ function jobProfile({ jobProps, id }) {
                     <td>
                       <select>
                         <option>Choose Task...</option>
-                        {job.quoteTasks.map((task) => (
+                        {job?.quoteTasks?.map((task) => (
                           <option value={task.name}>{task.name}</option>
                         ))}
                       </select>
