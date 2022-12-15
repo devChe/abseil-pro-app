@@ -44,6 +44,7 @@ const Quotes = () => {
         <table className='styled-table'>
             <thead>
                 <tr>
+                    <th>Quote No.</th>
                     <th>Name</th>
                     <th>Client</th>
                     <th>State</th>
