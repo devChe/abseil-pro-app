@@ -328,6 +328,7 @@ function clientProfile({ clientProps }) {
             <table className='styled-table'>
                 <thead>
                     <tr>
+                        <th>Quote No.</th>
                         <th>Name</th>
                         <th>Client</th>
                         <th>State</th>
@@ -335,15 +336,15 @@ function clientProfile({ clientProps }) {
                         <th>Amount</th>
                     </tr>
                 </thead>
-                    {quotes.map((quote) => {
+                    {quotes?.filter((q) => (q?.client === client?.name)  && (q?.state === "issued" || q?.state === "draft")).map((quote) => {
                         const validDate = `${!quote.validDate ? "" : new Date(quote.date.seconds * 1000).toLocaleDateString("en-US")}`;
                         return (
                         <>
                             <tr key={quote.id}>
-                            <Link  href="quoteProfile/[id]" as={`quoteProfile/${quote.id}`} key={quote.id}><td>{quote.quoteNumber}</td></Link>
+                            <Link  href="/quoteProfile/[id]" as={`/quoteProfile/${quote.id}`} onClick={() => window.location.href.replace("clientProfile/","" )} key={quote.id}><td>{quote.quoteNumber}</td></Link>
                                 <td>{quote.name}</td>
                                 <td>{quote.client}</td>
-                                <td>draft</td>
+                                <td>{quote.state}</td>
                                 <td>{!validDate ? "DD / MM / YYYY" : dateFormat(validDate, "dd mmm yyyy")}</td>
                                 <td>{quote.total}</td>
                             </tr>
@@ -355,6 +356,35 @@ function clientProfile({ clientProps }) {
             </table>
 
             <h1>Archived Quotes</h1>
+            <table className='styled-table'>
+                <thead>
+                    <tr>
+                        <th>Quote No.</th>
+                        <th>Name</th>
+                        <th>Client</th>
+                        <th>State</th>
+                        <th>Valid until</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                    {quotes?.filter((q) => (q?.client === client?.name) && (q?.state === "accepted" || q?.state === "declined" || q?.state === "revise")).map((quote) => {
+                        const validDate = `${!quote.validDate ? "" : new Date(quote.date.seconds * 1000).toLocaleDateString("en-US")}`;
+                        return (
+                        <>
+                            <tr key={quote.id}>
+                            <Link  href="/quoteProfile/[id]" as={`/quoteProfile/${quote.id}`} onClick={() => window.location.href.replace("clientProfile/","" )} key={quote.id}><td>{quote.quoteNumber}</td></Link>
+                                <td>{quote.name}</td>
+                                <td>{quote.client}</td>
+                                <td>{quote.state}</td>
+                                <td>{!validDate ? "DD / MM / YYYY" : dateFormat(validDate, "dd mmm yyyy")}</td>
+                                <td>{quote.total}</td>
+                            </tr>
+                        </>
+                        )
+                    }
+                )}
+                
+            </table>
         </div>
       </div>
 

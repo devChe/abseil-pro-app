@@ -10,8 +10,8 @@ function ExternalQuoteToPrint({
   job,
   selectedTasks,
   selectedCosts,
-  date,
-  validDate,
+  startDate,
+  endDate,
   contactPerson,
   clientName,
   desc,
@@ -87,11 +87,11 @@ function ExternalQuoteToPrint({
               </div>
               <div>
                 <span className="quoteLabel">Quote Date: </span>
-                {dateFormat(date, "dd mmm yyyy")}
+                {dateFormat(startDate, "dd mmm yyyy")}
               </div>
               <div>
                 <span className="quoteLabel">Valid to: </span>
-                {dateFormat(validDate, "dd mmm yyyy")}
+                {dateFormat(endDate, "dd mmm yyyy")}
               </div>
             </div>
           </div>

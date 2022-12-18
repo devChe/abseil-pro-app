@@ -60,7 +60,7 @@ const Quotes = () => {
                         <Link  href="quoteProfile/[id]" as={`quoteProfile/${quote.id}`} key={quote.id}><td className="quoteNumber">{quote.quoteNumber}</td></Link>
                             <td>{quote.name}</td>
                             <td>{quote.client}</td>
-                            <td>draft</td>
+                            <td>{quote.state ? quote.state : "draft"}</td>
                             <td>{!validDate ? "DD / MM / YYYY" : dateFormat(validDate, "dd mmm yyyy")}</td>
                             <td>{quote.total}</td>
                         </tr>

@@ -36,6 +36,13 @@ import LoadingSpinner from "../../../../components/LoadingSpinner";
 import ExternalQuoteToPrint from "../../../../components/ExternalQuoteToPrint";
 import { getDownloadURL, listAll, ref, uploadBytes } from "@firebase/storage";
 import { v4 } from "uuid";
+import dateFormat, { masks } from "dateformat";
+import DatePicker from "react-datepicker"; 
+import "react-datepicker/dist/react-datepicker.css";
+import 'react-datepicker/dist/react-datepicker-cssmodules.css';
+
+
+require("react-datepicker/dist/react-datepicker.css");
   
   
   const externalId = () => {
@@ -47,8 +54,8 @@ import { v4 } from "uuid";
     const [clientName, setClientName] = useState("");
     const [contactPerson, setContactPerson] = useState("");
     const [desc, setDesc] = useState("");
-    const [date, setDate] = useState("");
-    const [validDate, setValidDate] = useState("");
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
     const [name, setName] = useState("");
     const [budget, setBudget] = useState(0);
     const [selectedTasks, setSelectedTasks] = useState([]);
@@ -127,8 +134,8 @@ import { v4 } from "uuid";
           setName(job.data.name);
           setDesc(job.data.description);
           setContactPerson(job.data.contactPerson);
-          setDate(new Date(job.data.startDate.seconds * 1000).toLocaleDateString("en-US"));
-          setValidDate(new Date(job.data.dueDate.seconds * 1000).toLocaleDateString("en-US"));
+          setStartDate(new Date());
+          setEndDate(new Date());
           setLoading(false);
         })
       }
@@ -395,8 +402,8 @@ import { v4 } from "uuid";
         quoteNumber: quoteUniId === 'Q-Infinity' ? 'Q00001' : quoteUniId,
         number: quoteUniId === 'Q-Infinity' ? Number(1) : Number(initialNumber),
         userId: userId,
-        date: date,
-        validDate: validDate,
+        date: startDate,
+        validDate: endDate,
         client: clientName,
         contact: contactPerson || null,
         name: name,
@@ -406,11 +413,35 @@ import { v4 } from "uuid";
           sumOfTotal +
             sumOfQuoteTotal +
             (sumOfTotal + sumOfQuoteTotal) * 0.1
-        )
-  
+        ),
+        quoteCosts: arrayUnion({
+          id: "COST:" + taskId,
+          code: Number(newCode),
+          cost: Number(newQty) * Number(newUnitCost),
+          description: newCostDesc,
+          notes: newNotes,
+          quantity: Number(newQty),
+          supplier: newSupplier,
+          tax: newTax,
+          total: Number(newQty) * Number(newUnitPrice),
+          unitCost: Number(newUnitCost),
+          unitPrice: Number(newUnitPrice)
+        }),
+        quoteTasks: arrayUnion({
+          id: 'TASK:'+ taskId ,
+          name: newTask,
+          time: newTime,
+          baseRate: Number(newBaseRate),
+          cost: newTime.replace(":", ".") * Number(newBaseRate),
+          billableRate: Number(newBillableRate),
+          note: newDesc,
+          total: newTime.replace(":", ".") * Number(newBillableRate),
+        })
     });
+    
+    setPrintQuote(true);
   
-      window.location.pathname="/quotes";
+    // window.location.pathname="/quotes";
   
     }
     
@@ -427,15 +458,35 @@ import { v4 } from "uuid";
                 <label>Date:</label>
               </td>
               <td className="editCell">
-                <input value={date} onChange={(e) => setDate(e.target.value)} />
+                {/* <input type="date" value={date} onChange={(e) => setDate(e.target.value)} /> */}
+                <DatePicker
+                  selected={startDate}
+                  selectsStart
+                  startDate={startDate}
+                  endDate={endDate}
+                  onChange={date => setStartDate(date)}
+                  dateFormat={'dd/MM/yyyy'}
+                  className="newQuoteDate"
+                />
               </td>
               <td className="editLabel">
                 <label>Valid Date:</label>
               </td>
               <td className="editCell">
-                <input
+                {/* <input
+                  type="date"
                   value={validDate}
                   onChange={(e) => setValidDate(e.target.value)}
+                /> */}
+                <DatePicker
+                  selected={endDate}
+                  selectsEnd
+                  startDate={startDate}
+                  endDate={endDate}
+                  onChange={date => setEndDate(date)}
+                  dateFormat={'dd/MM/yyyy'}
+                  minDate={startDate}
+                  className="newQuoteDate"
                 />
               </td>
             </tr>
@@ -736,6 +787,7 @@ import { v4 } from "uuid";
                       <input
                         type="checkbox"
                         onChange={(e) => handleSelectCost(e, cost.id)}
+                        defaultChecked={isChecked}
                       />
                     </td>
                     <td style={{ textAlign: "left", fontWeight: "500" }}>
@@ -957,15 +1009,15 @@ import { v4 } from "uuid";
           </div>
         </div>
         <div>
-        <button onClick={() => setPrintQuote(true)}>Save</button>
+        <button onClick={saveQuote}>Save</button>
             <Modal open={printQuote} onClose={onCloseModal} center>
               <ExternalQuoteToPrint
                 job={job}
                 selectedTasks={selectedTasks}
                 selectedCosts={selectedCosts}
                 contactPerson={contactPerson}
-                validDate={validDate}
-                date={date}
+                endDate={endDate}
+                startDate={startDate}
                 clientName={clientName}
                 name={name}
                 desc={desc}
