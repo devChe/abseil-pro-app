@@ -85,7 +85,6 @@ require("react-datepicker/dist/react-datepicker.css");
     const [newCode, setNewCode] = useState("");
     const [newTax, setNewTax] = useState("");
     const [newNotes, setNewNotes] = useState("");
-    const [isChecked, setIsChecked] = useState(true);
     const [userId, setUserId] = useState('');
     const [loading, setLoading] = useState(false);
   
@@ -137,12 +136,14 @@ require("react-datepicker/dist/react-datepicker.css");
           setStartDate(new Date());
           setEndDate(new Date());
           setLoading(false);
+          setSelectedTasks(job.data.quoteTasks || []);
+          setSelectedCosts(job.data.quoteCosts || []);
         })
       }
       getJob()
     }, [])
 
-    
+  
   
     useEffect(() => {
       const getQuotes = async () => {
@@ -163,7 +164,6 @@ require("react-datepicker/dist/react-datepicker.css");
   
     const handleSelectTask = (e, id) => {
       const taskSelected = job.data.quoteTasks.find((task) => task.id === id);
-      
       if (e.target.checked) {
         setSelectedTasks((prev) => [...prev, taskSelected]);
       } else {
@@ -173,6 +173,8 @@ require("react-datepicker/dist/react-datepicker.css");
         });
       }
     };
+
+    console.log(selectedTasks);
 
     const handleSelectCost = (e, id) => {
       const costSelected = job.data.quoteCosts.find((cost) => cost.id === id);
@@ -396,8 +398,8 @@ require("react-datepicker/dist/react-datepicker.css");
     }
   
     // SAVE QUOTE
-  
     const saveQuote = async () => {
+      console.log(selectedTasks);
       await addDoc(quotesCollectionRef, {
         quoteNumber: quoteUniId === 'Q-Infinity' ? 'Q00001' : quoteUniId,
         number: quoteUniId === 'Q-Infinity' ? Number(1) : Number(initialNumber),
@@ -414,29 +416,8 @@ require("react-datepicker/dist/react-datepicker.css");
             sumOfQuoteTotal +
             (sumOfTotal + sumOfQuoteTotal) * 0.1
         ),
-        quoteCosts: arrayUnion({
-          id: "COST:" + taskId,
-          code: Number(newCode),
-          cost: Number(newQty) * Number(newUnitCost),
-          description: newCostDesc,
-          notes: newNotes,
-          quantity: Number(newQty),
-          supplier: newSupplier,
-          tax: newTax,
-          total: Number(newQty) * Number(newUnitPrice),
-          unitCost: Number(newUnitCost),
-          unitPrice: Number(newUnitPrice)
-        }),
-        quoteTasks: arrayUnion({
-          id: 'TASK:'+ taskId ,
-          name: newTask,
-          time: newTime,
-          baseRate: Number(newBaseRate),
-          cost: newTime.replace(":", ".") * Number(newBaseRate),
-          billableRate: Number(newBillableRate),
-          note: newDesc,
-          total: newTime.replace(":", ".") * Number(newBillableRate),
-        })
+        quoteCosts: selectedCosts,
+        quoteTasks: selectedTasks
     });
     
     setPrintQuote(true);
@@ -604,9 +585,8 @@ require("react-datepicker/dist/react-datepicker.css");
                     <td>
                       <input
                         type="checkbox"
-                        onClick={(e => setIsChecked(true))}
                         onChange={(e) => handleSelectTask(e, task.id)}
-                        defaultChecked={isChecked}
+                        defaultChecked={true}
                       />
                     </td>
                     <td style={{ textAlign: "left", fontWeight: "500" }}>
@@ -787,7 +767,7 @@ require("react-datepicker/dist/react-datepicker.css");
                       <input
                         type="checkbox"
                         onChange={(e) => handleSelectCost(e, cost.id)}
-                        defaultChecked={isChecked}
+                        defaultChecked={true}
                       />
                     </td>
                     <td style={{ textAlign: "left", fontWeight: "500" }}>
