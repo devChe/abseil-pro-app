@@ -19,19 +19,19 @@ import {
     updateDoc,
     where,
   } from "firebase/firestore";
-  import { useRouter } from "next/router";
-  import React, { useState, useEffect } from "react";
-  import { db, storage } from "../../../../src/config/firebase.config";
-  import dynamic from "next/dynamic";
-  const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
-  import "react-quill/dist/quill.snow.css";
-  import "react-responsive-modal/styles.css";
-  import { Modal } from "react-responsive-modal";
-  import moment from "moment/moment";
-  import NewQuoteTask from "../../../../components/NewQuoteTask";
-  import { faWindowRestore } from "@fortawesome/free-solid-svg-icons";
-  import NewQuoteCosts from "../../../../components/NewQuoteCosts";
-  import Link from "next/link";
+import { useRouter } from "next/router";
+import React, { useState, useEffect } from "react";
+import { db, storage } from "../../../../src/config/firebase.config";
+import dynamic from "next/dynamic";
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+import "react-quill/dist/quill.snow.css";
+import "react-responsive-modal/styles.css";
+import { Modal } from "react-responsive-modal";
+import moment from "moment/moment";
+import NewQuoteTask from "../../../../components/NewQuoteTask";
+import { faWindowRestore } from "@fortawesome/free-solid-svg-icons";
+import NewQuoteCosts from "../../../../components/NewQuoteCosts";
+import Link from "next/link";
 import LoadingSpinner from "../../../../components/LoadingSpinner";
 import ExternalQuoteToPrint from "../../../../components/ExternalQuoteToPrint";
 import { getDownloadURL, listAll, ref, uploadBytes } from "@firebase/storage";

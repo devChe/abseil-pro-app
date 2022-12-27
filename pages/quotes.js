@@ -5,6 +5,9 @@ import React, { useEffect, useState } from 'react'
 import { db } from '../src/config/firebase.config';
 import dateFormat, { masks } from "dateformat";
 
+const RedLink = styled.a`
+  color: red;
+`
 
 const Quotes = () => {
     const [quotes, setQuotes] = useState([]);
@@ -57,7 +60,7 @@ const Quotes = () => {
                     return (
                     <>
                         <tr key={quote.id}>
-                        <Link  href="quoteProfile/[id]" as={`quoteProfile/${quote.id}`} key={quote.id}><td className="quoteNumber">{quote.quoteNumber}</td></Link>
+                        <Link  href="quoteProfile/[id]" as={`quoteProfile/${quote.id}`} key={quote.id} legacyBehavior><td className="quoteNumber">{quote.quoteNumber}</td></Link>
                             <td>{quote.name}</td>
                             <td>{quote.client}</td>
                             <td>{quote.state ? quote.state : "draft"}</td>

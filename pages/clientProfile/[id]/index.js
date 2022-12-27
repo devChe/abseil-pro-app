@@ -135,6 +135,7 @@ function clientProfile({ clientProps }) {
     };
     getQuotes();
   }, []);
+  
 
   return (
     <>
@@ -341,7 +342,7 @@ function clientProfile({ clientProps }) {
                         return (
                         <>
                             <tr key={quote.id}>
-                            <Link  href="/quoteProfile/[id]" as={`/quoteProfile/${quote.id}`} onClick={() => window.location.href.replace("clientProfile/","" )} key={quote.id}><td>{quote.quoteNumber}</td></Link>
+                            <td className="quoteNumber"><Link href="/quoteProfile/[id]" as={`/quoteProfile/${quote.id}`} onClick={() => window.location.href.replace("clientProfile/","" )} key={quote.id}>{quote.quoteNumber}</Link></td>
                                 <td>{quote.name}</td>
                                 <td>{quote.client}</td>
                                 <td>{quote.state}</td>
@@ -372,7 +373,7 @@ function clientProfile({ clientProps }) {
                         return (
                         <>
                             <tr key={quote.id}>
-                            <Link  href="/quoteProfile/[id]" as={`/quoteProfile/${quote.id}`} onClick={() => window.location.href.replace("clientProfile/","" )} key={quote.id}><td>{quote.quoteNumber}</td></Link>
+                            <td className="quoteNumber"><Link  href="/quoteProfile/[id]" as={`/quoteProfile/${quote.id}`} onClick={() => window.location.href.replace("quoteProfile/","" )} key={quote.id}>{quote.quoteNumber}</Link></td>
                                 <td>{quote.name}</td>
                                 <td>{quote.client}</td>
                                 <td>{quote.state}</td>
@@ -487,6 +488,14 @@ function clientProfile({ clientProps }) {
 
         .tableWrapper {
             overflow-x: auto;
+        }
+
+        .quoteNumber {
+          color: blue;
+        }
+
+        .quoteNumber:hover {
+          text-decoration: underline;
         }
 
         @media screen and (max-width: 990px) {
