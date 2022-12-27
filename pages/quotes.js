@@ -5,10 +5,6 @@ import React, { useEffect, useState } from 'react'
 import { db } from '../src/config/firebase.config';
 import dateFormat, { masks } from "dateformat";
 
-const RedLink = styled.a`
-  color: red;
-`
-
 const Quotes = () => {
     const [quotes, setQuotes] = useState([]);
     const [job, setJob] = useState([]);
