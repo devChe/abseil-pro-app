@@ -45,7 +45,7 @@ import 'react-datepicker/dist/react-datepicker-cssmodules.css';
 require("react-datepicker/dist/react-datepicker.css");
   
   
-  const externalId = () => {
+const externalId = () => {
     const [job, setJob] = useState({});
     const [clients, setClients] = useState([]);
     const [temps, setTemps] = useState([]);
@@ -58,6 +58,7 @@ require("react-datepicker/dist/react-datepicker.css");
     const [endDate, setEndDate] = useState("");
     const [name, setName] = useState("");
     const [budget, setBudget] = useState(0);
+    const [state, setState] = useState('draft');
     const [selectedTasks, setSelectedTasks] = useState([]);
     const [selectedCosts, setSelectedCosts] = useState([]);
     const [open, setOpen] = useState(false);
@@ -153,9 +154,13 @@ require("react-datepicker/dist/react-datepicker.css");
         setQuotes(res);
   
         const quoteNumbers = res.map((quote) => quote.number)
+        console.log("Eto ang quotenumbers:" + quoteNumbers);
         const largest = Math.max(...quoteNumbers);
+        console.log("Eto ang largest number:" + largest);
         const sum = largest + 1;
+        console.log("Eto ang sum ng largest + 1:" + sum);
         const quoteNumber = sum.toString().padStart('5', 0);
+        console.log("Eto ang quotenumber:" + quoteNumber);
         setQuoteUniId('Q' + quoteNumber);
         setInitialNumber(sum);
       };
@@ -291,6 +296,7 @@ require("react-datepicker/dist/react-datepicker.css");
           billableRate: Number(newBillableRate),
           note: newDesc,
           total: newTime.replace(":", ".") * Number(newBillableRate),
+          state: state
         }),
       }).then(() => {
         setAddTaskOpen(false);
@@ -313,7 +319,7 @@ require("react-datepicker/dist/react-datepicker.css");
       index
     ) {
       const jobDoc = doc(db, "jobs", jobId);
-      updateDoc(jobDoc, {
+      await updateDoc(jobDoc, {
         quoteTasks: arrayRemove({
           id: id,
           name: name,

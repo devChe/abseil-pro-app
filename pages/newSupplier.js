@@ -104,7 +104,6 @@ function newSupplier() {
             input {
                 width: 100%;
                 padding: 5px;
-                
             }
 
             input:focus {

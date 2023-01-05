@@ -59,6 +59,7 @@ import {
       const [endDate, setEndDate] = useState(new Date());
       const [name, setName] = useState("");
       const [budget, setBudget] = useState(0);
+      const [state, setState] = useState('draft');
       const [selectedTasks, setSelectedTasks] = useState([]);
       const [selectedCosts, setSelectedCosts] = useState([]);
       const [open, setOpen] = useState(false);
@@ -142,15 +143,37 @@ import {
           const data = await getDocs(q);
           const res = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
           setQuotes(res);
+          console.log(res);
     
           const quoteNumbers = res.map((quote) => quote.number)
+          console.log(quoteNumbers)
           const largest = Math.max(...quoteNumbers);
+          console.log(largest)
           const sum = largest + 1;
+          console.log(sum);
           const quoteNumber = sum.toString().padStart('5', 0);
+          console.log(quoteNumber);
           setQuoteUniId('Q' + quoteNumber);
+          console.log('Q' + quoteNumber);
           setInitialNumber(sum);
         };
         getQuotes();
+      }, []);
+
+      const uniId = () => {
+        const d = new Date();
+        const day = d.getDate().toString();
+        const month = d.getMonth().toString();
+        const yr = d.getFullYear().toString();
+        const hr = d.getHours().toString();
+        const min = d.getMinutes().toString();
+        const sec = d.getSeconds().toString();
+        const formattedDate = month + day + yr + hr + min + sec;
+        setTaskId(formattedDate);
+      };
+    
+      useEffect(() => {
+        setTaskId(uniId);
       }, []);
     
       // const handleSelectTask = (e, id) => {
@@ -209,8 +232,11 @@ import {
       const handleNameChange = (e) => {
         console.log(e.target.value);
         const selectedName = temps.find((temp) => temp.name === e.target.value);
+        const selectedTasks = tasks.find((task) => task.name.includes(e.target.value));
         setDesc(selectedName.description);
         setName(selectedName.name);
+        setSelectedTasks(selectedTasks);
+        
       };
     
       let dollarUSLocale = Intl.NumberFormat("en-US");
@@ -235,16 +261,8 @@ import {
           name: name,
           description: desc,
           budget: budget,
-          tasks: arrayUnion({ 
-            baseRate: baseRate,
-            billableRate: billableRate,
-            cost: cost,
-            id: "TASK:102420221424",
-            name: "Height Safety System Inspections",
-            note: "<p>yeah yeah yeah</p>",
-            time: "8:00",
-            total: 760
-          }), 
+          state: "Draft",
+          quoteTasks: arrayUnion(selectedTasks)
       });
         window.location.pathname="/quotes";
       }
@@ -363,7 +381,6 @@ import {
                 </td>
               </tr>
             </table>
-            {/*  */}
           </div>
           <div>
           <button onClick={saveQuote}>Save</button>

@@ -30,7 +30,7 @@ function ExternalQuoteToPrint({
 
   //getting selected tasks
 
-  const totalArray = selectedTasks.map((selected) => selected.total);
+  const totalArray = selectedTasks ? selectedTasks.map((selected) => selected.total) : "";
 
   let sum = 0;
 
@@ -40,7 +40,7 @@ function ExternalQuoteToPrint({
 
   //getting selected costs
 
-  const selectedCostsArray = selectedCosts.map((selected) => selected.total);
+  const selectedCostsArray = selectedCosts ? selectedCosts.map((selected) => selected.total) : "";
 
   let costs = 0;
 
@@ -110,7 +110,7 @@ function ExternalQuoteToPrint({
               <td></td>
               <th style={{ textAlign: "right" }}>Amount</th>
             </tr>
-            {selectedTasks?.map((quoteTask) => (
+            {selectedTasks.map((quoteTask) => (
               <>
                 <tr>
                   <td style={{ fontWeight: "bold" }}>{quoteTask.name}</td>

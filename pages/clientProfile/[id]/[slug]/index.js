@@ -36,6 +36,7 @@ const ClientQuote = () => {
     const [newTask, setNewTask] = useState("");
     const [newBillableRate, setNewBillableRate] = useState("");
     const [quotes, setQuotes] = useState([]);
+    const [initialNumber, setInitialNumber] = useState('');
 
     const router = useRouter();
 
@@ -68,11 +69,16 @@ const ClientQuote = () => {
         setQuotes(res);
   
         const quoteNumbers = res.map((quote) => quote.number)
-        const largest = Math.max(...quoteNumbers);
-        const sum = largest + 1;
-        const quoteNumber = sum.toString().padStart('5', 0);
-        setQuoteUniId('Q' + quoteNumber);
-        // setInitialNumber(sum);
+          console.log(quoteNumbers)
+          const largest = Math.max(...quoteNumbers);
+          console.log(largest)
+          const sum = largest + 1;
+          console.log(sum);
+          const quoteNumber = sum.toString().padStart('5', 0);
+          console.log(quoteNumber);
+          setQuoteUniId('Q' + quoteNumber);
+          console.log('Q' + quoteNumber);
+          setInitialNumber(sum);
       };
       getQuotes();
     }, []);
@@ -104,6 +110,7 @@ const ClientQuote = () => {
     const saveQuote = async () => {
       await addDoc(quotesCollectionRef, {
         quoteNumber: quoteUniId === 'Q-Infinity' ? 'Q00001' : quoteUniId,
+        number: quoteUniId === 'Q-Infinity' ? Number(1) : Number(initialNumber),
         date: startDate,
         validDate: endDate,
         client: clientName,
