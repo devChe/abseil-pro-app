@@ -375,6 +375,7 @@ const quoteProfile = ({quoteProps}) => {
       window.location.pathname="/quotes";
     };
 
+    console.log(quote.state);
     
     const saveAsIssuePrint = async () => {
       const id = quote.id;
