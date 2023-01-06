@@ -36,6 +36,7 @@ export const getStaticProps = async (context) => {
   quoteProps.id = id;
   return {
     props: { quoteProps: JSON.stringify(quoteProps) || null },
+    revalidate: 1
   };
 };
 const quoteProfile = ({quoteProps}) => {
@@ -376,7 +377,7 @@ const quoteProfile = ({quoteProps}) => {
     };
 
     console.log(quote.state);
-    
+
     const saveAsIssuePrint = async () => {
       const id = quote.id;
       const quoteDoc = doc(db, "quotes", id);
@@ -388,6 +389,16 @@ const quoteProfile = ({quoteProps}) => {
         setPrintQuoteIssue(true);
       });
       
+    };
+
+    const saveAsIssue = async () => {
+      const id = quote.id;
+      const quoteDoc = doc(db, "quotes", id);
+      await updateDoc(quoteDoc, {
+        state: "Issued",
+      }).then(() => {
+        alert("Quote ISSUED");
+      })
     };
 
     const deleteQuote = async () => {
@@ -954,8 +965,8 @@ const quoteProfile = ({quoteProps}) => {
                   quoteUniId={quote.quoteNumber}
                   />
               </Modal>
-              <button type="submit">Issue</button>
-              <button type="submit">Issue & Accept</button>
+              <button type="submit" onClick={saveAsIssue}>Issue</button>
+              <button type="submit" onClick={saveAsIssueAccept}>Issue & Accept</button>
               <button type="submit" style={{background: "linear-gradient(to bottom, #bbbec2, #949a9e)", color:"#fff"}}  onClick={() => setDeleteQuoteOpen(true)}>Cancel</button>
               <Modal
                 open={deleteQuoteOpen}
