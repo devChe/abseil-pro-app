@@ -44,6 +44,7 @@ export const getStaticProps = async (context) => {
   clientProps.id = id;
   return {
     props: { clientProps: JSON.stringify(clientProps) || null },
+    revalidate: 1
   };
 };
 

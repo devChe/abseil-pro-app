@@ -28,7 +28,8 @@ export const getStaticProps = async (context) => {
     const supplierProps = docSnap.data();
     supplierProps.id = id;
     return {
-        props: { supplierProps: JSON.stringify(supplierProps) || null}
+        props: { supplierProps: JSON.stringify(supplierProps) || null},
+        revalidate: 1
     }
 }
 

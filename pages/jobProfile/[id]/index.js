@@ -65,6 +65,7 @@ import ExternalQuote from "../../../components/ExternalQuote";
 import HeightAndSafetyToPrint from "../../../components/HeightAndSafetyToPrint";
 import HeightAndSafetyImages from "../../../components/HeightAndSafetyImages";
 import DisqusThread from "../../../components/DisqusThread";
+import FinancialView from "../../../components/FinancialView";
 
 require("react-datepicker/dist/react-datepicker.css");
 
@@ -1953,7 +1954,7 @@ function jobProfile({ jobProps, id }) {
             >
               <div>
                 <h1>Financial</h1>
-                
+                <FinancialView job={job} />
               </div>
             </div>
         </div>

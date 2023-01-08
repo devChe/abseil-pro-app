@@ -27,7 +27,8 @@ export const getStaticProps = async (context) => {
     const heightSafetyProps = docSnap.data();
     heightSafetyProps.id = id;
     return {
-        props: { heightSafetyProps: JSON.stringify(heightSafetyProps) || null}
+        props: { heightSafetyProps: JSON.stringify(heightSafetyProps) || null},
+        revalidate: 1
     }
 }
 
