@@ -5,26 +5,31 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { collection, getDocs, orderBy, query } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react'
+import LoadingSpinner from '../components/LoadingSpinner';
 import { db } from '../src/config/firebase.config';
 
 const photos = () => {
     const [jobs, setJobs] = useState([]);
     const [clients, setClients] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     const jobsCollectionRef = collection(db, "jobs");
 
     useEffect(() => {
+        setLoading(true)
         const getJobs = async () => {
             const q = query(jobsCollectionRef);
             const data = await getDocs(q);
             const res = data.docs.map((doc) => ({...doc.data(), id: doc.id })); 
             setJobs(res);
+            setLoading(false);
         }
         getJobs();
     }, [])
     
   return (
     <div>
+        {loading && <LoadingSpinner />}
         <h1>Photo Gallery</h1>
         <hr/>
         <div>
