@@ -162,6 +162,12 @@ function clientProfile({ clientProps }) {
           >
             Quote
           </div>
+          <div
+            className={toggleState === 3 ? "tabs activeTabs" : "tabs"}
+            onClick={() => toggleTab(3)}
+          >
+            Photo
+          </div>
         </div>
         <div
           id="clients"
@@ -324,8 +330,7 @@ function clientProfile({ clientProps }) {
         <div
           id="clients"
           className={toggleState === 2 ? "content  activeContent" : "content"}
-          style={{ overflowX: "auto" }}
-        >
+          style={{ overflowX: "auto" }}>
             <h1>Active Quotes</h1>
             <table className='styled-table'>
                 <thead>
@@ -387,6 +392,13 @@ function clientProfile({ clientProps }) {
                 )}
                 
             </table>
+        </div>
+        <div
+          id="clients"
+          className={toggleState === 3 ? "content  activeContent" : "content"}
+          style={{ overflowX: "auto" }}
+        >
+          <h1>Photos</h1>
         </div>
       </div>
 
