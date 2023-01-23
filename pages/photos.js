@@ -11,9 +11,14 @@ import { db } from '../src/config/firebase.config';
 const photos = () => {
     const [jobs, setJobs] = useState([]);
     const [clients, setClients] = useState([]);
+    const [staff, setStaff] = useState([]);
     const [loading, setLoading] = useState(false);
 
     const jobsCollectionRef = collection(db, "jobs");
+
+    const clientsCollectionRef = collection(db, "clients");
+
+    const employeesCollectionRef = collection(db, "employees");
 
     useEffect(() => {
         setLoading(true)
@@ -26,6 +31,30 @@ const photos = () => {
         }
         getJobs();
     }, [])
+
+    useEffect(() => {
+        setLoading(true)
+        const getClients = async () => {
+            const q = query(clientsCollectionRef);
+            const data = await getDocs(q);
+            const res = data.docs.map((doc) => ({...doc.data(), id: doc.id })); 
+            setClients(res);
+            setLoading(false);
+        }
+        getClients();
+    }, [])
+
+    useEffect(() => {
+        setLoading(true)
+        const getStaff = async () => {
+            const q = query(employeesCollectionRef);
+            const data = await getDocs(q);
+            const res = data.docs.map((doc) => ({...doc.data(), id: doc.id })); 
+            setStaff(res);
+            setLoading(false);
+        }
+        getStaff();
+    }, [])
     
   return (
     <div>
@@ -37,16 +66,30 @@ const photos = () => {
         </div>
         <div className="imageGrid">
             {jobs?.map((job) => (
-                job.images?.map((img) => (
-                    <img src={img.url} style={{ width: "100%",height:"auto", margin: "10px" }} />
+                job.photos?.map((img) => (
+                    <img src={img.url} style={{ width: "100%",height:"300", margin: "10px" }} />
                 ) )
               ))}
         </div>
         <div>
             <h2>From Clients</h2>
         </div>
+        <div className="imageGrid">
+            {clients?.map((cient) => (
+                cient.photos?.map((img) => (
+                    <img src={img.url} style={{ width: "100%",height:"300", margin: "10px" }} />
+                ) )
+              ))}
+        </div>
         <div>
             <h2>From Employee</h2>
+        </div>
+        <div className="imageGrid">
+            {staff?.map((person) => (
+                person.photos?.map((img) => (
+                    <img src={img.url} style={{ width: "100%",height:"300", margin: "10px" }} />
+                ) )
+              ))}
         </div>
 
         <style jsx>{`

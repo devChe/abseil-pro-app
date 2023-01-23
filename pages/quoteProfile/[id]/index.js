@@ -401,6 +401,16 @@ const quoteProfile = ({quoteProps}) => {
       })
     };
 
+    const saveAsIssueAccept = async () => {
+      const id = quote.id;
+      const quoteDoc = doc(db, "quotes", id);
+      await updateDoc(quoteDoc, {
+        state: "Issued",
+      }).then(() => {
+        alert("Quote ISSUED");
+      })
+    }
+
     const deleteQuote = async () => {
       const id = quote.id
       const quoteDoc = doc(db, "quotes", id);

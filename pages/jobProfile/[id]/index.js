@@ -22,6 +22,7 @@ import {
   orderBy,
   arrayUnion,
   arrayRemove,
+  onSnapshot,
 } from "firebase/firestore";
 import { onAuthStateChanged, signOut, getAuth } from "firebase/auth";
 import firebase from "firebase/app";
@@ -66,6 +67,7 @@ import HeightAndSafetyToPrint from "../../../components/HeightAndSafetyToPrint";
 import HeightAndSafetyImages from "../../../components/HeightAndSafetyImages";
 import DisqusThread from "../../../components/DisqusThread";
 import FinancialView from "../../../components/FinancialView";
+import JobImageUpload from "../../../components/JobImageUpload";
 
 require("react-datepicker/dist/react-datepicker.css");
 
@@ -1003,7 +1005,8 @@ function jobProfile({ jobProps, id }) {
             <h4 style={{ paddingBottom: "15px", paddingTop: "20px" }}>
               Image gallery
             </h4>
-            <ImgMultipleUpload
+            <JobImageUpload job={job} />
+            {/* <ImgMultipleUpload
               url={url}
               hide={hide}
               imageName={imageName}
@@ -1106,7 +1109,7 @@ function jobProfile({ jobProps, id }) {
                   No Images uploaded
                 </h4>
               )}
-            </div>
+            </div> */}
           </div>
           <div
             id="docs"

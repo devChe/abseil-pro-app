@@ -21,6 +21,7 @@ import {
 import Modal from "react-modal";
 import NewContactForm from "../../../components/NewContactForm";
 import dateFormat, { masks } from "dateformat";
+import ClientImageUpload from "../../../components/ClientImageUpload";
 
 
 export const getStaticPaths = async () => {
@@ -399,6 +400,8 @@ function clientProfile({ clientProps }) {
           style={{ overflowX: "auto" }}
         >
           <h1>Photos</h1>
+          <hr/>
+          <ClientImageUpload client={client} />
         </div>
       </div>
 

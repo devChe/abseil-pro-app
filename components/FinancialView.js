@@ -1,7 +1,10 @@
 /* eslint-disable react/jsx-key */
 import React, { useEffect, useState } from 'react';
 import moment from "moment/moment";
-import Modal from "react-modal";
+import Modal from 'react-responsive-modal';
+import "react-responsive-modal/styles.css";
+import NewProgressInvoice from './NewProgressInvoice';
+
 
 
 const customStyles = {
@@ -55,12 +58,16 @@ const FinancialView = ({job}) => {
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "left" }}>
-        <button onClick={() => setOpenNewProgressInvoice(true)}>New Progress Invoice</button>
+        {/* <button onClick={() => setOpenNewProgressInvoice(true)}>New Progress Invoice</button>
         <Modal isOpen={openNewProgressInvoice} onRequestClose={onCloseModal} onClose={onCloseModal} style={customStyles} center>
           <h2>New Progress Invoice</h2>
           <button onClick={onCloseModal}>close</button>
           
-        </Modal>
+        </Modal> */}
+        <button onClick={() => setOpenNewProgressInvoice(true)}>+ New Task</button>
+            <Modal style={{width:"100%"}} open={openNewProgressInvoice} onClose={onCloseModal} center>
+              <NewProgressInvoice job={job} />
+            </Modal>
         <button type="submit">New Final Invoice</button>
       </div>
       <h2>Financial Settings</h2>

@@ -130,7 +130,7 @@ import {
               data: doc.data()
             }));
             const job = res[0];
-            (job);
+            setJob(job);
             setLoading(false);
           })
         }

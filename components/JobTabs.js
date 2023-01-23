@@ -62,8 +62,6 @@ function JobTabs() {
         setToggleState(index);
     };
 
-    console.log(jobs);
-
     const admin = staff.map(user => user.role);
 
 
