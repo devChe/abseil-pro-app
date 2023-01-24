@@ -767,6 +767,18 @@ function jobProfile({ jobProps, id }) {
             >
               Financial
             </div>
+            <div
+              className={toggleState === 6 ? "tabs activeTabs" : "tabs"}
+              onClick={() => toggleTab(6)}
+            >
+              Forms
+            </div>
+            <div
+              className={toggleState === 7 ? "tabs activeTabs" : "tabs"}
+              onClick={() => toggleTab(7)}
+            >
+              Reports
+            </div>
           </div>
 
           <div
@@ -1949,7 +1961,7 @@ function jobProfile({ jobProps, id }) {
               </div>
             </div>
             <div
-              id="timesheet"
+              id="financial"
               style={{ paddingBottom: "50px" }}
               className={
                 toggleState === 5 ? "content  activeContent" : "content"
@@ -1958,6 +1970,29 @@ function jobProfile({ jobProps, id }) {
               <div>
                 <h1>Financial</h1>
                 <FinancialView job={job} />
+              </div>
+            </div>
+            <div
+              id="forms"
+              style={{ paddingBottom: "50px" }}
+              className={
+                toggleState === 6 ? "content  activeContent" : "content"
+              }
+            >
+              <div>
+                <h1>Forms</h1>
+                
+              </div>
+            </div>
+            <div
+              id="Reports"
+              style={{ paddingBottom: "50px" }}
+              className={
+                toggleState === 7 ? "content  activeContent" : "content"
+              }
+            >
+              <div>
+                <h1>Reports</h1>
               </div>
             </div>
         </div>
@@ -2070,7 +2105,7 @@ function jobProfile({ jobProps, id }) {
         .tabs {
           padding: 15px;
           text-align: center;
-          width: 20%;
+          width: auto;
           background: rgba(128, 128, 128, 0.075);
           cursor: pointer;
           border-bottom: 1px solid rgba(0, 0, 0, 0.274);

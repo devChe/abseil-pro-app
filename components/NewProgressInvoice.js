@@ -29,10 +29,10 @@ const NewProgressInvoice = ({job}) => {
                             <input type="text" value="0.00"  />
                             <label>progress amount / deposit</label>
                         </div>
-                        {/* <div>
-                            <p>Description to appear on the invoice if the type is progress amount / deposit. To setup a default description, add a cost via the Business > Settings > Costs screen with the code "PROGRESS-INVOICE".</p>
+                        <div>
+                            <p>Description to appear on the invoice if the type is progress amount / deposit. To setup a default description, add a cost via the Business &gt; Settings &gt; Costs screen with the code "PROGRESS-INVOICE".</p>
                             <input name="ctl00$PageContent$ctl24" type="text" maxLength={100} className="EditTextBoxMulti"/>
-                        </div> */}
+                        </div>
                     </td>
                 </tr>
                 <tr>

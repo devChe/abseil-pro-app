@@ -64,7 +64,7 @@ const FinancialView = ({job}) => {
           <button onClick={onCloseModal}>close</button>
           
         </Modal> */}
-        <button onClick={() => setOpenNewProgressInvoice(true)}>+ New Task</button>
+        <button onClick={() => setOpenNewProgressInvoice(true)}>New Progress Invoice</button>
             <Modal style={{width:"100%"}} open={openNewProgressInvoice} onClose={onCloseModal} center>
               <NewProgressInvoice job={job} />
             </Modal>

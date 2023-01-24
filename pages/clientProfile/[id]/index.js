@@ -344,7 +344,7 @@ function clientProfile({ clientProps }) {
                         <th>Amount</th>
                     </tr>
                 </thead>
-                    {quotes?.filter((q) => (q?.client === client?.name)  && (q?.state === "Issued" || q?.state === "Draft")).map((quote) => {
+                    {quotes?.filter((q) => (q?.client === client?.name) && (q?.state === "Issued" || q?.state === "Draft")).map((quote) => {
                         const validDate = `${!quote.validDate ? "" : new Date(quote.date.seconds * 1000).toLocaleDateString("en-US")}`;
                         return (
                         <>

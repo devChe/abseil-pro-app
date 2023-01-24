@@ -117,7 +117,8 @@ const ClientQuote = () => {
         contact: contactPerson || null,
         name: name,
         description: desc,
-        budget: budget
+        budget: budget,
+        state: "Draft"
     });
     window.location.pathname="/quotes";
   
