@@ -6,19 +6,23 @@
 import { collection, getDocs, orderBy, query } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react'
 import LoadingSpinner from '../components/LoadingSpinner';
-import { db } from '../src/config/firebase.config';
+import { auth, db } from '../src/config/firebase.config';
+import dateFormat, { masks } from "dateformat";
+import { onAuthStateChanged } from 'firebase/auth';
+
 
 const photos = () => {
     const [jobs, setJobs] = useState([]);
-    const [clients, setClients] = useState([]);
-    const [staff, setStaff] = useState([]);
+    const [user, setUser] = useState({});
     const [loading, setLoading] = useState(false);
 
+    onAuthStateChanged(auth, (currentUser) => {
+        console.log(currentUser)
+        setUser(currentUser);
+    })
+    
+
     const jobsCollectionRef = collection(db, "jobs");
-
-    const clientsCollectionRef = collection(db, "clients");
-
-    const employeesCollectionRef = collection(db, "employees");
 
     useEffect(() => {
         setLoading(true)
@@ -32,81 +36,89 @@ const photos = () => {
         getJobs();
     }, [])
 
-    useEffect(() => {
-        setLoading(true)
-        const getClients = async () => {
-            const q = query(clientsCollectionRef);
-            const data = await getDocs(q);
-            const res = data.docs.map((doc) => ({...doc.data(), id: doc.id })); 
-            setClients(res);
-            setLoading(false);
-        }
-        getClients();
-    }, [])
+    
+    const photosByMonth = {};
 
-    useEffect(() => {
-        setLoading(true)
-        const getStaff = async () => {
-            const q = query(employeesCollectionRef);
-            const data = await getDocs(q);
-            const res = data.docs.map((doc) => ({...doc.data(), id: doc.id })); 
-            setStaff(res);
-            setLoading(false);
-        }
-        getStaff();
-    }, [])
+      jobs?.map((job) => {
+        job.photos.forEach(photo => {
+            const convertedDate = dateFormat(new Date(photo.date.seconds * 1000), "fullDate");
+            
+            if(photosByMonth[convertedDate]){
+                photosByMonth[convertedDate].push(photo);}
+            else{
+                photosByMonth[convertedDate] = [photo]}
+        });
+      })
+
     
   return (
     <div>
         {loading && <LoadingSpinner />}
-        <h1>Photo Gallery</h1>
+        <h1>Photo Feed</h1>
         <hr/>
+        
         <div>
-            <h2>From Job</h2>
-        </div>
-        <div className="imageGrid">
-            {jobs?.map((job) => (
+            {Object.keys(photosByMonth).map(month => {
+                return (
+                    <>
+                        <h1>{month}</h1>
+                        <div className='imageGrid'>
+                            {photosByMonth[month].map((photo) => {
+                                    return (
+                                      <>
+                                        <div className="column">
+                                          <div className="content">
+                                            <img
+                                              src={photo.url}
+                                              style={{
+                                                width: "100%",
+                                                height: "150px",
+                                                borderRadius: "8px",
+                                              }}
+                                            />
+                                            <h4>{photo.client}</h4>
+                                            <p>{photo.name[0]}</p>
+                                          </div>
+                                        </div>
+                                      </>
+                                    );
+                                }
+                            )}
+                        </div>
+                    </>
+                )
+            })}
+
+            {/* {jobs?.map((job) => (
                 job.photos?.map((img) => (
-                    <img src={img.url} style={{ width: "100%",height:"300", margin: "10px" }} />
+                    <div className='column'>
+                        <div className="content">
+                            <img src={img.url} style={{width:"100%", height: "150px",borderRadius:"8px"}}  />
+                            <h4>Mountains</h4>
+                            <p>Lorem ipsum dolor..</p>
+                        </div>
+                    </div>
                 ) )
-              ))}
+              ))} */}
         </div>
-        <div>
-            <h2>From Clients</h2>
-        </div>
-        <div className="imageGrid">
-            {clients?.map((cient) => (
-                cient.photos?.map((img) => (
-                    <img src={img.url} style={{ width: "100%",height:"300", margin: "10px" }} />
-                ) )
-              ))}
-        </div>
-        <div>
-            <h2>From Employee</h2>
-        </div>
-        <div className="imageGrid">
-            {staff?.map((person) => (
-                person.photos?.map((img) => (
-                    <img src={img.url} style={{ width: "100%",height:"300", margin: "10px" }} />
-                ) )
-              ))}
-        </div>
+        
 
         <style jsx>{`
             .imageGrid {
                 display: grid;
-                grid-template-columns: 1fr 1fr 1fr;
-                width: 100%;
-                margin: 0 auto;
-                grid-gap: 15px;
-                padding: 20px 0;
+                grid-template-columns: repeat(auto-fill, minmax(200px, 200px));
             }
 
-            .imageGrid img {
-                border: 1px solid black;
-                text-align: center;
-                height: 240px;
+            .content {
+                background-color: white;
+                padding: 10px;
             }
+
+            .column {
+                float: left;
+            }
+
+
         `}</style>
     </div>
   )

@@ -12,6 +12,7 @@ function Navbar() {
   const router = useRouter();
 
   onAuthStateChanged(auth, (currentUser) => {
+    console.log(currentUser)
     setUser(currentUser);
   })
 

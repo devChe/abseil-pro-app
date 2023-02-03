@@ -1,6 +1,9 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react'
+import Link from 'next/link';
+import React, { useEffect, useState } from 'react';
+
+
 
 const NewProgressInvoice = ({job}) => {
 
@@ -69,6 +72,9 @@ const NewProgressInvoice = ({job}) => {
                 </tr>
             </tbody>
         </table>
+        <div style={{display:"flex",justifyContent:"right",alignItems:"center"}}>
+            <Link href="/progressInvoice/[id]" as={`/progressInvoice/${job.jobNumber}`}><button className='button-primary two columns'>Next</button></Link>
+        </div>
         <style jsx>{`
             .viewLabel {
                 color: #333;

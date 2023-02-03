@@ -3,20 +3,41 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { ref, uploadBytes, listAll, getDownloadURL, deleteObject, getStorage } from '@firebase/storage';
-import { arrayRemove, arrayUnion, collection, doc, onSnapshot, query, updateDoc, where } from 'firebase/firestore';
+import { onAuthStateChanged } from 'firebase/auth';
+import { arrayRemove, arrayUnion, collection, doc, getDocs, onSnapshot, query, updateDoc, where } from 'firebase/firestore';
+import { userAgent } from 'next/server';
 import React, { useState, useEffect } from 'react'
 import { v4 } from 'uuid';
-import { db, storage } from '../src/config/firebase.config';
+import { auth, db, storage } from '../src/config/firebase.config';
 import LoadingSpinner from './LoadingSpinner';
+
 
 const JobImageUpload = ({job}) => {
     const [jobs, setJobs] = useState({});
+    const [staff, setStaff] = useState([]);
+    const [user, setUser] = useState({});
     const [imageUpload, setImageUpload] = useState(null);
     const [imageList, setImageList] = useState([]);
     const [imagePath, setImagePath] = useState("");
     const [imgNewId, setImgNewId] = useState("");
     const [imgURL, setImgURL] = useState("");
     const [loading, setLoading] = useState(false);
+
+    onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser.email);
+    })
+
+    const employeesCollectionRef = collection(db, "employees");
+
+    useEffect(() => {
+      const getEmployees = async () => {
+          const q = query(employeesCollectionRef);
+          const data = await getDocs(q);
+          const res = data.docs.map((doc) => ({...doc.data(), id: doc.id })); 
+          setStaff(res);
+      }
+      getEmployees();
+  }, [])
 
     const uniId = () => {
         const d = new Date();
@@ -45,7 +66,17 @@ const JobImageUpload = ({job}) => {
                 const id = job.id;
                 const jobDoc = doc(db, "jobs", id);
                 updateDoc(jobDoc, {
-                    photos: arrayUnion({ id: "IMG:" + imgNewId, path: imageRef.fullPath, url: url}),
+                  photos: arrayUnion({
+                    id: "IMG:" + imgNewId,
+                    path: imageRef.fullPath,
+                    url: url,
+                    date: new Date(),
+                    client: job.client,
+                    name: staff
+                      .filter((el) => el.email === user)
+                      .map((emp) => emp.name),
+                    
+                  }),
                 });
                 alert("save to jobs collection");
             })
@@ -86,7 +117,7 @@ const JobImageUpload = ({job}) => {
       }, [])
 
 
-      const deletePhoto = async (deleteId, path, url) => {
+      const deletePhoto = async (deleteId, path, url, date, client, name) => {
         setLoading(true)
         const id = job.id;
         //deleteId is the id from the post you want to delete
@@ -95,7 +126,10 @@ const JobImageUpload = ({job}) => {
           photos: arrayRemove({
             id: deleteId,
             path: path,
-            url: url
+            url: url,
+            date: date,
+            client: client,
+            name: name
           })
         })
           .then((success) => {
@@ -122,7 +156,7 @@ const JobImageUpload = ({job}) => {
                         <div>
                             {loading && <LoadingSpinner /> }
                             <img key={item.id} src={item.url} />
-                            <button type="submit" onClick={() => deletePhoto(item.id, item.path, item.url)}>Delete</button>
+                            <button type="submit" onClick={() => deletePhoto(item.id, item.path, item.url, item.date, item.client, item.name)}>Delete</button>
                         </div>
                             
                         

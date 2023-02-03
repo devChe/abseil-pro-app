@@ -58,12 +58,6 @@ const FinancialView = ({job}) => {
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "left" }}>
-        {/* <button onClick={() => setOpenNewProgressInvoice(true)}>New Progress Invoice</button>
-        <Modal isOpen={openNewProgressInvoice} onRequestClose={onCloseModal} onClose={onCloseModal} style={customStyles} center>
-          <h2>New Progress Invoice</h2>
-          <button onClick={onCloseModal}>close</button>
-          
-        </Modal> */}
         <button onClick={() => setOpenNewProgressInvoice(true)}>New Progress Invoice</button>
             <Modal style={{width:"100%"}} open={openNewProgressInvoice} onClose={onCloseModal} center>
               <NewProgressInvoice job={job} />

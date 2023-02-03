@@ -3,13 +3,15 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { ref, uploadBytes, listAll, getDownloadURL, deleteObject, getStorage } from '@firebase/storage';
-import { arrayRemove, arrayUnion, collection, doc, onSnapshot, query, updateDoc, where } from 'firebase/firestore';
+import { arrayRemove, arrayUnion, collection, doc, getDocs, onSnapshot, query, updateDoc, where } from 'firebase/firestore';
 import React, { useState, useEffect } from 'react'
 import { v4 } from 'uuid';
 import { db, storage } from '../src/config/firebase.config';
 import LoadingSpinner from './LoadingSpinner';
 
+
 const ClientImageUpload = ({client}) => {
+    const [jobs, setJobs] = useState([]);
     const [clients, setClients] = useState({});
     const [imageUpload, setImageUpload] = useState(null);
     const [imageList, setImageList] = useState([]);
@@ -18,145 +20,146 @@ const ClientImageUpload = ({client}) => {
     const [imgURL, setImgURL] = useState("");
     const [loading, setLoading] = useState(false);
 
-    const uniId = () => {
-        const d = new Date();
-        const day = d.getDate().toString();
-        const month = d.getMonth().toString();
-        const yr = d.getFullYear().toString();
-        const hr = d.getHours().toString();
-        const min = d.getMinutes().toString();
-        const sec = d.getSeconds().toString();
-        const formattedDate = month + day + yr + hr + min + sec;
-        setImgNewId(formattedDate);
-      };
+    // const uniId = () => {
+    //     const d = new Date();
+    //     const day = d.getDate().toString();
+    //     const month = d.getMonth().toString();
+    //     const yr = d.getFullYear().toString();
+    //     const hr = d.getHours().toString();
+    //     const min = d.getMinutes().toString();
+    //     const sec = d.getSeconds().toString();
+    //     const formattedDate = month + day + yr + hr + min + sec;
+    //     setImgNewId(formattedDate);
+    //   };
     
-      useEffect(() => {
-        setImgNewId(uniId);
-      }, []);
+    //   useEffect(() => {
+    //     setImgNewId(uniId);
+    //   }, []);
 
-    const imageListRef = ref(storage, `client_${client.id}/`);
+    // const imageListRef = ref(storage, `client_${client.id}/`);
 
-    const uploadImage = () => {
-        if (imageUpload == null) return;
-        const imageRef = ref(storage, `client_${client.id}/${imageUpload.name + v4() }`);
-        uploadBytes(imageRef, imageUpload).then((snapshot) => {
-            getDownloadURL(snapshot.ref).then((url) => {
-                setImageList((prev) => [...prev, url]);
-                const id = client.id;
-                const clientDoc = doc(db, "clients", id);
-                updateDoc(clientDoc, {
-                    photos: arrayUnion({ id: "IMG:" + imgNewId, path: imageRef.fullPath, url: url}),
-                });
-                alert("save to clients collection");
-            })
-        });
+    // const uploadImage = () => {
+    //     if (imageUpload == null) return;
+    //     const imageRef = ref(storage, `client_${client.id}/${imageUpload.name + v4() }`);
+    //     uploadBytes(imageRef, imageUpload).then((snapshot) => {
+    //         getDownloadURL(snapshot.ref).then((url) => {
+    //             setImageList((prev) => [...prev, url]);
+    //             const id = client.id;
+    //             const clientDoc = doc(db, "clients", id);
+    //             updateDoc(clientDoc, {
+    //                 photos: arrayUnion({ id: "IMG:" + imgNewId, path: imageRef.fullPath, url: url}),
+    //             });
+    //             alert("save to clients collection");
+    //         })
+    //     });
         
-    };
+    // };
 
 
-    useEffect(() => {
-      listAll(imageListRef).then((response) => {
-        response.items.forEach((item) => {
-            getDownloadURL(item).then((url) => {
-                setImageList((prev) => [...prev, url]);
-            });
-        });
-      });
-    }, []);
+    // useEffect(() => {
+    //   listAll(imageListRef).then((response) => {
+    //     response.items.forEach((item) => {
+    //         getDownloadURL(item).then((url) => {
+    //             setImageList((prev) => [...prev, url]);
+    //         });
+    //     });
+    //   });
+    // }, []);
 
 
-    const clientsCollectionRef = collection(db, "clients");
+    // const clientsCollectionRef = collection(db, "clients");
 
 
-    useEffect(() => {
-        setLoading(true)
-        const getClient = async () => {
-          const id = client.name;
-          const q = query(clientsCollectionRef, where("name", "==", id ))
-          onSnapshot(q, (snapshot) => {
-            const res = snapshot.docs.map(doc => ({
-              id: doc.id,
-              data: doc.data()
-            }));
-            setClients(res[0]);
-            setLoading(false);
-          })
-        }
-        getClient()
-      }, [])
+    // useEffect(() => {
+    //     setLoading(true)
+    //     const getClient = async () => {
+    //       const id = client.name;
+    //       const q = query(clientsCollectionRef, where("name", "==", id ))
+    //       onSnapshot(q, (snapshot) => {
+    //         const res = snapshot.docs.map(doc => ({
+    //           id: doc.id,
+    //           data: doc.data()
+    //         }));
+    //         setClients(res[0]);
+    //         setLoading(false);
+    //       })
+    //     }
+    //     getClient()
+    //   }, [])
 
 
-      const deletePhoto = async (deleteId, path, url) => {
-        setLoading(true)
-        const id = client.id;
-        //deleteId is the id from the post you want to delete
-        const clientDoc = doc(db, "clients", id);
-        await updateDoc(clientDoc, {
-          photos: arrayRemove({
-            id: deleteId,
-            path: path,
-            url: url
-          })
-        })
-          .then((success) => {
-            if(success) {
-                setLoading(false);
-            }
+    //   const deletePhoto = async (deleteId, path, url) => {
+    //     setLoading(true)
+    //     const id = client.id;
+    //     //deleteId is the id from the post you want to delete
+    //     const clientDoc = doc(db, "clients", id);
+    //     await updateDoc(clientDoc, {
+    //       photos: arrayRemove({
+    //         id: deleteId,
+    //         path: path,
+    //         url: url
+    //       })
+    //     })
+    //       .then((success) => {
+    //         if(success) {
+    //             setLoading(false);
+    //         }
             
-          })
-          .catch(function (error) {
-            console.error("Error removing document: ", error);
-          });
-      };
+    //       })
+    //       .catch(function (error) {
+    //         console.error("Error removing document: ", error);
+    //       });
+    //   };
+
+    const jobsCollectionRef = collection(db, "jobs");
+
+    useEffect(() => {
+      const getJobs = async () => {
+          const q = query(jobsCollectionRef);
+          const data = await getDocs(q);
+          const res = data.docs.map((doc) => ({...doc.data(), id: doc.id })); 
+          setJobs(res);
+      }
+      getJobs();
+    }, [])
 
 
   return (
     <>
-        <div className='wrapper'>
-            <input type="file" onChange={(event) => {setImageUpload(event.target.files[0])}} />
-            <button onClick={uploadImage}>Upload Image</button>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gridGap:"10px",marginTop:"50px"}}>
-                {clients?.data?.photos?.map((item) => {
-                    return (
-                        
-                        <div>
-                            {loading && <LoadingSpinner /> }
-                            <img key={item.id} src={item.url} />
-                            <button type="submit" onClick={() => deletePhoto(item.id, item.path, item.url)}>Delete</button>
-                        </div>
-                            
-                        
-                    )
-                })}
-                {/* {imageList.map((url) => {
-                    return (
-                        <>
-                        <div>
-                            {loading && <LoadingSpinner /> }
-                            <img key={url} src={url} />
-                            <button type="submit" onClick={deletePhoto(url)}>Delete</button>
-                        </div>
-                            
-                        </>
-                    )
-                })} */}
-            </div>
-            
+        <div className='imageGrid'>
+          {jobs.filter(el => el.client === client.name).map(job => (
+              job.photos.map(photo => (
+                <div className="column">
+                  <div className="content">
+                    <img
+                      src={photo.url}
+                      style={{
+                        width: "100%",
+                        height: "150px",
+                        borderRadius: "8px",
+                      }}
+                    />
+                    <h4>{photo.client}</h4>
+                    <p>{photo.name[0]}</p>
+                  </div>
+                </div> 
+              ))
+          ))}
             
         </div>
         <style jsx>{`
-            .wrapper {
-                display: flex;
-                align-items: center;
-                flex-direction: column;
-                padding-bottom: 50px;
-                min-height: 100vh;
+            .imageGrid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(200px, 200px));
             }
 
-            img {
-                width: 300px;
-                height: 300px;
-                margin: 10px;
+            .content {
+                background-color: white;
+                padding: 10px;
+            }
+
+            .column {
+                float: left;
             }
         `}</style>
     </>
