@@ -50,6 +50,7 @@ function newJob() {
   const [initialNumber, setInitialNumber] = useState(Number(0));
   const [address, setAddress] = useState("");
   const [coordinates, setCoordinates] = useState({lat: null, lng: null})
+  const [clientID, setClientID ] = useState("");
 
   const clientsCollectionRef = collection(db, "clients");
 
@@ -66,7 +67,7 @@ function newJob() {
         const getClients = async () => {
             const q = query(clientsCollectionRef, orderBy("name"));
             const data = await getDocs(q);
-            setClients(data.docs.map((doc) => ({...doc.data(), id: doc.id })))
+            setClients(data.docs.map((doc) => ({...doc.data(), id: doc.id })));
         }
         getClients();
     }, []) 
@@ -150,7 +151,8 @@ function newJob() {
     await addDoc(jobsCollectionRef, {
       jobNumber: jobUniId === 'J-Infinity' ? 'J00001' : jobUniId,
       number: jobUniId === 'J-Infinity' ? (Number(1)) : Number(initialNumber),
-      imageUrl: url, 
+      imageUrl: url,
+      clientID: clients.filter(res => res.name === newClient).map(client => client.id), 
       client: newClient,
       name: name,
       contact: Number(newContact), 

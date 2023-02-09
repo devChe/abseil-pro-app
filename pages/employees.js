@@ -52,6 +52,9 @@ const employees = () => {
         <thead>
           <tr>
             <th>
+              No.
+            </th>
+            <th>
               Name
             </th>
             <th>
@@ -72,6 +75,7 @@ const employees = () => {
           employees.map(employee => 
             (
                 <tr key={employee.id}>
+                  <td>{employee.data.num}</td>
                   <Link  href="staffProfile/[id]" as={`staffProfile/${employee.id}`} key={employee.id} className="staffName"><td>{employee.data.name}</td></Link>
                   <td>{employee.data.position}</td>
                   <td>{employee.data.phone}</td>

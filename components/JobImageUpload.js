@@ -72,9 +72,11 @@ const JobImageUpload = ({job}) => {
                     url: url,
                     date: new Date(),
                     client: job.client,
+                    clientID: job.clientID[0],
                     name: staff
                       .filter((el) => el.email === user)
                       .map((emp) => emp.name),
+                    jobName: job.name
                     
                   }),
                 });
