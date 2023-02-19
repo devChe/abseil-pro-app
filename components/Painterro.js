@@ -9,6 +9,9 @@ import { db, storage } from "../src/config/firebase.config";
 const Paint = ({ onSave, photo, jobs }) => {
   useEffect(() => {
     Painterro({
+        defaultLineWidth: "5",
+        defaultSize: "fill",
+        fixMobilePageReloader: true,
       saveHandler: (image, done) => {
         const imageRef = ref(
           storage,
