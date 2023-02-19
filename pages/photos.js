@@ -3,7 +3,7 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/rules-of-hooks */
-import { collection, getDocs, orderBy, query } from 'firebase/firestore';
+import { collection, getDocs, onSnapshot, orderBy, query } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react'
 import LoadingSpinner from '../components/LoadingSpinner';
 import { auth, db } from '../src/config/firebase.config';
@@ -13,7 +13,8 @@ import Link from 'next/link';
 import { Modal } from "react-responsive-modal";
 import "react-responsive-modal/styles.css";
 import dynamic from 'next/dynamic';
-const PhotoEditor = dynamic(() => import("../components/PhotoEditor"), { ssr: false });
+const Paint = dynamic(() => import("../components/Painterro"), { ssr: false });
+
 
 
 const photos = () => {
@@ -22,6 +23,8 @@ const photos = () => {
     const [user, setUser] = useState({});
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
+    const [show, setShow] = useState(null);
+    const [url, setUrl] = useState(null);
 
     onAuthStateChanged(auth, (currentUser) => {
         console.log(currentUser)
@@ -30,7 +33,9 @@ const photos = () => {
 
 
     function openEditor(id){
-        setOpen(id)
+        // setOpen(id)
+        setShow(id)
+        
     }
 
     function onCloseModal() {
@@ -52,6 +57,24 @@ const photos = () => {
         }
         getJobs();
     }, [])
+
+    // useEffect(() => {
+    //     setLoading(true)
+    //     const getJob = async () => {
+    //       const q = query(jobsCollectionRef)
+    //       onSnapshot(q, (snapshot) => {
+    //         const res = snapshot.docs.map(doc => ({
+    //           id: doc.id,
+    //           data: doc.data()
+    //         }));
+    //         setJobs(res.data);
+    //         setLoading(false);
+    //       })
+    //     }
+    //     getJob()
+    //   }, [])
+
+
 
     useEffect(() => {
         setLoading(true)
@@ -99,7 +122,9 @@ const photos = () => {
                                         <div className="column">
                                           <div className="content">
                                             <img
-                                              onClick={() => openEditor(photo.id)}
+                                                onClick={() =>
+                                                  openEditor(photo.id)
+                                                }
                                               src={photo.url}
                                               style={{
                                                 width: "100%",
@@ -108,23 +133,52 @@ const photos = () => {
                                               }}
                                             />
                                             <h3>{photo.jobName}</h3>
-                                            <Link href="/clientProfile/[id]" as={`clientProfile/${photo.clientID}`}><h4 className="a" style={{color:"blueviolet"}}>{photo.client}</h4></Link>
-                                            <Link href="/staffProfile/[id]" as={`staffProfile/${employees?.filter((employee) => employee.num === photo.userNum)?.map((res) => res.id)}`}><p className='b'>{photo.name[0]}</p></Link>
-                                            <p style={{color:"steelblue"}}>{dateFormat(new Date(photo.date.seconds * 1000), "h:MM TT")}</p>
+                                            <Link
+                                              href="/clientProfile/[id]"
+                                              as={`clientProfile/${photo.clientID}`}
+                                            >
+                                              <h4
+                                                className="a"
+                                                style={{ color: "blueviolet" }}
+                                              >
+                                                {photo.client}
+                                              </h4>
+                                            </Link>
+                                            <Link
+                                              href="/staffProfile/[id]"
+                                              as={`staffProfile/${employees
+                                                ?.filter(
+                                                  (employee) =>
+                                                    employee.num ===
+                                                    photo.userNum
+                                                )
+                                                ?.map((res) => res.id)}`}
+                                            >
+                                              <p className="b">
+                                                {photo.name[0]}
+                                              </p>
+                                            </Link>
+                                            <p style={{ color: "steelblue" }}>
+                                              {dateFormat(
+                                                new Date(
+                                                  photo.date.seconds * 1000
+                                                ),
+                                                "h:MM TT"
+                                              )}
+                                            </p>
                                           </div>
                                         </div>
-                                        <Modal open={open === photo.id} onClose={onCloseModal} style={{width:"100%"}} center>
-                                            <h2>Upload by: {photo.name}</h2>
-                                            <PhotoEditor photo={photo} />
-                                            {/* <img
-                                              src={photo.url}
-                                              style={{
-                                                width: "100%",
-                                                borderRadius: "8px",
-                                              }}
-                                            /> */}
-
-                                        </Modal>
+                                        {/* {open === photo.id ? <PhotoEditor jobs={jobs} photo={photo} /> : ""} */}
+                                        {show === photo.id ? (
+                                          <Paint
+                                            onSave={(dataUrl) => {
+                                              setUrl(dataUrl);
+                                            }}
+                                            photo={photo}
+                                            jobs={jobs}
+                                          />
+                                        ) : ("")}
+                                        {url && <img src={url} alt="editedImage" />}
                                       </>
                                     );
                                 }

@@ -76,14 +76,13 @@ const JobImageUpload = ({job}) => {
                     name: staff
                       .filter((el) => el.email === user)
                       .map((emp) => emp.name),
-                    jobName: job.name
-                    
+                    jobName: job.name,
+                    jobNum: job.jobNumber
                   }),
                 });
                 alert("save to jobs collection");
             })
         });
-        
     };
 
 

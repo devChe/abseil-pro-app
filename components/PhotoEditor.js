@@ -1,106 +1,60 @@
-import "tui-image-editor/dist/tui-image-editor.css";
-import ImageEditor from "@toast-ui/react-image-editor";
+/* eslint-disable jsx-a11y/alt-text */
+/* eslint-disable @next/next/no-img-element */
+import { getDownloadURL, ref, uploadBytes, uploadString } from "@firebase/storage";
+import { arrayUnion, doc, updateDoc } from "firebase/firestore";
+import Painterro from "painterro";
+import { useState } from "react";
+import { v4 } from "uuid";
+import { db, storage } from "../src/config/firebase.config";
 
-export default function PhotoEditor({photo}) {
+
+export default function PhotoEditor({photo, jobs}) {
+
+  const imageListRef = ref(storage, `photos_${photo.jobNum}/`);
+
+  const showPaint = Painterro({
+    defaultLineWidth: "5",
+    defaultSize: "fill",
+    fixMobilePageReloader: true,
+    saveHandler: function (image, done) {
+      const imageRef = ref(storage, `photos_${photo.jobNum}/edited + ${v4()}`);
+      const message4 = image.asDataURL();
+      uploadString(imageRef, message4, "data_url").then((snapshot) => {
+        getDownloadURL(snapshot.ref).then((url) => {
+          // setImageList((prev) => [...prev, url]);
+          const id = jobs
+            .filter((job) => job.jobNumber === photo.jobNum)
+            .map((job) => job.id);
+          const jobDoc = doc(db, "jobs", id[0]);
+          updateDoc(jobDoc, {
+            photos: arrayUnion({
+              id: "IMG:" + v4(),
+              path: imageRef.fullPath,
+              url: url,
+              date: new Date(),
+              client: photo.client,
+              clientID: photo.clientID,
+              name: photo.name,
+              jobName: photo.jobName,
+              jobNum: photo.jobNum,
+            }),
+          })
+        });
+      });
+      done(true)
+    },
+  
+  });
+
   return (
-    <div className="App">
-      <ImageEditor
-        includeUI={{
-          loadImage: {
-            path: `${photo.url}`,
-            name: "SampleImage",
-          },
-          initMenu: "filter",
-          uiSize: {
-            width: "1000px",
-            height: "700px",
-          },
-          menuBarPosition: "bottom",
-        }}
-        cssMaxHeight={500}
-        cssMaxWidth={700}
-        selectionStyle={{
-          cornerSize: 20,
-          rotatingPointOffset: 70,
-        }}
-        usageStatistics={true}
-      />
+    <div>
+      <div>
+        {Object.keys(
+          showPaint.show(photo.url)
+        ).map((obj) => {
+          return undefined;
+        })}
+      </div>
     </div>
   );
 }
-
-
-// import React, { useRef, useState } from "react";
-// import FilerobotImageEditor, {
-// 	TABS,
-// 	TOOLS
-// } from "react-filerobot-image-editor";
-
-// export default function PhotoEditor() {
-// 	const editorRef = useRef(null);
-
-// 	const [isImgEditorShown, setIsImgEditorShown] = useState(false);
-// 	const [source, setSource] = React.useState("");
-// 	const [selectedShapeId, setSelectedShapeId] = useState(null);
-
-// 	const openImgEditor = () => {
-// 		setIsImgEditorShown(true);
-// 	};
-
-// 	const closeImgEditor = () => {
-// 		setIsImgEditorShown(false);
-// 	};
-
-// 	const handleShapeSelection = (shapeId) => {
-// 		console.log(shapeId);
-// 		setSelectedShapeId(shapeId);
-// 	};
-
-// 	console.log(editorRef);
-
-// 	return (
-// 		<div>
-// 			{/* Display the position of the selected shape */}
-// 			{selectedShapeId !== null && (
-// 				<div>
-// 					Selected shape position:
-// 					{editorRef.current &&
-// 						editorRef.current
-// 							.getShapes()
-// 							.find((shape) => shape.id === selectedShapeId).position.x}
-// 					,
-// 					{editorRef.current &&
-// 						editorRef.current
-// 							.getShapes()
-// 							.find((shape) => shape.id === selectedShapeId).position.y}
-// 				</div>
-// 			)}
-
-// 			{/* Render the FilerobotImageEditor component and pass it the editor reference */}
-// 			<img style={{ width: "300px", height: "auto" }} src={source} />
-// 			<button onClick={openImgEditor}>Open Filerobot image editor</button>
-// 			{isImgEditorShown && (
-// 				<FilerobotImageEditor
-// 					ref={editorRef}
-// 					source="https://i.imgur.com/kHkrXoX.png"
-// 					onSave={(editedImageObject, designState) => {
-// 						closeImgEditor();
-// 						setSource(editedImageObject.imageBase64);
-// 						// console.log("saved", editedImageObject, designState)
-// 						console.log("saved", editedImageObject);
-// 						console.log("saved", designState);
-// 					}}
-// 					onShapeCreate={(shape) => handleShapeSelection(shape.id)}
-// 					onClose={closeImgEditor}
-// 					annotationsCommon={{
-// 						fill: "#ff0000"
-// 					}}
-// 					Text={{ text: "Filerobot..." }}
-// 					tabsIds={[TABS.ADJUST, TABS.ANNOTATE, TABS.WATERMARK]} // or {['Adjust', 'Annotate', 'Watermark']}
-// 					defaultTabId={TABS.ANNOTATE} // or 'Annotate'
-// 					defaultToolId={TOOLS.TEXT} // or 'Text'
-// 				/>
-// 			)}
-// 		</div>
-// 	);
-// }
