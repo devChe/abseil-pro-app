@@ -126,8 +126,8 @@ const EmployeeImageUpload = ({staff}) => {
   return (
     <>
         <div className='imageGrid'>
-          {jobs.map(job => (
-              job.photos.filter(el => el.name[0] === staff.name).map(photo => (
+          {jobs?.map(job => (
+              job?.photos?.filter(el => el.name[0] === staff.name).map(photo => (
                 <div className="column">
                   <div className="content">
                     <img
