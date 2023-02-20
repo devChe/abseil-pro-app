@@ -23,9 +23,9 @@ const JobImageUpload = ({job}) => {
     const [imgURL, setImgURL] = useState("");
     const [loading, setLoading] = useState(false);
 
-    // onAuthStateChanged(auth, (currentUser) => {
-    //   setUser(currentUser.email);
-    // })
+    onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser?.email);
+    })
 
     const employeesCollectionRef = collection(db, "employees");
 
