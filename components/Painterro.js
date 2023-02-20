@@ -12,6 +12,8 @@ const Paint = ({ onSave, photo, jobs }) => {
         defaultLineWidth: "5",
         defaultSize: "fill",
         fixMobilePageReloader: true,
+        toolbarHeightPx: 54,
+        buttonSizePx:42,
       saveHandler: (image, done) => {
         const imageRef = ref(
           storage,
@@ -49,7 +51,15 @@ const Paint = ({ onSave, photo, jobs }) => {
     }).show(photo.url);
     //eslint-disable-next-line
   }, []);
-  return null;
+  return (
+    <>
+      <style jsx>{`
+      .ptro-icon-btn[class] {
+        border-radius: 27px;
+      }
+        `}</style>
+    </>
+  );
 };
 
 export default Paint;
