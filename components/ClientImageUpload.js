@@ -127,8 +127,8 @@ const ClientImageUpload = ({client}) => {
   return (
     <>
         <div className='imageGrid'>
-          {jobs.filter(el => el.client === client.name).map(job => (
-              job.photos.map(photo => (
+          {jobs?.filter(el => el.client === client.name).map(job => (
+              job?.photos?.map(photo => (
                 <div className="column">
                   <div className="content">
                     <img
