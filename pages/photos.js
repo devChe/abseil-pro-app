@@ -46,35 +46,36 @@ const photos = () => {
     const jobsCollectionRef = collection(db, "jobs");
     const employeesCollectionRef = collection(db, "employees")
 
-    useEffect(() => {
-        setLoading(true)
-        const getJobs = async () => {
-            const q = query(jobsCollectionRef);
-            const data = await getDocs(q);
-            const res = data.docs.map((doc) => ({...doc.data(), id: doc.id })); 
-            setJobs(res);
-            setLoading(false);
-        }
-        getJobs();
-    }, [])
-
     // useEffect(() => {
     //     setLoading(true)
-    //     const getJob = async () => {
-    //       const q = query(jobsCollectionRef)
-    //       onSnapshot(q, (snapshot) => {
-    //         const res = snapshot.docs.map(doc => ({
-    //           id: doc.id,
-    //           data: doc.data()
-    //         }));
-    //         setJobs(res.data);
+    //     const getJobs = async () => {
+    //         const q = query(jobsCollectionRef);
+    //         const data = await getDocs(q);
+    //         const res = data.docs.map((doc) => ({...doc.data(), id: doc.id })); 
+    //         setJobs(res);
     //         setLoading(false);
-    //       })
     //     }
-    //     getJob()
-    //   }, [])
+    //     getJobs();
+    // }, [])
 
+    useEffect(() => {
+        setLoading(true)
+        const getJob = async () => {
+          const q = query(jobsCollectionRef)
+          onSnapshot(q, (snapshot) => {
+            const res = snapshot.docs.map(doc => ({
+              id: doc.id,
+              data: doc.data()
+            }));
+            setJobs(res);
+            console.log(res.map(res => res.data.client))
+            setLoading(false);
+          })
+        }
+        getJob()
+      }, [])
 
+      
 
     useEffect(() => {
         setLoading(true)
@@ -92,7 +93,7 @@ const photos = () => {
     const photosByMonth = {};
 
       jobs?.map((job) => {
-        job?.photos?.forEach(photo => {
+        job?.data?.photos?.forEach(photo => {
             const convertedDate = dateFormat(new Date(photo.date.seconds * 1000), "mm/dd/yyyy");
             
             if(photosByMonth[convertedDate]){
@@ -101,8 +102,6 @@ const photos = () => {
                 photosByMonth[convertedDate] = [photo]}
         });
       })
-
-      console.log(photosByMonth)
     
   return (
     <div>
@@ -176,6 +175,7 @@ const photos = () => {
                                             }}
                                             photo={photo}
                                             jobs={jobs}
+                                            setJobs={setJobs}
                                           />
                                         ) : ("")}
                                         {url && <img src={url} alt="editedImage" />}
@@ -187,18 +187,6 @@ const photos = () => {
                     </>
                 )
             })}
-
-            {/* {jobs?.map((job) => (
-                job.photos?.map((img) => (
-                    <div className='column'>
-                        <div className="content">
-                            <img src={img.url} style={{width:"100%", height: "150px",borderRadius:"8px"}}  />
-                            <h4>Mountains</h4>
-                            <p>Lorem ipsum dolor..</p>
-                        </div>
-                    </div>
-                ) )
-              ))} */}
         </div>
         
 
