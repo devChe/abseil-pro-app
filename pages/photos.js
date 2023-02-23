@@ -13,15 +13,15 @@ import Link from 'next/link';
 import { Modal } from "react-responsive-modal";
 import "react-responsive-modal/styles.css";
 import dynamic from 'next/dynamic';
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import {PlaceholderImage} from "../public/placeholder.jpg"
 const Paint = dynamic(() => import("../components/Painterro"), { ssr: false });
-
-
 
 const photos = () => {
     const [jobs, setJobs] = useState([]);
     const [employees, setEmployees] = useState([]);
     const [user, setUser] = useState({});
-    const [loading, setLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [open, setOpen] = useState(false);
     const [show, setShow] = useState(null);
     const [url, setUrl] = useState(null);
@@ -46,20 +46,12 @@ const photos = () => {
     const jobsCollectionRef = collection(db, "jobs");
     const employeesCollectionRef = collection(db, "employees")
 
-    // useEffect(() => {
-    //     setLoading(true)
-    //     const getJobs = async () => {
-    //         const q = query(jobsCollectionRef);
-    //         const data = await getDocs(q);
-    //         const res = data.docs.map((doc) => ({...doc.data(), id: doc.id })); 
-    //         setJobs(res);
-    //         setLoading(false);
-    //     }
-    //     getJobs();
-    // }, [])
+    useEffect(() => {
+      window.scrollTo(0, 0)
+    }, [isLoading])
 
     useEffect(() => {
-        setLoading(true)
+        setIsLoading(true)
         const getJob = async () => {
           const q = query(jobsCollectionRef)
           onSnapshot(q, (snapshot) => {
@@ -69,7 +61,7 @@ const photos = () => {
             }));
             setJobs(res);
             console.log(res.map(res => res.data.client))
-            setLoading(false);
+            setIsLoading(false);
           })
         }
         getJob()
@@ -78,13 +70,12 @@ const photos = () => {
       
 
     useEffect(() => {
-        setLoading(true)
         const getEmployees = async () => {
             const q = query(employeesCollectionRef);
             const data = await getDocs(q);
             const res = data.docs.map((doc) => ({...doc.data(), id: doc.id })); 
             setEmployees(res);
-            setLoading(false);
+            console.log(res)
         }
         getEmployees();
     }, [])
@@ -105,7 +96,6 @@ const photos = () => {
     
   return (
     <div>
-        {loading && <LoadingSpinner />}
         <h1>Photo Feed</h1>
         <hr/>
         
@@ -118,9 +108,10 @@ const photos = () => {
                             {photosByMonth[month].map((photo) => {
                                     return (
                                       <>
-                                        <div className="column">
+                                        <div className="column" key={photo.id}>
+                                        {isLoading === photo.id ? (<div>Uploading...</div>) : ""}
                                           <div className="content">
-                                            <img
+                                            <LazyLoadImage
                                                 onClick={() =>
                                                   openEditor(photo.id)
                                                 }
@@ -130,11 +121,14 @@ const photos = () => {
                                                 height: "150px",
                                                 borderRadius: "8px",
                                               }}
+                                              PlaceholderSrc={PlaceholderImage}
+                                              loading="lazy"
+                                              effect='blur'
                                             />
                                             <h3>{photo.jobName}</h3>
                                             <Link
                                               href="/clientProfile/[id]"
-                                              as={`clientProfile/${photo.clientID}`}
+                                              as={`/clientProfile/${photo.clientID}`}
                                             >
                                               <h4
                                                 className="a"
@@ -145,13 +139,7 @@ const photos = () => {
                                             </Link>
                                             <Link
                                               href="/staffProfile/[id]"
-                                              as={`staffProfile/${employees
-                                                ?.filter(
-                                                  (employee) =>
-                                                    employee.num ===
-                                                    photo.userNum
-                                                )
-                                                ?.map((res) => res.id)}`}
+                                              as={`/staffProfile/${employees?.filter((employee) => employee.name === photo.name[0] ).map((staff) => staff.id)}`}
                                             >
                                               <p className="b">
                                                 {photo.name[0]}
@@ -176,6 +164,7 @@ const photos = () => {
                                             photo={photo}
                                             jobs={jobs}
                                             setJobs={setJobs}
+                                            setIsLoading={setIsLoading}
                                           />
                                         ) : ("")}
                                         {url && <img src={url} alt="editedImage" />}

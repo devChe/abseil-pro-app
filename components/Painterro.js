@@ -2,18 +2,12 @@ import { getDownloadURL, ref, uploadString } from "@firebase/storage";
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
 import Painterro from "painterro";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { v4 } from "uuid";
 import { db, storage } from "../src/config/firebase.config";
 
 
-
-const Paint = ({ onSave, photo, jobs, setJobs }) => {
-
-  const router = useRouter();
-    const refreshData = () => {
-      router.replace(router.asPath);
-    }
+const Paint = ({ onSave, photo, jobs, setJobs, setIsLoading }) => {
 
   useEffect(() => {
     Painterro({
@@ -23,16 +17,17 @@ const Paint = ({ onSave, photo, jobs, setJobs }) => {
         toolbarHeightPx: 54,
         buttonSizePx:42,
       saveHandler: (image, done) => {
+        setIsLoading(true)
         const imageRef = ref(
           storage,
           `photos_${photo.jobNum}/edited + ${v4()}`
         );
         const message4 = image.asDataURL();
+        console.log(message4)
         uploadString(imageRef, message4, "data_url").then((snapshot) => {
           getDownloadURL(snapshot.ref).then((url) => {
             // setImageList((prev) => [...prev, url]);
             const id = jobs?.filter((job) => job.data.jobNumber === photo.jobNum).map((res) => res);
-            console.log(id);
             const jobDoc = doc(db, "jobs", id[0].id);
             updateDoc(jobDoc, {
               photos: arrayUnion({
@@ -46,6 +41,10 @@ const Paint = ({ onSave, photo, jobs, setJobs }) => {
                 jobName: photo.jobName,
                 jobNum: photo.jobNum,
               }),
+            }).then((success) => {
+              if(success) {
+                  setIsLoading(false);
+              }
             })
           });
         });
