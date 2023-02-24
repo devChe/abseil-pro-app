@@ -118,7 +118,7 @@ const JobImageUpload = ({job}) => {
       }, [])
 
 
-      const deletePhoto = async (deleteId, path, url, date, client, name) => {
+      const deletePhoto = async (deleteId, path, url, date, client, name, clientID, jobName, jobNum) => {
         setLoading(true)
         const id = job.id;
         //deleteId is the id from the post you want to delete
@@ -130,7 +130,11 @@ const JobImageUpload = ({job}) => {
             url: url,
             date: date,
             client: client,
-            name: name
+            name: name,
+            clientID: clientID,
+            jobName: jobName,
+            jobNum: jobNum,
+
           })
         })
           .then((success) => {
@@ -157,7 +161,7 @@ const JobImageUpload = ({job}) => {
                         <div>
                             {loading && <LoadingSpinner /> }
                             <img key={item.id} src={item.url} />
-                            <button type="submit" onClick={() => deletePhoto(item.id, item.path, item.url, item.date, item.client, item.name)}>Delete</button>
+                            <button type="submit" onClick={() => deletePhoto(item.id, item.path, item.url, item.date, item.client, item.name, item.clientID, item.jobName, item.jobNum)}>Delete</button>
                         </div>
                             
                         

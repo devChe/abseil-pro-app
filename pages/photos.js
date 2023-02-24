@@ -60,7 +60,6 @@ const photos = () => {
               data: doc.data()
             }));
             setJobs(res);
-            console.log(res.map(res => res.data.client))
             setIsLoading(false);
           })
         }
@@ -75,7 +74,6 @@ const photos = () => {
             const data = await getDocs(q);
             const res = data.docs.map((doc) => ({...doc.data(), id: doc.id })); 
             setEmployees(res);
-            console.log(res)
         }
         getEmployees();
     }, [])
@@ -125,7 +123,9 @@ const photos = () => {
                                               loading="lazy"
                                               effect='blur'
                                             />
-                                            <h3>{photo.jobName}</h3>
+                                            <Link href="/jobProfile/[id]" as={`/jobProfile/${jobs?.filter((job) => job?.data?.jobNumber === photo.jobNum).map((res) => res.id)}`}>
+                                              <h3 className='photoJobName'>{photo.jobName}</h3>
+                                            </Link>
                                             <Link
                                               href="/clientProfile/[id]"
                                               as={`/clientProfile/${photo.clientID}`}
@@ -210,6 +210,11 @@ const photos = () => {
 
             .column {
                 float: left;
+            }
+
+            .photoJobName:hover {
+                cursor: pointer;
+                color: red;
             }
 
 
