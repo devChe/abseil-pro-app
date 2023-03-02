@@ -56,7 +56,7 @@ function newJob() {
 
   const jobsCollectionRef = collection(db, "jobs");
 
-  const staffCollectionRef = collection(db, "staff");
+  const staffCollectionRef = collection(db, "employees");
 
   const tempCollectionRef = collection(db, "jobTemplates");
 
@@ -124,6 +124,13 @@ function newJob() {
     const selectedTemplate = temps.find(temp => temp.name === e.target.value);
     setNewDesc(selectedTemplate.description);
     setName(selectedTemplate.name);
+  }
+
+  const handleContactChange = (e) => {
+    console.log(e.target.value);
+    const selectedClient = clients.find(temp => temp.name === e.target.value);
+    setNewContact(selectedClient);
+    console.log(selectedClient);
   }
 
   const handleSelect = async value => {
@@ -195,7 +202,7 @@ function newJob() {
       </div>
       <hr />
       <label>Client</label>
-      <select value={newClient} onChange={(event) => {setNewClient(event.target.value)}}>
+      <select onChange={handleContactChange}>
         <option>Choose client...</option>
         {clients.map(client => (
           <option value={client.name}>{client.name}</option>
@@ -207,9 +214,12 @@ function newJob() {
       {/* <input type="tel" placeholder="Contact.." onChange={(event) => {setNewContact(event.target.value)}}/> */}
       <select value={newContact} onChange={(event) => {setNewContact(event.target.value)}}>
         <option>Choose contact...</option>
-        {clients.map(client => (
-          <option value={client.phone}>{client.phone}</option>
+        {newContact?.contacts?.map(person => (
+          <option value={person.name}>{person.name}</option>
         ))}
+        {/* {clients?.map(client => client.contacts.map(person => (
+          <option value={person.name}>{person.name}</option>
+        )))} */}
       </select>
       <label>Template</label>
       <select onChange={handleTemplateChange}>
