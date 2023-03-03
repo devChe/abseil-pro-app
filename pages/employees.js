@@ -51,9 +51,9 @@ const employees = () => {
       <table className='styled-table'>
         <thead>
           <tr>
-            <th>
+            {/* <th>
               No.
-            </th>
+            </th> */}
             <th>
               Name
             </th>
@@ -75,7 +75,7 @@ const employees = () => {
           employees.map(employee => 
             (
                 <tr key={employee.id}>
-                  <td>{employee.data.num}</td>
+                  {/* <td>{employee.data.num}</td> */}
                   <Link  href="staffProfile/[id]" as={`staffProfile/${employee.id}`} key={employee.id} className="staffName"><td>{employee.data.name}</td></Link>
                   <td>{employee.data.position}</td>
                   <td>{employee.data.phone}</td>
