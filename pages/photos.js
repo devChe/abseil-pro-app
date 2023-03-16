@@ -11,11 +11,14 @@ import dateFormat, { masks } from "dateformat";
 import { onAuthStateChanged } from 'firebase/auth';
 import Link from 'next/link';
 import { Modal } from "react-responsive-modal";
-import "react-responsive-modal/styles.css";
+import 'react-responsive-modal/styles.css';
 import dynamic from 'next/dynamic';
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import {PlaceholderImage} from "../public/placeholder.jpg"
+import Slick from '../components/Slick';
 const Paint = dynamic(() => import("../components/Painterro"), { ssr: false });
+
+
 
 const photos = () => {
     const [jobs, setJobs] = useState([]);
@@ -25,6 +28,8 @@ const photos = () => {
     const [open, setOpen] = useState(false);
     const [show, setShow] = useState(null);
     const [url, setUrl] = useState(null);
+    const [slideshow, setSlideshow] = useState(false);
+    const [activeImage, setActiveImage] = useState(0);
 
     onAuthStateChanged(auth, (currentUser) => {
         console.log(currentUser)
@@ -33,10 +38,16 @@ const photos = () => {
 
 
     function openEditor(id){
-        // setOpen(id)
-        setShow(id)
+        setShow(id);
+        setOpen(false);
         
     }
+
+    function openSlick(id) {
+      setOpen(id)
+    }
+
+
 
     function onCloseModal() {
         setOpen(false);
@@ -103,16 +114,22 @@ const photos = () => {
                     <>
                         <h1>{dateFormat(month, "fullDate")}</h1>
                         <div className='imageGrid'>
-                            {photosByMonth[month].map((photo) => {
+                            {photosByMonth[month].map((photo, index) => {
                                     return (
                                       <>
-                                        <div className="column" key={photo.id}>
-                                        {isLoading === photo.id ? (<div>Uploading...</div>) : ""}
+                                        <div className="column" key={index}>
+                                          {isLoading === photo.id ? (
+                                            <div>Uploading...</div>
+                                          ) : (
+                                            ""
+                                          )}
                                           <div className="content">
                                             <LazyLoadImage
-                                                onClick={() =>
-                                                  openEditor(photo.id)
-                                                }
+                                              
+                                              onClick={() => {
+                                                openSlick(photo.id);
+                                                setActiveImage(index)
+                                              }}
                                               src={photo.url}
                                               style={{
                                                 width: "100%",
@@ -121,10 +138,21 @@ const photos = () => {
                                               }}
                                               PlaceholderSrc={PlaceholderImage}
                                               loading="lazy"
-                                              effect='blur'
+                                              effect="blur"
                                             />
-                                            <Link href="/jobProfile/[id]" as={`/jobProfile/${jobs?.filter((job) => job?.data?.jobNumber === photo.jobNum).map((res) => res.id)}`}>
-                                              <h3 className='photoJobName'>{photo.jobName}</h3>
+                                            <Link
+                                              href="/jobProfile/[id]"
+                                              as={`/jobProfile/${jobs
+                                                ?.filter(
+                                                  (job) =>
+                                                    job?.data?.jobNumber ===
+                                                    photo.jobNum
+                                                )
+                                                .map((res) => res.id)}`}
+                                            >
+                                              <h3 className="photoJobName">
+                                                {photo.jobName}
+                                              </h3>
                                             </Link>
                                             <Link
                                               href="/clientProfile/[id]"
@@ -139,7 +167,13 @@ const photos = () => {
                                             </Link>
                                             <Link
                                               href="/staffProfile/[id]"
-                                              as={`/staffProfile/${employees?.filter((employee) => employee.name === photo.name[0] ).map((staff) => staff.id)}`}
+                                              as={`/staffProfile/${employees
+                                                ?.filter(
+                                                  (employee) =>
+                                                    employee.name ===
+                                                    photo.name[0]
+                                                )
+                                                .map((staff) => staff.id)}`}
                                             >
                                               <p className="b">
                                                 {photo.name[0]}
@@ -148,13 +182,26 @@ const photos = () => {
                                             <p style={{ color: "steelblue" }}>
                                               {dateFormat(
                                                 new Date(
-                                                  photo.date.seconds * 1000
+                                                  photo.createdTime.seconds * 1000
                                                 ),
-                                                "h:MM TT"
+                                                "mmmm dS, yyyy h:MM TT"
                                               )}
                                             </p>
                                           </div>
+                                          
                                         </div>
+                                        <Modal
+                                          open={open === photo.id}
+                                          onClose={onCloseModal}
+                                          center={true}
+                                        >
+                                          <div className='custom-modal'>
+                                            <div className='custom-modal_body'>
+                                              <Slick photo={photo} photosByMonth={photosByMonth[month]} activeImage={activeImage} openEditor={openEditor} />
+                                            </div>
+                                          </div>
+                                          
+                                        </Modal>
                                         {/* {open === photo.id ? <PhotoEditor jobs={jobs} photo={photo} /> : ""} */}
                                         {show === photo.id ? (
                                           <Paint
@@ -166,8 +213,12 @@ const photos = () => {
                                             setJobs={setJobs}
                                             setIsLoading={setIsLoading}
                                           />
-                                        ) : ("")}
-                                        {url && <img src={url} alt="editedImage" />}
+                                        ) : (
+                                          ""
+                                        )}
+                                        {url && (
+                                          <img src={url} alt="editedImage" />
+                                        )}
                                       </>
                                     );
                                 }
@@ -217,7 +268,12 @@ const photos = () => {
                 color: red;
             }
 
+            .custom-modal_body {
+              width: 90%;
+              height: auto;
+            }
 
+            
         `}</style>
     </div>
   )

@@ -167,18 +167,7 @@ const JobImageUpload = ({job}) => {
                         
                     )
                 })}
-                {/* {imageList.map((url) => {
-                    return (
-                        <>
-                        <div>
-                            {loading && <LoadingSpinner /> }
-                            <img key={url} src={url} />
-                            <button type="submit" onClick={deletePhoto(url)}>Delete</button>
-                        </div>
-                            
-                        </>
-                    )
-                })} */}
+                
             </div>
             
             

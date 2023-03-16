@@ -68,6 +68,7 @@ import HeightAndSafetyImages from "../../../components/HeightAndSafetyImages";
 import DisqusThread from "../../../components/DisqusThread";
 import FinancialView from "../../../components/FinancialView";
 import JobImageUpload from "../../../components/JobImageUpload";
+import Dropzone from "../../../components/Dropzone";
 
 require("react-datepicker/dist/react-datepicker.css");
 
@@ -1017,7 +1018,8 @@ function jobProfile({ jobProps, id }) {
             <h4 style={{ paddingBottom: "15px", paddingTop: "20px" }}>
               Image gallery
             </h4>
-            <JobImageUpload job={job} />
+            <Dropzone job={job} />
+            {/* <JobImageUpload job={job} /> */}
             {/* <ImgMultipleUpload
               url={url}
               hide={hide}

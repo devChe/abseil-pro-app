@@ -11,11 +11,16 @@ const Paint = ({ onSave, photo, jobs, setJobs, setIsLoading }) => {
 
   useEffect(() => {
     Painterro({
+      colorScheme: {
+        main: '#303134',
+        control: '#ADC0C3'
+      },
         defaultLineWidth: "5",
         defaultSize: "fill",
         fixMobilePageReloader: true,
         toolbarHeightPx: 54,
         buttonSizePx:42,
+        hiddenTools: ['rect', 'ellipse', 'brush', 'resize', 'open', 'bucket', 'clear', 'settings', 'eraser'],
       saveHandler: (image, done) => {
         setIsLoading(true)
         const imageRef = ref(
@@ -37,6 +42,7 @@ const Paint = ({ onSave, photo, jobs, setJobs, setIsLoading }) => {
                 date: new Date(),
                 client: photo.client,
                 clientID: photo.clientID,
+                createdTIme: photo.createdTIme,
                 name: photo.name,
                 jobName: photo.jobName,
                 jobNum: photo.jobNum,
