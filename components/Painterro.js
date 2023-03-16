@@ -20,7 +20,7 @@ const Paint = ({ onSave, photo, jobs, setJobs, setIsLoading }) => {
         fixMobilePageReloader: true,
         toolbarHeightPx: 54,
         buttonSizePx:42,
-        hiddenTools: ['rect', 'ellipse', 'brush', 'resize', 'open', 'bucket', 'clear', 'settings', 'eraser'],
+        hiddenTools: ['rect', 'ellipse', 'brush', 'resize', 'open', 'bucket', 'clear', 'settings', 'eraser','zoomin', 'zoomout',],
       saveHandler: (image, done) => {
         setIsLoading(true)
         const imageRef = ref(
