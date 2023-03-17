@@ -32,16 +32,15 @@ const photos = () => {
     const [activeImage, setActiveImage] = useState(0);
 
     onAuthStateChanged(auth, (currentUser) => {
-        console.log(currentUser)
         setUser(currentUser);
     })
 
 
-    function openEditor(id){
-        setShow(id);
-        setOpen(false);
+    // function openEditor(id){
+    //     setShow(id);
+    //     setOpen(false);
         
-    }
+    // }
 
     function openSlick(id) {
       setOpen(id)
@@ -125,7 +124,6 @@ const photos = () => {
                                           )}
                                           <div className="content">
                                             <LazyLoadImage
-                                              
                                               onClick={() => {
                                                 openSlick(photo.id);
                                                 setActiveImage(index)
@@ -197,13 +195,13 @@ const photos = () => {
                                         >
                                           <div className='custom-modal'>
                                             <div className='custom-modal_body'>
-                                              <Slick photo={photo} photosByMonth={photosByMonth[month]} activeImage={activeImage} openEditor={openEditor} />
+                                              <Slick setJobs={setJobs} jobs={jobs} photo={photo} photosByMonth={photosByMonth[month]} activeImage={activeImage} setOpen={setOpen} open={open} />
                                             </div>
                                           </div>
                                           
                                         </Modal>
                                         {/* {open === photo.id ? <PhotoEditor jobs={jobs} photo={photo} /> : ""} */}
-                                        {show === photo.id ? (
+                                        {/* {show === photo.id ? (
                                           <Paint
                                             onSave={(dataUrl) => {
                                               setUrl(dataUrl);
@@ -215,7 +213,7 @@ const photos = () => {
                                           />
                                         ) : (
                                           ""
-                                        )}
+                                        )} */}
                                         {url && (
                                           <img src={url} alt="editedImage" />
                                         )}
@@ -269,7 +267,6 @@ const photos = () => {
             }
 
             .custom-modal_body {
-              width: 90%;
               height: auto;
             }
 

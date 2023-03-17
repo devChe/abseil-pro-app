@@ -7,7 +7,7 @@ import { v4 } from "uuid";
 import { db, storage } from "../src/config/firebase.config";
 
 
-const Paint = ({ onSave, photo, jobs, setJobs, setIsLoading }) => {
+const Paint = ({ onSave, img, jobs, setJobs, setIsLoading }) => {
 
   useEffect(() => {
     Painterro({
@@ -20,32 +20,32 @@ const Paint = ({ onSave, photo, jobs, setJobs, setIsLoading }) => {
         fixMobilePageReloader: true,
         toolbarHeightPx: 54,
         buttonSizePx:42,
-        hiddenTools: ['rect', 'ellipse', 'brush', 'resize', 'open', 'bucket', 'clear', 'settings', 'eraser','zoomin', 'zoomout',],
+        hiddenTools: ['brush', 'resize', 'open', 'bucket', 'clear', 'settings', 'eraser','zoomin', 'zoomout',],
       saveHandler: (image, done) => {
         setIsLoading(true)
         const imageRef = ref(
           storage,
-          `photos_${photo.jobNum}/edited + ${v4()}`
+          `photos_${img.jobNum}/edited + ${v4()}`
         );
         const message4 = image.asDataURL();
         console.log(message4)
         uploadString(imageRef, message4, "data_url").then((snapshot) => {
           getDownloadURL(snapshot.ref).then((url) => {
             // setImageList((prev) => [...prev, url]);
-            const id = jobs?.filter((job) => job.data.jobNumber === photo.jobNum).map((res) => res);
+            const id = jobs?.filter((job) => job.data.jobNumber === img.jobNum).map((res) => res);
             const jobDoc = doc(db, "jobs", id[0].id);
             updateDoc(jobDoc, {
               photos: arrayUnion({
                 id: "IMG:" + v4(),
                 path: imageRef.fullPath,
                 url: url,
-                date: new Date(),
-                client: photo.client,
-                clientID: photo.clientID,
-                createdTIme: photo.createdTIme,
-                name: photo.name,
-                jobName: photo.jobName,
-                jobNum: photo.jobNum,
+                date: img.date,
+                client: img.client,
+                clientID: img.clientID,
+                createdTime: img.createdTime,
+                name: img.name,
+                jobName: img.jobName,
+                jobNum: img.jobNum,
               }),
             }).then((success) => {
               if(success) {
@@ -56,7 +56,7 @@ const Paint = ({ onSave, photo, jobs, setJobs, setIsLoading }) => {
         });
         done(true);
       },
-    }).show(photo.url);
+    }).show(img.url);
     //eslint-disable-next-line
   }, []);
   return null;

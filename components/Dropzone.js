@@ -108,7 +108,7 @@ const Dropzone = ({job}) => {
             const jobDoc = doc(db, "jobs", id);
             updateDoc(jobDoc, {
               photos: arrayUnion({
-                id: "IMG:" + new Date() + v4(),
+                id: "IMG:" + v4(),
                 path: imageRef.fullPath,
                 url: downloadURL,
                 date: new Date(),

@@ -43,6 +43,10 @@ a {
   width: 100%;
 }
 
+.slick-active {
+  z-index: 10;
+}
+
 @media screen and (min-width: 991px) {
   
 }
