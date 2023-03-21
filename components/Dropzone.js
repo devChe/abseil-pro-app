@@ -112,7 +112,7 @@ const Dropzone = ({job}) => {
                 path: imageRef.fullPath,
                 url: downloadURL,
                 date: new Date(),
-                createdTime,
+                createdTime: createdTime,
                 client: job.client,
                 clientID: job.clientID[0],
                 name: staff.filter((el) => el.email === user).map((emp) => emp.name),

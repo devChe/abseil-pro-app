@@ -32,7 +32,7 @@ function newJob() {
   const [jobs, setJobs] = useState([]);
   const [name, setName] = useState("");
   const [newClient, setNewClient] = useState("");
-  const [newContact, setNewContact] = useState("");
+  const [newContact, setNewContact] = useState([]);
   const [newDesc, setNewDesc] = useState("");
   const [newBudget, setNewBudget] = useState("");
   const [image, setImage] = useState(null);
@@ -51,6 +51,7 @@ function newJob() {
   const [address, setAddress] = useState("");
   const [coordinates, setCoordinates] = useState({lat: null, lng: null})
   const [clientID, setClientID ] = useState("");
+  const [contactPerson, setContactPerson] = useState("")
 
   const clientsCollectionRef = collection(db, "clients");
 
@@ -127,8 +128,8 @@ function newJob() {
   }
 
   const handleContactChange = (e) => {
-    console.log(e.target.value);
     const selectedClient = clients.find(temp => temp.name === e.target.value);
+    setNewClient(selectedClient.name);
     setNewContact(selectedClient);
     console.log(selectedClient);
   }
@@ -202,7 +203,7 @@ function newJob() {
       </div>
       <hr />
       <label>Client</label>
-      <select onChange={handleContactChange}>
+      <select value={newClient} onChange={handleContactChange}>
         <option>Choose client...</option>
         {clients.map(client => (
           <option value={client.name}>{client.name}</option>
@@ -212,7 +213,7 @@ function newJob() {
 
       <label>Contact</label>
       {/* <input type="tel" placeholder="Contact.." onChange={(event) => {setNewContact(event.target.value)}}/> */}
-      <select value={newContact} onChange={(event) => {setNewContact(event.target.value)}}>
+      <select value={contactPerson} onChange={(event) => {setContactPerson(event.target.value)}}>
         <option>Choose contact...</option>
         {newContact?.contacts?.map(person => (
           <option value={person.name}>{person.name}</option>
