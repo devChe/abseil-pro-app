@@ -7,9 +7,7 @@ import { addDoc, collection, getDocs, onSnapshot, query } from 'firebase/firesto
 import React, { useEffect, useState } from 'react'
 import { v4 } from 'uuid';
 import { auth, db, storage } from '../src/config/firebase.config';
-
-
-
+// const { sendMail } = require('../pages/api/mailer');
 
 const AddEmployeeForm = ({setOpen, employees}) => {
     const [name, setName] = useState("");
@@ -38,33 +36,49 @@ const AddEmployeeForm = ({setOpen, employees}) => {
     const [imageDriversLicenseURL, setImageDriversLicenseURL] = useState("");
     const [imageSignatureUpload, setImageSignatureUpload] = useState(null);
     const [imageSignatureURL, setImageSignatureURL] = useState("");
-
+    const [error, setError] = useState('');
+    
    
     const employeesCollectionRef = collection(db, "employees");
 
     const saveEmployee = async () => {
+      try {
+        // Save employee data to Firestore
         await addDoc(employeesCollectionRef, { 
-        name: name,
-        position: position, 
-        phone: Number(phone),
-        email: email,
-        qualifications: qualifications,
-        photo: imageURL,
-        irata: imageIRATAURL,
-        workingAtHeights: imageWorkingHeightsURL,
-        whiteCard: imageWhiteCardURL,
-        tradeOne: imageTradeOneURL,
-        tradeTwo: imageTradeTwoURL,
-        ewp: imageEwpURL,
-        driversLicense: imageDriversLicenseURL,
-        signature: imageSignatureURL
-        }).then(() => {
-            createUserWithEmailAndPassword(auth, email, password).then((res) => {
-                setOpen(false);
-            })
-            .catch(err => setError(err.message))
-          });
-    }
+          name: name,
+          position: position, 
+          phone: Number(phone),
+          email: email,
+          qualifications: qualifications,
+          photo: imageURL,
+          irata: imageIRATAURL,
+          workingAtHeights: imageWorkingHeightsURL,
+          whiteCard: imageWhiteCardURL,
+          tradeOne: imageTradeOneURL,
+          tradeTwo: imageTradeTwoURL,
+          ewp: imageEwpURL,
+          driversLicense: imageDriversLicenseURL,
+          signature: imageSignatureURL
+        });
+    
+        // Create user authentication in Firebase Auth
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    
+        // Send email to user with login details
+        // const user = userCredential.user;
+        const message = {
+          to: email,
+          subject: 'Your login details',
+          text: `Hello ${name},\n\nYour account has been created with the following login details:\nEmail: ${email}\nPassword: ${password}\n\nPlease keep this information safe and do not share it with anyone.\n\nBest regards,\nThe Team`
+        };
+        sendMail(message);
+    
+        setOpen(false);
+      } catch (error) {
+        setError(error.message);
+      }
+    };
+    
 
     const imageListRef = ref(storage, `${name}/`)
     const uploadImage = () => {

@@ -45,7 +45,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import ImgMultipleUpload from "../../../components/ImgMultipleUpload";
 import ReactDOM from "react-dom";
-import Modal from "react-modal";
+import "react-responsive-modal/styles.css";
+import { Modal } from "react-responsive-modal";
 import dynamic from "next/dynamic";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.snow.css";
@@ -69,6 +70,10 @@ import DisqusThread from "../../../components/DisqusThread";
 import FinancialView from "../../../components/FinancialView";
 import JobImageUpload from "../../../components/JobImageUpload";
 import Dropzone from "../../../components/Dropzone";
+import NewQuoteTask from "../../../components/NewQuoteTask";
+import TimeSheet from "../../../components/TImeSheet";
+
+
 
 require("react-datepicker/dist/react-datepicker.css");
 
@@ -110,7 +115,6 @@ const customStyles = {
     height: "100vh",
   },
 };
-
 
 const toPrintCustomStyles = {
   content: {
@@ -157,11 +161,27 @@ const bodyCustomStyles = {
 };
 
 
+const ProgressBar = ({ percentage }) => (
+  <div style={{border: '1px solid #007aff'}}>
+    <div style={{ width: `${percentage}%`, backgroundColor: '#007aff', height: '20px' }} />
+  </div>
+  
+);
 
 function jobProfile({ jobProps, id }) {
-  const router = useRouter();
+  const [addTaskOpen, setAddTaskOpen] = useState(false);
+  const [estimatedTime, setEstimatedTime] = useState('');
+  const [newTask, setNewTask] = useState("");
+  const [newBillableRate, setNewBillableRate] = useState("");
+  const [newBaseRate, setNewBaseRate] = useState("");
+  const [quotes, setQuotes] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [state, setState] = useState("draft");
+  const [crew, setCrew] = useState('');
 
   
+
+  const router = useRouter();
 
   const tasksCollectionRef = collection(db, "tasks");
 
@@ -176,14 +196,22 @@ function jobProfile({ jobProps, id }) {
 
   const showDisqusComment = () => {
     return (
-        <>
-         <DisqusThread id = { job.id } path = { job.id } title = { job.client } />
-        </>
-    )
-}
+      <>
+        <DisqusThread id={job.id} path={job.id} title={job.client} />
+      </>
+    );
+  };
 
-  const START_DATE = `${!job.startDate ? "" : new Date(job.startDate.seconds * 1000).toLocaleDateString("en-US")}`;
-  const DUE_DATE = `${!job.dueDate ? "" : new Date(job.dueDate.seconds * 1000).toLocaleDateString("en-US")}`;
+  const START_DATE = `${
+    !job.startDate
+      ? ""
+      : new Date(job.startDate.seconds * 1000).toLocaleDateString("en-US")
+  }`;
+  const DUE_DATE = `${
+    !job.dueDate
+      ? ""
+      : new Date(job.dueDate.seconds * 1000).toLocaleDateString("en-US")
+  }`;
 
   const [jobs, setJobs] = useState([]);
   const [staff, setStaff] = useState([]);
@@ -208,9 +236,11 @@ function jobProfile({ jobProps, id }) {
   const [modalIsOpenHSIF, setIsOpenHSIF] = useState(false);
   const [modalIsOpenHSIC, setIsOpenHSIC] = useState(false);
   const [modalIsOpenHSBody, setIsOpenHSBody] = useState(false);
-  const [modalIsOpenHSInspectionSummary, setIsOpenHSInspectionSummary] = useState(false);
+  const [modalIsOpenHSInspectionSummary, setIsOpenHSInspectionSummary] =
+    useState(false);
   const [modalIsOpenHSAssetMap, setIsOpenHSAssetMap] = useState(false);
-  const [modalIsOpenInspectionReport, setIsOpenInspectionReport] = useState(false);
+  const [modalIsOpenInspectionReport, setIsOpenInspectionReport] =
+    useState(false);
   const [modalIsOpenExQuote, setIsOpenExQuote] = useState(false);
   const [modalIsOpenInQuote, setIsOpenInQuote] = useState(false);
   const [modalIsOpenQuoteCost, setIsOpenQuoteCost] = useState(false);
@@ -221,8 +251,6 @@ function jobProfile({ jobProps, id }) {
   const [newDesc, setNewDesc] = useState("");
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  const [startTime, setStartTime] = useState("0:00");
-  const [endTime, setEndTime] = useState("0:00");
   const [est, setEst] = useState(0);
   const [actual, setActual] = useState(0);
   const [remaining, setRemaining] = useState(0);
@@ -239,16 +267,17 @@ function jobProfile({ jobProps, id }) {
   const [heightSiteAddress, setHeightSiteAddress] = useState("");
   const [timeDate, setTimeDate] = useState(new Date());
 
-
   const [assetGroupOneQty, setAssetGroupOneQty] = useState("");
   const [assetGrpOneType, setAssetGrpOneType] = useState("");
-  const [assetGrpOneInspectionType, setAssetGrpOneInspectionType] = useState("");
+  const [assetGrpOneInspectionType, setAssetGrpOneInspectionType] =
+    useState("");
   const [assetGrpOneRating, setAssetGrpOneRating] = useState("");
   const [assetGrpOneResult, setAssetGrpOneResult] = useState("");
   const [assetGrpOneNotes, setAssetGrpOneNotes] = useState("");
   const [assetGrpTwoQty, setAssetGrpTwoQty] = useState("");
   const [assetGrpTwoType, setAssetGrpTwoType] = useState("");
-  const [assetGrpTwoInspectionType, setAssetGrpTwoInspectionType] = useState("");
+  const [assetGrpTwoInspectionType, setAssetGrpTwoInspectionType] =
+    useState("");
   const [assetGrpTwoRating, setAssetGrpTwoRating] = useState("");
   const [assetGrpTwoResult, setAssetGrpTwoResult] = useState("");
   const [assetGrpTwoNotes, setAssetGrpTwoNotes] = useState("");
@@ -295,7 +324,9 @@ function jobProfile({ jobProps, id }) {
   const [updateDesc, setUpdateDesc] = useState(`${job.description}`);
   const [updateBudget, setUpdateBudget] = useState(`${job.budget}`);
   const [updateState, setUpdateState] = useState(`${job.state}`);
-  const [updateSiteAddress, setUpdateSiteAddress] = useState(`${job.site_address}`);
+  const [updateSiteAddress, setUpdateSiteAddress] = useState(
+    `${job.site_address}`
+  );
   const [updateStartDate, setupdateStartDate] = useState(new Date());
   const [updateDueDate, setUpdateDueDate] = useState(new Date());
   const [updatePriority, setUpdatePriority] = useState(`${job.priority}`);
@@ -304,6 +335,14 @@ function jobProfile({ jobProps, id }) {
   const [updateTeam, setUpdateTeam] = useState(`${job.staff}`);
 
   const [timeSheetNotes, setTimeSheetNotes] = useState("");
+
+  useEffect(() => {
+    setToggleState(JSON.parse(window.localStorage.getItem('toggleState')));
+  }, []);
+
+  useEffect(() => {
+    window.localStorage.setItem('toggleState', toggleState);
+  }, [toggleState]);
 
   let subtitle;
 
@@ -416,24 +455,38 @@ function jobProfile({ jobProps, id }) {
     window.location.reload(false);
   };
 
-  // ADD TASK IN AN ARRAY OF TASKS
-
-  async function addTask() {
-    const id = job.id;
-    const jobDoc = doc(db, "jobs", id);
-    await updateDoc(jobDoc, {
-      tasks: arrayUnion({
-        id: "TSK:" + taskId,
-        name: newTaskName,
-        startDate: startDate,
-        dueDate: endDate,
-        estimated: est,
-        actual: actual,
-        remaining: remaining,
-      }),
-    });
-    window.location.reload(false);
+  function onCloseModal() {
+    setAddTaskOpen(false);
+    
   }
+
+
+  //ADD QUOTE TASK
+
+  async function addQuoteTask() {
+    const id = job.id;
+    console.log(id);
+    const jobDoc = doc(db, "jobs", id);
+    updateDoc(jobDoc, {
+      quoteTasks: arrayUnion({
+        id: "TASK:" + taskId,
+        name: newTask,
+        time: estimatedTime,
+        baseRate: Number(newBaseRate),
+        cost: estimatedTime.replace(":", ".") * Number(newBaseRate),
+        billableRate: Number(newBillableRate),
+        note: newDesc,
+        total: estimatedTime.replace(":", ".") * Number(newBillableRate),
+        state: state,
+        staff: crew
+      }),
+    }).then(() => {
+      setAddTaskOpen(false);
+      setLoading(true);
+    });
+  }
+
+
 
   // ADD HEIGHT AND SAFETY
 
@@ -441,60 +494,60 @@ function jobProfile({ jobProps, id }) {
     const id = job.id;
     const jobDoc = doc(db, "jobs", id);
     await updateDoc(jobDoc, {
-            inspector_name: newInspector,
-            inspection_date: heightStartDate,
-            next_inspection_date: newInspectionDate,
-            email: heightEmail,
-            site_name: heightSiteName,
-            site_address: heightSiteAddress,
-            asset_group_1_qty: assetGroupOneQty,
-            asset_group_1_type: assetGrpOneType,
-            asset_group_1_inspection_type: assetGroupOneQty,
-            asset_group_1_rating: assetGrpOneRating,
-            asset_group_1_result: assetGrpOneResult,
-            asset_group_1_notes: assetGrpOneNotes,
-            asset_group_2_qty: assetGrpTwoQty,
-            asset_group_2_type: assetGrpTwoType,
-            asset_group_2_inspection_type: assetGrpTwoInspectionType,
-            asset_group_2_rating: assetGrpTwoRating,
-            asset_group_2_result: assetGrpTwoResult,
-            asset_group_2_notes: assetGrpTwoNotes,
-            asset_group_3_qty: assetGrp3Qty,
-            asset_grp_3_type: assetGrp3Type,
-            asset_grp_3_inspection_type: assetGrp3InspectionType,
-            asset_grp_3_rating: assetGrp3Rating,
-            asset_grp_3_result: assetGrp3Result,
-            asset_grp_3_notes: assetGrp3Notes,
-            asset_grp_4_qty: assetGrp4Qty,
-            asset_grp_4_type: assetGrp4Type,
-            asset_grp_4_inspection_type: assetGrp4InspectionType,
-            asset_grp_4_rating: assetGrp4Rating,
-            asset_grp_4_result: assetGrp4Result,
-            asset_grp_4_notes: assetGrp4Notes,
-            asset_grp_5_qty: assetGrp5Qty,
-            asset_grp_5_type: assetGrp5Type,
-            asset_grp_5_inspection_type: assetGrp5InspectionType,
-            asset_grp_5_rating: assetGrp5Rating,
-            asset_grp_5_result: assetGrp5Result,
-            asset_grp_5_notes: assetGrp5Notes,
-            asset_grp_6_qty: assetGrp6Qty,
-            asset_grp_6_type: assetGrp6Type,
-            asset_grp_6_inspection_type: assetGrp6InspectionType,
-            asset_grp_6_rating: assetGrp6Rating,
-            asset_grp_6_result: assetGrp6Result,
-            asset_grp_6_notes: assetGrp6Notes,
-            asset_grp_7_qty: assetGrp7Qty,
-            asset_grp_7_type: assetGrp7Type,
-            asset_grp_7_inspection_type: assetGrp7InspectionType,
-            asset_grp_7_rating: assetGrp7Rating,
-            asset_grp_7_result: assetGrp7Result,
-            asset_grp_7_notes: assetGrp7Notes,
-            asset_grp_8_qty: assetGrp8Qty,
-            asset_grp_8_type: assetGrp8Type,
-            asset_grp_8_inspection_type: assetGrp8InspectionType,
-            asset_grp_8_rating: assetGrp8Rating,
-            asset_grp_8_result: assetGrp8Result,
-            asset_grp_8_notes: assetGrp8Notes,
+      inspector_name: newInspector,
+      inspection_date: heightStartDate,
+      next_inspection_date: newInspectionDate,
+      email: heightEmail,
+      site_name: heightSiteName,
+      site_address: heightSiteAddress,
+      asset_group_1_qty: assetGroupOneQty,
+      asset_group_1_type: assetGrpOneType,
+      asset_group_1_inspection_type: assetGroupOneQty,
+      asset_group_1_rating: assetGrpOneRating,
+      asset_group_1_result: assetGrpOneResult,
+      asset_group_1_notes: assetGrpOneNotes,
+      asset_group_2_qty: assetGrpTwoQty,
+      asset_group_2_type: assetGrpTwoType,
+      asset_group_2_inspection_type: assetGrpTwoInspectionType,
+      asset_group_2_rating: assetGrpTwoRating,
+      asset_group_2_result: assetGrpTwoResult,
+      asset_group_2_notes: assetGrpTwoNotes,
+      asset_group_3_qty: assetGrp3Qty,
+      asset_grp_3_type: assetGrp3Type,
+      asset_grp_3_inspection_type: assetGrp3InspectionType,
+      asset_grp_3_rating: assetGrp3Rating,
+      asset_grp_3_result: assetGrp3Result,
+      asset_grp_3_notes: assetGrp3Notes,
+      asset_grp_4_qty: assetGrp4Qty,
+      asset_grp_4_type: assetGrp4Type,
+      asset_grp_4_inspection_type: assetGrp4InspectionType,
+      asset_grp_4_rating: assetGrp4Rating,
+      asset_grp_4_result: assetGrp4Result,
+      asset_grp_4_notes: assetGrp4Notes,
+      asset_grp_5_qty: assetGrp5Qty,
+      asset_grp_5_type: assetGrp5Type,
+      asset_grp_5_inspection_type: assetGrp5InspectionType,
+      asset_grp_5_rating: assetGrp5Rating,
+      asset_grp_5_result: assetGrp5Result,
+      asset_grp_5_notes: assetGrp5Notes,
+      asset_grp_6_qty: assetGrp6Qty,
+      asset_grp_6_type: assetGrp6Type,
+      asset_grp_6_inspection_type: assetGrp6InspectionType,
+      asset_grp_6_rating: assetGrp6Rating,
+      asset_grp_6_result: assetGrp6Result,
+      asset_grp_6_notes: assetGrp6Notes,
+      asset_grp_7_qty: assetGrp7Qty,
+      asset_grp_7_type: assetGrp7Type,
+      asset_grp_7_inspection_type: assetGrp7InspectionType,
+      asset_grp_7_rating: assetGrp7Rating,
+      asset_grp_7_result: assetGrp7Result,
+      asset_grp_7_notes: assetGrp7Notes,
+      asset_grp_8_qty: assetGrp8Qty,
+      asset_grp_8_type: assetGrp8Type,
+      asset_grp_8_inspection_type: assetGrp8InspectionType,
+      asset_grp_8_rating: assetGrp8Rating,
+      asset_grp_8_result: assetGrp8Result,
+      asset_grp_8_notes: assetGrp8Notes,
     });
   }
 
@@ -512,66 +565,64 @@ function jobProfile({ jobProps, id }) {
     window.location.reload(false);
   }
 
-    const createHeightSafety = async () => {
-    
-        await addDoc(heightSafetyCollectionRef, {
-            inspector_name: newInspector,
-            inspection_date: heightStartDate,
-            next_inspection_date: newInspectionDate,
-            email: heightEmail,
-            site_name: heightSiteName,
-            site_address: heightSiteAddress,
-            asset_group_1_qty: assetGroupOneQty,
-            asset_group_1_type: assetGrpOneType,
-            asset_group_1_inspection_type: assetGroupOneQty,
-            asset_group_1_rating: assetGrpOneRating,
-            asset_group_1_result: assetGrpOneResult,
-            asset_group_1_notes: assetGrpOneNotes,
-            asset_group_2_type: assetGrpTwoType,
-            asset_group_2_inspection_type: assetGrpTwoInspectionType,
-            asset_group_2_rating: assetGrpTwoRating,
-            asset_group_2_result: assetGrpTwoResult,
-            asset_group_2_notes: assetGrpTwoNotes,
-            asset_group_3_qty: assetGrp3Qty,
-            asset_grp_3_type: assetGrp3Type,
-            asset_grp_3_inspection_type: assetGrp3InspectionType,
-            asset_grp_3_rating: assetGrp3Rating,
-            asset_grp_3_result: assetGrp3Result,
-            asset_grp_3_notes: assetGrp3Notes,
-            asset_grp_4_qty: assetGrp4Qty,
-            asset_grp_4_type: assetGrp4Type,
-            asset_grp_4_inspection_type: assetGrp4InspectionType,
-            asset_grp_4_rating: assetGrp4Rating,
-            asset_grp_4_result: assetGrp4Result,
-            asset_grp_4_notes: assetGrp4Notes,
-            asset_grp_5_qty: assetGrp5Qty,
-            asset_grp_5_type: assetGrp5Type,
-            asset_grp_5_inspection_type: assetGrp5InspectionType,
-            asset_grp_5_rating: assetGrp5Rating,
-            asset_grp_5_result: assetGrp5Result,
-            asset_grp_5_notes: assetGrp5Notes,
-            asset_grp_6_qty: assetGrp6Qty,
-            asset_grp_6_type: assetGrp6Type,
-            asset_grp_6_inspection_type: assetGrp6InspectionType,
-            asset_grp_6_rating: assetGrp6Rating,
-            asset_grp_6_result: assetGrp6Result,
-            asset_grp_6_notes: assetGrp6Notes,
-            asset_grp_7_qty: assetGrp7Qty,
-            asset_grp_7_type: assetGrp7Type,
-            asset_grp_7_inspection_type: assetGrp7InspectionType,
-            asset_grp_7_rating: assetGrp7Rating,
-            asset_grp_7_result: assetGrp7Result,
-            asset_grp_7_notes: assetGrp7Notes,
-            asset_grp_8_qty: assetGrp8Qty,
-            asset_grp_8_inspection_type: assetGrp8InspectionType,
-            asset_grp_8_rating: assetGrp8Rating,
-            asset_grp_8_result: assetGrp8Result,
-            asset_grp_8_notes: assetGrp8Notes,
-         });
-        addHeightSafety();
-        window.location.pathname="/jobs";
-    
-      }
+  const createHeightSafety = async () => {
+    await addDoc(heightSafetyCollectionRef, {
+      inspector_name: newInspector,
+      inspection_date: heightStartDate,
+      next_inspection_date: newInspectionDate,
+      email: heightEmail,
+      site_name: heightSiteName,
+      site_address: heightSiteAddress,
+      asset_group_1_qty: assetGroupOneQty,
+      asset_group_1_type: assetGrpOneType,
+      asset_group_1_inspection_type: assetGroupOneQty,
+      asset_group_1_rating: assetGrpOneRating,
+      asset_group_1_result: assetGrpOneResult,
+      asset_group_1_notes: assetGrpOneNotes,
+      asset_group_2_type: assetGrpTwoType,
+      asset_group_2_inspection_type: assetGrpTwoInspectionType,
+      asset_group_2_rating: assetGrpTwoRating,
+      asset_group_2_result: assetGrpTwoResult,
+      asset_group_2_notes: assetGrpTwoNotes,
+      asset_group_3_qty: assetGrp3Qty,
+      asset_grp_3_type: assetGrp3Type,
+      asset_grp_3_inspection_type: assetGrp3InspectionType,
+      asset_grp_3_rating: assetGrp3Rating,
+      asset_grp_3_result: assetGrp3Result,
+      asset_grp_3_notes: assetGrp3Notes,
+      asset_grp_4_qty: assetGrp4Qty,
+      asset_grp_4_type: assetGrp4Type,
+      asset_grp_4_inspection_type: assetGrp4InspectionType,
+      asset_grp_4_rating: assetGrp4Rating,
+      asset_grp_4_result: assetGrp4Result,
+      asset_grp_4_notes: assetGrp4Notes,
+      asset_grp_5_qty: assetGrp5Qty,
+      asset_grp_5_type: assetGrp5Type,
+      asset_grp_5_inspection_type: assetGrp5InspectionType,
+      asset_grp_5_rating: assetGrp5Rating,
+      asset_grp_5_result: assetGrp5Result,
+      asset_grp_5_notes: assetGrp5Notes,
+      asset_grp_6_qty: assetGrp6Qty,
+      asset_grp_6_type: assetGrp6Type,
+      asset_grp_6_inspection_type: assetGrp6InspectionType,
+      asset_grp_6_rating: assetGrp6Rating,
+      asset_grp_6_result: assetGrp6Result,
+      asset_grp_6_notes: assetGrp6Notes,
+      asset_grp_7_qty: assetGrp7Qty,
+      asset_grp_7_type: assetGrp7Type,
+      asset_grp_7_inspection_type: assetGrp7InspectionType,
+      asset_grp_7_rating: assetGrp7Rating,
+      asset_grp_7_result: assetGrp7Result,
+      asset_grp_7_notes: assetGrp7Notes,
+      asset_grp_8_qty: assetGrp8Qty,
+      asset_grp_8_inspection_type: assetGrp8InspectionType,
+      asset_grp_8_rating: assetGrp8Rating,
+      asset_grp_8_result: assetGrp8Result,
+      asset_grp_8_notes: assetGrp8Notes,
+    });
+    addHeightSafety();
+    window.location.pathname = "/jobs";
+  };
 
   // EDIT JOB FORM FUNCTION
 
@@ -579,35 +630,28 @@ function jobProfile({ jobProps, id }) {
     isEdit(true);
   };
 
-  // EDIT AND UPDATE JOB FUNCTION
 
-  // const updateClient = async (id, name) => {
-  //   const clientDoc = doc(db, "suppliers", id);
-  //   const newFields = { name: newName }
-  //   await updateDoc(clientDoc, newFields);
-  //   window.location.reload(false);
-  // }
 
   const updateJob = async (id) => {
     const jobDoc = doc(db, "jobs", id);
     const newFields = {
-          client: updateClientName,
-          contact: updateContact,
-          name: updateName,
-          description: updateDesc,
-          budget: updateBudget,
-          state: updateState,
-          site_address: updateSiteAddress,
-          startDate: updateStartDate,
-          dueDate: updateDueDate,
-          priority: updatePriority,
-          accountManager: updateAccMngr,
-          manager: updateManager,
-          staff: updateTeam.split(",").map(staff => doc(db, "users", staff)),
-    }
+      client: updateClientName,
+      contact: updateContact,
+      name: updateName,
+      description: updateDesc,
+      budget: updateBudget,
+      state: updateState,
+      site_address: updateSiteAddress,
+      startDate: updateStartDate,
+      dueDate: updateDueDate,
+      priority: updatePriority,
+      accountManager: updateAccMngr,
+      manager: updateManager,
+      staff: updateTeam.split(",").map((staff) => doc(db, "users", staff)),
+    };
     await updateDoc(jobDoc, newFields);
     window.location.reload(false);
-}
+  };
 
   // GET THE IDS OF STAFF
 
@@ -619,22 +663,7 @@ function jobProfile({ jobProps, id }) {
     setToggleState(index);
   };
 
-  const handleChange = (e) => {
-    if (e.target.files[0]) {
-      setImage(e.target.files[0]);
-    }
-  };
 
-  const handleChangeName = (e) => {
-    setImageName(e.target.value);
-  };
-
-  // const handleTaskChange = (e) => {
-  //   console.log(e.target.value);
-  //   const selectedTask = tasks.find((task) => task.name === e.target.value);
-  //   setNewDesc(selectedTask.description);
-  //   setNewTaskName(selectedTask.name);
-  // };
 
   const handleUpload = () => {
     if (image == null) return;
@@ -649,12 +678,23 @@ function jobProfile({ jobProps, id }) {
     });
   };
 
-  const disqusShortname = "abseil"
-    const disqusConfig = {
-      url: "http://localhost:3000",
-      identifier: "article-id",
-      title: "Title of Your Article"
-    }
+  const handleTaskChange = (e) => {
+    console.log(e.target.value);
+    const selectedTask = tasks.find((task) => task.name === e.target.value);
+    setNewTask(selectedTask.name);
+    setNewDesc(selectedTask.description);
+    setNewBaseRate(selectedTask.baseRate);
+    setNewBillableRate(selectedTask.billableRate);
+  };
+
+  const disqusShortname = "abseil";
+  const disqusConfig = {
+    url: "http://localhost:3000",
+    identifier: "article-id",
+    title: "Title of Your Article",
+  };
+
+  
 
   return (
     <>
@@ -849,166 +889,120 @@ function jobProfile({ jobProps, id }) {
 
             <hr />
 
-            <div className="disqusWrapper">{showDisqusComment()}</div>
+            <h1>Tasks</h1>
+            <div style={{ padding: "15px 0" }}>
+              <button onClick={() => setAddTaskOpen(true)}>+ New Task</button>
+            </div>
 
-            {/* <h4>Tasks</h4>
-            <button onClick={() => openModal(job.id)} style={{margin:"20px 0"}}>+ New Task</button>
-            <Modal
-              isOpen={modalIsOpen === job.id}
-              onAfterOpen={afterOpenModal}
-              onRequestClose={closeModal}
-              style={customStyles}
-              contentLabel="Example Modal"
-            >
-              <h2 ref={(_subtitle) => (subtitle = _subtitle)}>TASK FORM</h2>
-              <div className="taskField">
-                <label>Template</label><br/>
-                <select value={newTaskName} onChange={handleTaskChange}>
-                  <option>Choose Template...</option>
-                  {tasks.map(task => (
-                    <option value={task.name}>{task.name}</option>
-                  ))}
-                </select>
-              </div>
-              <div className="taskField">
-                <label>Description</label><br/>
-                <ReactQuill value={newDesc} onChange={setNewDesc} />
-              </div>
-              <div className="taskField" style={{display:"flex",justifyContent:"space-between"}}>
-                <div className="startDate six columns">
-                  <label>Start Date</label>
-                  <DatePicker
-                    selected={startDate}
-                    selectsStart
-                    startDate={startDate}
-                    endDate={endDate}
-                    onChange={(date) => setStartDate(date)}
-                    className="datePickerClass"
-                    dateFormat={"dd/MM/yyyy"}
-                    isClearable
-                    placeholderText="I have been cleared!"
-                  />
-                </div>
-                <div className="dueDate six columns">
-                  <label>Due Date</label>
-                  <DatePicker
-                    selected={endDate}
-                    selectsEnd
-                    startDate={startDate}
-                    endDate={endDate}
-                    minDate={startDate}
-                    onChange={(date) => setEndDate(date)}
-                    className="datePickerClass"
-                    dateFormat={"dd/MM/yyyy"}
-                    isClearable
-                    placeholderText="I have been cleared!"
-                  />
-                </div>
-              </div>
-              <div className="taskField">
-                <label>Estimated</label><br/>
-                <input
-                  type="number"
-                  value={est}
-                  onChange={(event) => {
-                    setEst(event.target.value);
-                  }}
-                />
-              </div>
-              <div className="taskField">
-                <label>Actual</label><br/>
-                <input
-                  type="number"
-                  value={actual}
-                  onChange={(event) => {
-                    setActual(event.target.value);
-                  }}
-                />
-              </div>
-              <div className="taskField">
-                <label>Remaining</label><br/>
-                <input
-                  type="number"
-                  value={remaining}
-                  onChange={(event) => {
-                    setRemaining(event.target.value);
-                  }}
-                />
-              </div>
-              <div style={{display:"flex"}}>
-                <input type="submit" value="submit" onClick={addTask} />
-                <input type="submit" value="Cancel" onClick={closeModal} />
-              </div>
-              
+            <Modal open={addTaskOpen} onClose={onCloseModal} center>
+              <h2>Task Information</h2>
+              <NewQuoteTask
+                job={job}
+                tasks={tasks}
+                newTask={newTask}
+                estimatedTime={estimatedTime}
+                setEstimatedTime={setEstimatedTime}
+                newBillableRate={newBillableRate}
+                newDesc={newDesc}
+                state={state}
+                setState={setState}
+                crew={crew}
+                setCrew={setCrew}
+                addQuoteTask={addQuoteTask}
+                handleTaskChange={handleTaskChange}
+              />
             </Modal>
-            <div className="tableWrapper">
-              <table>
+
+            <table>
+              <thead>
                 <tr>
+                  <th></th>
                   <th>Name</th>
                   <th>Start</th>
                   <th>Due</th>
                   <th>Estimated</th>
                   <th>Actual</th>
                   <th>Remaining</th>
+                  <th>Actions</th>
                 </tr>
-                {job.tasks ? (
-                  job.tasks.map((task) => (
-                    <tr>
-                      <td>{task.name}</td>
-                      <td>
-                        {new Date(
-                          task.startDate.seconds * 1000
-                        ).toLocaleDateString("en-US")}
-                      </td>
-                      <td>
-                        {new Date(
-                          task.dueDate.seconds * 1000
-                        ).toLocaleDateString("en-US")}
-                      </td>
-                      <td>{task.estimated}</td>
-                      <td>{task.actual}</td>
-                      <td>{task.remaining}</td>
-                    </tr>
-                  ))
-                ) : (
-                  <di>UPLOAD TASKS</di>
-                )}
-              </table>
-            </div> */}
-            {/* <button onClick={() => setIsOpenQuoteCost(true)}>+ New Cost</button>
-            <div className="modal">
-              <Modal
-                isOpen={modalIsOpenQuoteCost}
-                onAfterOpen={afterOpenModal}
-                onRequestClose={closeModal}
-                style={customStyles}
-                contentLabel="Example Modal"
-              >
-                <h2 ref={(_subtitle) => (subtitle = _subtitle)}>
-                  Edit Quote Cost
-                </h2>
-                <button className="modalBtn" onClick={() => closeModal(true)}>
-                  close
-                </button>
-                <label>Description:</label>
-                <input
-                  type="text"
-                  value={quoteDesc}
-                  onChange={(event) => {
-                    setQuoteDesc(event.target.value);
-                  }}
-                />
-                <label>Quantity:</label>
-                <input
-                  type="number"
-                  value={qty}
-                  onChange={(event) => {
-                    setQty(event.target.value);
-                  }}
-                />
-                <input type="submit" value="submit" onClick={addCost} />
-              </Modal>
-            </div> */}
+              </thead>
+              <tbody>
+                {job?.quoteTasks?.map((task) => {
+                  // filter the login array to only include items that match the current task name
+                  const taskLogins = job?.login?.filter(
+                    (item) => item.task === task.name
+                  );
+
+                  // calculate the total time for the task
+                  const totalTaskTime = taskLogins?.reduce((total, item) => {
+                    const [hours, minutes] = item.time.split(":");
+                    return total + parseInt(hours) * 60 + parseInt(minutes);
+                  }, 0);
+
+                  // convert the total time back to HH:MM format
+                  const totalTaskTimeFormatted = `${Math.floor(
+                    totalTaskTime / 60
+                  )
+                    .toString()
+                    .padStart(2, "0")}:${(totalTaskTime % 60)
+                    .toString()
+                    .padStart(2, "0")}`;
+
+                    const estimatedTime = task.time;
+                    const actualTime = totalTaskTimeFormatted;
+                    
+                    // convert estimatedTime and actualTime to minutes
+                    const estimatedMinutes = parseInt(estimatedTime.split(":")[0]) * 60 + parseInt(estimatedTime.split(":")[1]);
+                    const actualMinutes = parseInt(actualTime.split(":")[0]) * 60 + parseInt(actualTime.split(":")[1]);
+                    
+                    // calculate remaining minutes
+                    const remainingMinutes = estimatedMinutes - actualMinutes;
+                    
+                    // convert remainingMinutes back to hours:minutes format
+                    const remainingTime = `${Math.floor(remainingMinutes / 60)}:${remainingMinutes % 60}`;
+
+                    
+
+                    const percentageCompleted =
+                      (parseFloat(totalTaskTimeFormatted) /
+                        parseFloat(task.time)) *
+                      100;
+
+                  
+                  return (
+                    <>
+                      <tr key={task.id}>
+                        <td>
+                          <input type="checkbox" name="" value="" />
+                        </td>
+                        <td>{task.name}</td>
+                        <td></td>
+                        <td></td>
+                        <td>{task.time}</td>
+                        <td>{totalTaskTimeFormatted === "NaN:NaN" ? "" : totalTaskTimeFormatted}</td>
+                        <td>{remainingTime === "NaN:NaN" ? "" : remainingTime}</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td>{task.staff}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td colSpan={2}>
+                          <ProgressBar percentage={percentageCompleted} />
+                        </td>
+                        <td></td>
+                      </tr>
+                    </>
+                  );
+                })}
+              </tbody>
+            </table>
+
+            <hr />
+
+            <div className="disqusWrapper">{showDisqusComment()}</div>
           </div>
 
           <div
@@ -1019,111 +1013,6 @@ function jobProfile({ jobProps, id }) {
               Image gallery
             </h4>
             <Dropzone job={job} />
-            {/* <JobImageUpload job={job} /> */}
-            {/* <ImgMultipleUpload
-              url={url}
-              hide={hide}
-              imageName={imageName}
-              image={image}
-              handleChangeName={handleChangeName}
-              handleChange={handleChange}
-              handleUpload={handleUpload}
-            />
-            <input
-              className="show"
-              placeholder="Name..."
-              value={imageName}
-              onChange={handleChangeName}
-            />
-            <input
-              className="show"
-              type="submit"
-              value="submit"
-              onClick={addPhoto}
-            />
-
-            <input
-              type="hidden"
-              value={url}
-              onChange={(event) => {
-                setUrl(event.target.value);
-              }}
-            />
-            <hr />
-            <div className="container">
-              {job.images ? (
-                job.images.map((img) => (
-                  <div className="imgWrapper">
-                    <img
-                      key={img.id}
-                      className="item"
-                      src={img.url}
-                      alt={img.name}
-                      onClick={() => openModal(img.id)}
-                    />
-
-                    <FontAwesomeIcon
-                      icon={faTrashCan}
-                      onClick={() => setIsOpenYesNo(img.id)}
-                      width="35"
-                      className="trashIcon"
-                    />
-                    <div className="modal">
-                      <Modal
-                        isOpen={modalIsOpenYesNo === img.id}
-                        onAfterOpen={afterOpenModal}
-                        onRequestClose={closeModal}
-                        style={customStyles}
-                        contentLabel="Example Modal"
-                      >
-                        <h2 ref={(_subtitle) => (subtitle = _subtitle)}>
-                          Delete Photo?
-                        </h2>
-                        <div
-                          className="modalBtn"
-                          disabled={isLoading}
-                          onClick={() => deletePhoto(img.id)}
-                        >
-                          {isLoading === img.id ? <LoadingSpinner /> : "YES"}
-                        </div>
-                        <div className="modalBtn" onClick={closeModal}>
-                          No
-                        </div>
-                      </Modal>
-                    </div>
-
-                    <div className="modal">
-                      <Modal
-                        isOpen={modalIsOpen === img.id}
-                        onAfterOpen={afterOpenModal}
-                        onRequestClose={closeModal}
-                        style={customStyles}
-                        contentLabel="Example Modal"
-                      >
-                        <h2 ref={(_subtitle) => (subtitle = _subtitle)}>
-                          {img.name}
-                        </h2>
-                        <button className="modalBtn" onClick={closeModal}>
-                          close
-                        </button>
-                        <div className="modalPicture">
-                          <img
-                            src={img.url}
-                            alt={img.name}
-                            width="100%"
-                            height="390"
-                          />
-                        </div>
-                      </Modal>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <h4 style={{ height: "20vh", whiteSpace: "nowrap" }}>
-                  No Images uploaded
-                </h4>
-              )}
-            </div> */}
           </div>
           <div
             id="docs"
@@ -1837,24 +1726,6 @@ function jobProfile({ jobProps, id }) {
                 <h3 style={{ marginBottom: "10px" }}>Sales & Estimating</h3>
               </div>
 
-              {/* <div className="docs" onClick={() => setIsOpenExQuote(true)}>
-                External Quote
-              </div>
-              <div className="modal">
-                <Modal
-                  isOpen={modalIsOpenExQuote}
-                  onAfterOpen={afterOpenModal}
-                  onRequestClose={closeModal}
-                  style={customStyles}
-                  contentLabel="Example Modal"
-                >
-                  <h2 ref={(_subtitle) => (subtitle = _subtitle)}>
-                    External Quote
-                  </h2>
-                  <ExternalQuote job={job} id="target" closeModal={closeModal} />
-                </Modal>
-              </div> */}
-
               <Link href="[id]/[externalId]" as={`${job.id}/${job.jobNumber}`}>
                 External Quote
               </Link>
@@ -1882,121 +1753,42 @@ function jobProfile({ jobProps, id }) {
                 </Modal>
               </div>
             </div>
-
-            
           </div>
           <div
-              id="timesheet"
-              style={{ paddingBottom: "50px" }}
-              className={
-                toggleState === 4 ? "content  activeContent" : "content"
-              }
-            >
-              <div>
-                <h1>Time Sheet Information</h1>
-                <table>
-                  <tr>
-                    <td className="editLabel">
-                      <label>Date:</label>
-                    </td>
-                    <td className="editCell">
-                      <DatePicker selected={timeDate} onChange={(date) => setTimeDate(date)} />
-                    </td>
-                    <td></td>
-                    <td></td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <label>Staff:</label>
-                    </td>
-                    <td>
-                      <select>
-                        <option>Choose Staff...</option>
-                        {staff
-                        .filter((f) => array2.includes(f.id))
-                        .map((f) => (
-                          <option value={f.name}>{f.name}</option>
-                        ))}
-                      </select>
-                    </td>
-                    <td></td>
-                    <td></td>
-                  </tr>
-                  <tr>
-                    <td className="editLabel">
-                      <label>Task:</label>
-                    </td>
-                    <td>
-                      <select>
-                        <option>Choose Task...</option>
-                        {job?.quoteTasks?.map((task) => (
-                          <option value={task.name}>{task.name}</option>
-                        ))}
-                      </select>
-                    </td>
-                    <td></td>
-                    <td></td>
-                  </tr>
-                  <tr>
-                    <td><label>Start Time:</label></td>
-                    <td>
-                      <input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} />
-                    </td>
-                    <td>
-                      <label>Finish Time:</label>
-                    </td>
-                    <td>
-                      <input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <label>Notes:</label>
-                    </td>
-                    <td colSpan={3}>
-                      <ReactQuill value={timeSheetNotes} onChange={setTimeSheetNotes} />
-                    </td>
-                  </tr>
-                </table>
-                <button type="submit">Save</button>
-                <button type="submit">Cancel</button>
-              </div>
+            id="timesheet"
+            style={{ paddingBottom: "50px" }}
+            className={toggleState === 4 ? "content  activeContent" : "content"}
+          >
+            <TimeSheet staff={staff} job={job} array2={array2} />
+          </div>
+          <div
+            id="financial"
+            style={{ paddingBottom: "50px" }}
+            className={toggleState === 5 ? "content  activeContent" : "content"}
+          >
+            <div>
+              <h1>Financial</h1>
+              <FinancialView job={job} />
             </div>
-            <div
-              id="financial"
-              style={{ paddingBottom: "50px" }}
-              className={
-                toggleState === 5 ? "content  activeContent" : "content"
-              }
-            >
-              <div>
-                <h1>Financial</h1>
-                <FinancialView job={job} />
-              </div>
+          </div>
+          <div
+            id="forms"
+            style={{ paddingBottom: "50px" }}
+            className={toggleState === 6 ? "content  activeContent" : "content"}
+          >
+            <div>
+              <h1>Forms</h1>
             </div>
-            <div
-              id="forms"
-              style={{ paddingBottom: "50px" }}
-              className={
-                toggleState === 6 ? "content  activeContent" : "content"
-              }
-            >
-              <div>
-                <h1>Forms</h1>
-                
-              </div>
+          </div>
+          <div
+            id="Reports"
+            style={{ paddingBottom: "50px" }}
+            className={toggleState === 7 ? "content  activeContent" : "content"}
+          >
+            <div>
+              <h1>Reports</h1>
             </div>
-            <div
-              id="Reports"
-              style={{ paddingBottom: "50px" }}
-              className={
-                toggleState === 7 ? "content  activeContent" : "content"
-              }
-            >
-              <div>
-                <h1>Reports</h1>
-              </div>
-            </div>
+          </div>
         </div>
       )}
       <style jsx>{`
@@ -2202,10 +1994,6 @@ function jobProfile({ jobProps, id }) {
           white-space: nowrap;
         }
 
-        tr:nth-child(even) {
-          background-color: #dddddd;
-        }
-
         .docs {
           transition: 0.3s;
         }
@@ -2262,7 +2050,7 @@ function jobProfile({ jobProps, id }) {
           font-weight: bold;
           color: #333;
         }
-  
+
         .editCell {
           width: 200px;
           padding-top: 7px;

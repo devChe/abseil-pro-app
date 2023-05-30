@@ -6,8 +6,9 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { faPaintbrush } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import dateFormat, { masks } from "dateformat";
 import dynamic from "next/dynamic";
-import { collection, doc, onSnapshot, query } from "firebase/firestore";
+import { arrayUnion, collection, doc, getDoc, getDocs, onSnapshot, query, updateDoc, where } from "firebase/firestore";
 import { db } from "../src/config/firebase.config";
 const Paint = dynamic(() => import("../components/Painterro"), { ssr: false });
 
@@ -18,7 +19,8 @@ const Slick = ({ photo, photosByMonth, activeImage, open, setOpen, jobs, setJobs
   const [show, setShow] = useState(false)
   const [isLoading, setIsLoading] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [nextSlideId, setNextSlideId] = useState(null);
+  const [description, setDescription] = useState("");
+  const [writeDesc, setWriteDesc] = useState(false)
   
 
   const handleMouseEnter = (id) => {
@@ -49,13 +51,65 @@ const Slick = ({ photo, photosByMonth, activeImage, open, setOpen, jobs, setJobs
   }
 
   const settings = {
-    dots: true,
-    infinite: true,
+    infinite: true, 
     speed: 500,
     fade: true
   };
 
-  console.log(photosByMonth);
+  const submitDescription = async (id, path, url, date, createdTime, client, name, clientID, jobName, jobNum, index, description) => {
+    try {
+      // Find the job with the specified job number
+      const array = jobs?.filter(res => res?.data?.jobNumber === jobNum)
+      const map = array.map(res => res.id)
+      const docId = map[0]
+      console.log(id)
+      const jobDoc = doc(db, "jobs", docId);
+      //create new field to replace the target object
+      const newField = {
+            id: id,
+            path: path,
+            url: url,
+            date: date,
+            createdTime: createdTime,
+            client: client,
+            name: name,
+            clientID: clientID,
+            jobName: jobName,
+            jobNum: jobNum,
+            description: description
+      }
+      // Update the description field of the specified object in the photos array
+      const photos = array[0]?.data?.photos;
+      photos[index] = newField
+      console.log(photos)
+      await updateDoc(jobDoc, {
+        photos: photos
+      });
+      alert("Success");
+      setWriteDesc(photos.description)
+    } catch (error) {
+     console.log(error);
+    }
+  }
+  
+  
+
+
+
+  // const submitDescription = async (jobNum) => {
+    // const array = jobs?.filter(res => res?.data?.jobNumber === jobNum)
+    // const map = array.map(res => res.id)
+    // const id = map[0]
+    // const jobDoc = doc(db, "jobs", id);
+  //   await updateDoc(jobDoc, {
+  //     photos: arrayUnion({
+  //       description: description
+  //     }),
+  //   })
+  //   .then((success) => console.log(success))
+  //   .catch((err) => console.log(err))
+  // }
+
   return (
     <>
       <div>
@@ -65,15 +119,26 @@ const Slick = ({ photo, photosByMonth, activeImage, open, setOpen, jobs, setJobs
               <div style={{ display: "flex", gap: "20px" }}>
                 <div
                   key={index}
-                  style={{ position: "relative" }}
+                  style={{
+                    position: "relative",
+                    width: "100%",
+                    background: "darkgray",
+                  }}
                   onMouseEnter={() => handleMouseEnter(img.id)}
                   onMouseLeave={handleMouseLeave}
                 >
-                  <img src={img.url} width="100%" height="500px" />
+                  <img
+                    src={img.url}
+                    width="100%"
+                    height="500px"
+                    style={{ objectFit: "contain" }}
+                  />
                   {isHovered === img.id && (
                     <div
                       className="paintIcon"
-                      onClick={() => {openEditor(img.id) }}
+                      onClick={() => {
+                        openEditor(img.id);
+                      }}
                     >
                       <FontAwesomeIcon
                         icon={faPaintbrush}
@@ -84,13 +149,44 @@ const Slick = ({ photo, photosByMonth, activeImage, open, setOpen, jobs, setJobs
                 </div>
                 <div style={{ width: "100%" }}>
                   <h3>{img.jobName}</h3>
+                  <p>
+                    {dateFormat(
+                      new Date(img.createdTime.seconds * 1000),
+                      "mmmm dS, yyyy h:MM TT"
+                    )}
+                  </p>
                   <h4>Description</h4>
                   <div>
-                    <textarea
-                      placeholder="Add a description..."
-                      rows="4"
-                      cols="50"
-                    ></textarea>
+                    {img.description !== "" ? (
+                      <p>{img.description}</p>
+                    ) : (
+                      <>
+                        <p>{writeDesc}</p>
+                        <textarea
+                          placeholder="Add a description..."
+                          rows="4"
+                          cols="50"
+                          value={description}
+                          onChange={(e) => setDescription(e.target.value)}
+                      ></textarea><br/>
+                      <button onClick={() => {submitDescription(
+                        img.id,
+                        img.path,
+                        img.url,
+                        img.date,
+                        img.createdTime,
+                        img.client,
+                        img.name,
+                        img.clientID,
+                        img.jobName,
+                        img.jobNum,
+                        index,
+                        description
+                      )}}>Update Description</button>
+                      </>
+                      
+                    )}
+                    
                   </div>
                 </div>
                 {show === img.id ? (

@@ -381,7 +381,7 @@ const externalId = () => {
   
     // DELETE QUOTE COST
   
-    async function deleteQuoteCost(id,code,cost,description,notes,quantity,supplier,tax,total,unitCost,unitPrice,index) {
+    async function deleteQuoteCost(id,code,cost,description,notes,quantity,supplier,tax,total,unitCost,unitPrice) {
       const jobId = job.id;
       const jobDoc = doc(db, "jobs", jobId);
       updateDoc(jobDoc, {
@@ -837,8 +837,7 @@ const externalId = () => {
                                 cost.tax,
                                 cost.total,
                                 cost.unitCost,
-                                cost.unitPrice,
-                                index
+                                cost.unitPrice
                               );
                             }}
                           >

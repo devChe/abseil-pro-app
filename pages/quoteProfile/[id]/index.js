@@ -39,6 +39,7 @@ export const getStaticProps = async (context) => {
     revalidate: 1
   };
 };
+
 const quoteProfile = ({quoteProps}) => {
   const [clients, setClients] = useState([]);
   const [quotes, setQuotes] = useState({});
@@ -120,7 +121,7 @@ const quoteProfile = ({quoteProps}) => {
             const res = data.docs.map((doc) => ({...doc.data(), id: doc.id }));
             console.log(res);
             const currentClient = res.find((client) => client.name === clientName);
-            setClientId(currentClient.id);
+            setClientId(currentClient?.id);
         }
         getClients();
     }, [])

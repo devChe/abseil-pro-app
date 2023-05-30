@@ -13,8 +13,6 @@ import { useDropzone } from 'react-dropzone'
 import { v4 } from 'uuid';
 import { auth, db, storage } from '../src/config/firebase.config';
 import LoadingSpinner from './LoadingSpinner';
-import { faScribble } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 
 const Dropzone = ({job}) => {
@@ -62,40 +60,6 @@ const Dropzone = ({job}) => {
         getJob()
       }, [])
 
-      // const imageListRef = ref(storage, `photos_${job.jobNumber}/`);
-
-      // const uploadImage = async () => {
-      //   await Promise.all(
-      //     selectedImages.map((image) => {
-      //       const imageRef = ref(storage, `photos_${job.jobNumber}/${image.path + v4() }`);
-      //       uploadBytes(imageRef, image, "data_url").then( async ()=>{
-      //         const downloadURL = await getDownloadURL(imageRef)
-      //         const id = job.id;
-      //         const jobDoc = doc(db, "jobs", id);
-      //         updateDoc(jobDoc, {
-      //           photos: arrayUnion({
-      //             id: "IMG:" + new Date() + v4(),
-      //             path: imageRef.fullPath,
-      //             url: downloadURL,
-      //             date: new Date(),
-      //             client: job.client,
-      //             clientID: job.clientID[0],
-      //             name: staff
-      //               .filter((el) => el.email === user)
-      //               .map((emp) => emp.name),
-      //             jobName: job.name,
-      //             jobNum: job.jobNumber
-      //           }),
-      //         });
-      //       })
-      //     })
-      //   )
-      //   setSelectedImages([]);
-      // } 
-
-      
-      
-
       const uploadImage = async () => {
         await Promise.all(
           selectedImages.map(async (image) => {
@@ -117,7 +81,8 @@ const Dropzone = ({job}) => {
                 clientID: job.clientID[0],
                 name: staff.filter((el) => el.email === user).map((emp) => emp.name),
                 jobName: job.name,
-                jobNum: job.jobNumber
+                jobNum: job.jobNumber,
+                description: ""
               }),
             });
           })
@@ -126,7 +91,7 @@ const Dropzone = ({job}) => {
       } 
 
 
-      const deletePhoto = async (deleteId, path, url, date, createdTime, client, name, clientID, jobName, jobNum) => {
+      const deletePhoto = async (deleteId, path, url, date, createdTime, client, name, clientID, jobName, jobNum, description) => {
         setLoading(true)
         const id = job.id;
         //deleteId is the id from the post you want to delete
@@ -143,6 +108,7 @@ const Dropzone = ({job}) => {
             clientID: clientID,
             jobName: jobName,
             jobNum: jobNum,
+            description: description
 
           })
         })
@@ -172,11 +138,14 @@ const Dropzone = ({job}) => {
       
       const {getRootProps, getInputProps} = useDropzone({onDrop})
 
-      const selected_images = selectedImages?.map(file=>(
-        <div>
-           <Image src={file.preview} width={100} height="150px" style={{borderRadius:"8px"}} alt="" />
-        </div>
-      ))
+      const selected_images = selectedImages?.map(file=> {
+        return (
+          
+           <Image src={file.preview} style={{borderRadius:"8px"}} alt="" width={150} height={150}  />
+          
+        )
+        
+      })
       return (
         <div style={{minHeight:"100vh"}} className="wrapper">
           <div {...getRootProps()} className="uploader">
@@ -190,13 +159,16 @@ const Dropzone = ({job}) => {
           </div>
           <button onClick={uploadImage}>Upload Image</button>
 
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gridGap:"10px",marginTop:"50px"}}>
+          <div className='imageGrid'>
                 {jobs?.data?.photos?.map((item) => {
                     return (
                         <div style={{position: "relative"}}>
                             {loading && <LoadingSpinner /> }
-                            <img key={item.id} src={item.url} className="photo" />
-                            <button type="submit" onClick={() => deletePhoto(item.id, item.path, item.url, item.date, item.createdTime, item.client, item.name, item.clientID, item.jobName, item.jobNum)}>Delete</button>
+                            <div style={{position:"relative", width:"100%", height:"150px"}}>
+                              <Image key={item.id} src={item.url} style={{borderRadius:"8px"}} className="photo" layout="fill" />
+                            </div>
+                            
+                            <button type="submit" onClick={() => deletePhoto(item.id, item.path, item.url, item.date, item.createdTime, item.client, item.name, item.clientID, item.jobName, item.jobNum, item.description)}>Delete</button>
                         </div>
                     )
                 })}
@@ -251,6 +223,14 @@ const Dropzone = ({job}) => {
                 width: 300px;
                 height: 300px;
                 margin: 10px;
+            }
+
+            .imageGrid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(200px, 200px));
+                grid-gap: 15px;
+                width: 100%;
+                margin-top: 20px;
             }
             `}</style>
         </div>

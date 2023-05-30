@@ -36,7 +36,7 @@ const Paint = ({ onSave, img, jobs, setJobs, setIsLoading }) => {
             const jobDoc = doc(db, "jobs", id[0].id);
             updateDoc(jobDoc, {
               photos: arrayUnion({
-                id: "IMG:" + v4(),
+                id: "IMG:" + "Edited" + v4(),
                 path: imageRef.fullPath,
                 url: url,
                 date: img.date,

@@ -32,6 +32,9 @@ const business = () => {
           <div className='businessBtn'>
             <Link href={'documents'}><button className='btn'>Documents</button></Link>
           </div>
+          <div className='businessBtn'>
+            <Link href={'loginTable'}><button className='btn'>Timesheets</button></Link>
+          </div>
         </div>
       </div>
       
