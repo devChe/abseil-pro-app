@@ -7,7 +7,7 @@
     "lint": "next lint"
   },
   "engines": {
-    "node": "14.x"
+    "node": "18.x"
   },
   "dependencies": {
     "@firebase/storage": "^0.9.4",
