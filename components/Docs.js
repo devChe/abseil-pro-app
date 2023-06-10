@@ -3,6 +3,8 @@ import { db, storage, storageRef } from '../src/config/firebase.config';
 import { getDownloadURL, getStorage, ref, uploadBytes } from '@firebase/storage';
 import { arrayUnion, doc, updateDoc } from 'firebase/firestore';
 
+
+
 const DocumentPage = ({job}) => {
   const [file, setFile] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(0);
