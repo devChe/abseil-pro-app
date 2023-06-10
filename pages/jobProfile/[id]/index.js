@@ -35,14 +35,6 @@ import {
 } from "firebase/storage";
 import Image from "next/image";
 import { v4 } from "uuid";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faTrashCan,
-  faPhone,
-  faLocationDot,
-  faPenToSquare,
-  faClose,
-} from "@fortawesome/free-solid-svg-icons";
 import ImgMultipleUpload from "../../../components/ImgMultipleUpload";
 import ReactDOM from "react-dom";
 import "react-responsive-modal/styles.css";
@@ -742,7 +734,7 @@ function jobProfile({ jobProps, id }) {
               {job.name}
             </h2>
             <div className="editBtn" onClick={() => isEdit("true")}>
-              <FontAwesomeIcon icon={faPenToSquare} className="editIcon" />
+              <span>PenIconHere</span>
             </div>
           </div>
           <div className="heroImage">
@@ -751,8 +743,8 @@ function jobProfile({ jobProps, id }) {
             <div className="clientWrapper">
               <div className="clientName">{job.client}</div>
               <div className="info">
-                <div className="icon">
-                  <FontAwesomeIcon icon={faPhone} />
+                <div className="icon" style={{color: "white"}}>
+                  &#9742;
                 </div>
                 <div>
                   <a href={"tel:" + job.contact} className="contact">
@@ -763,7 +755,7 @@ function jobProfile({ jobProps, id }) {
               </div>
               <div className="info">
                 <div className="icon loc">
-                  <FontAwesomeIcon icon={faLocationDot} />
+                  &#9872;
                 </div>
                 <div>
                   <div className="location">{job.site_address}</div>

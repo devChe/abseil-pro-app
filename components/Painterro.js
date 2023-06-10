@@ -1,4 +1,4 @@
-import { getDownloadURL, ref, uploadString } from "@firebase/storage";
+import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
 import Painterro from "painterro";

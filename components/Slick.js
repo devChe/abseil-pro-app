@@ -4,8 +4,6 @@ import React, { useEffect, useRef, useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { faPaintbrush } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import dateFormat, { masks } from "dateformat";
 import dynamic from "next/dynamic";
 import { arrayUnion, collection, doc, getDoc, getDocs, onSnapshot, query, updateDoc, where } from "firebase/firestore";
@@ -140,10 +138,11 @@ const Slick = ({ photo, photosByMonth, activeImage, open, setOpen, jobs, setJobs
                         openEditor(img.id);
                       }}
                     >
-                      <FontAwesomeIcon
-                        icon={faPaintbrush}
+                      <span
                         style={{ fontSize: "35px" }}
-                      />
+                      >
+                        Edit
+                      </span>
                     </div>
                   )}
                 </div>

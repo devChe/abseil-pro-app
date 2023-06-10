@@ -2,8 +2,6 @@ import React from 'react'
 import { async } from '@firebase/util'
 import { db } from '../src/config/firebase.config'
 import { deleteDoc, doc } from 'firebase/firestore'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrashCan } from '@fortawesome/free-solid-svg-icons'
 
 const JobCategoriesData = ({category}) => {
 
@@ -20,7 +18,7 @@ const JobCategoriesData = ({category}) => {
                     {category.name}
                 </div>
                 <div>
-                    <FontAwesomeIcon icon={faTrashCan} onClick={() => {deleteCategory(category.id)}} width="35" className='trashIcon' />
+                    <span onClick={() => {deleteCategory(category.id)}} className='trashIcon'>Delete</span>
                 </div>
             </td>
         </tr>

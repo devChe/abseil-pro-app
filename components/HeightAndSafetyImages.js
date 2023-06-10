@@ -2,7 +2,7 @@
 /* eslint-disable react/jsx-key */
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { ref, uploadBytes, listAll, getDownloadURL } from '@firebase/storage';
+import { ref, uploadBytes, listAll, getDownloadURL } from 'firebase/storage';
 import React, { useState, useEffect } from 'react'
 import { v4 } from 'uuid';
 import { storage } from '../src/config/firebase.config';

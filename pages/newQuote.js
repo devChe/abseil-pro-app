@@ -31,9 +31,8 @@ import {
     import "react-responsive-modal/styles.css";
     import { Modal } from "react-responsive-modal";
     import moment from "moment/moment";
-    import { faWindowRestore } from "@fortawesome/free-solid-svg-icons";
     import Link from "next/link";
-    import { getDownloadURL, listAll, ref, uploadBytes } from "@firebase/storage";
+    import { getDownloadURL, listAll, ref, uploadBytes } from "firebase/storage";
     import { v4 } from "uuid";
     import NewQuoteTask from "../components/NewQuoteTask";
     import { db, storage } from "../src/config/firebase.config";

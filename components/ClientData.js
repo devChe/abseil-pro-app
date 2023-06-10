@@ -3,8 +3,6 @@ import Link from 'next/link'
 import { async } from '@firebase/util'
 import { db } from '../src/config/firebase.config'
 import { deleteDoc, doc } from 'firebase/firestore'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrashCan } from '@fortawesome/free-solid-svg-icons'
 
 
 const ClientData = ({client}) => {
@@ -23,7 +21,7 @@ const ClientData = ({client}) => {
         <Link href="clientProfile/[id]" as={`clientProfile/${client.id}`}><td>{client.name}</td></Link>
         <Link href="clientProfile/[id]" as={`clientProfile/${client.id}`}><td>{client.phone}</td></Link>
         <Link href="clientProfile/[id]" as={`clientProfile/${client.id}`}><td>{client.email}</td></Link>
-        <td style={{textAlign:"center"}}><FontAwesomeIcon icon={faTrashCan} onClick={() => {deleteClient(client.id)}} width="35" className='trashIcon' /></td>
+        <td style={{textAlign:"center"}}><span onClick={() => {deleteClient(client.id)}} className='trashIcon' />Delete</td>
       </tr>
       <style jsx>{`
           td, th {

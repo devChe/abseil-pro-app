@@ -4,7 +4,7 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/jsx-key */
-import { ref, uploadBytes, listAll, getDownloadURL, deleteObject, getStorage } from '@firebase/storage';
+import { ref, uploadBytes, listAll, getDownloadURL, deleteObject, getStorage } from 'firebase/storage';
 import { addDoc, arrayUnion, collection, serverTimestamp, doc, getDocs, onSnapshot, query, updateDoc, where, arrayRemove } from 'firebase/firestore';
 import Image from 'next/image';
 import { onAuthStateChanged } from 'firebase/auth';

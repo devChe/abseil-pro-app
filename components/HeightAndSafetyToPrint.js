@@ -7,7 +7,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import dateFormat, { masks } from "dateformat";
 import ImageUpload from "./ImageUpload";
-import { getDownloadURL, listAll, ref } from "@firebase/storage";
+import { getDownloadURL, listAll, ref } from "firebase/storage";
 import { storage } from "../src/config/firebase.config";
 
 function HeightAndSafetyToPrint({ job }) {

@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { getDownloadURL, listAll, ref, uploadBytes } from '@firebase/storage';
+import { getDownloadURL, listAll, ref, uploadBytes } from 'firebase/storage';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { addDoc, collection, getDocs, onSnapshot, query } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react'

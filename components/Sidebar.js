@@ -6,8 +6,7 @@ import { useRouter } from 'next/router'
 import Router from 'next/router'
 import React, { useState } from 'react'
 import { cssTransition } from 'react-toastify'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBurger } from '@fortawesome/free-solid-svg-icons'
+
 
 const Sidebar = () => {
     const [toggle, isToggle] = useState(false)
@@ -31,7 +30,7 @@ const Sidebar = () => {
         <div className='mobileLogo' style={{display:'none'}}>ABSEIL PRO</div>
         <div>
             <div className='menuBurger' style={{position:"relative", display: 'none'}} onClick={() => isToggle(!toggle)}>
-                <FontAwesomeIcon icon={faBurger} style={{fontSize:"25px"}} />
+                <div style={{fontSize:"25px"}}>Menu</div>
             </div>
             <div className={toggle ? "mobileTools" : "hide"} style={{display:'none',zIndex:"99999"}}>
                 <Link href="/dashboard"><a>Dashboard</a></Link>

@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import LoadingSpinner from '../../../../../components/LoadingSpinner';
 import { collection, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
 import { db, storage } from '../../../../../src/config/firebase.config';
-import { getDownloadURL, listAll, ref, uploadBytes } from '@firebase/storage';
+import { getDownloadURL, listAll, ref, uploadBytes } from 'firebase/storage';
 import { v4 } from 'uuid';
 
 
