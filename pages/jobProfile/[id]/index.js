@@ -71,7 +71,7 @@ import FinancialView from "../../../components/FinancialView";
 import JobImageUpload from "../../../components/JobImageUpload";
 import Dropzone from "../../../components/Dropzone";
 import NewQuoteTask from "../../../components/NewQuoteTask";
-import TimeSheet from "../../../components/TImeSheet";
+import TimeSheet from "../../../components/TimeSheet";
 import ReactModal from "react-modal";
 import Docs from "../../../components/Docs";
 
