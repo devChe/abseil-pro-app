@@ -52,7 +52,11 @@ const LoginTable = () => {
           width: 100%;
         }
 
-        td, th {
+        td {
+          text-align: center;
+        }
+
+        th {
                 border: 1px solid #dddddd;
                 padding: 8px;
                 white-space: nowrap;

@@ -72,6 +72,9 @@ import JobImageUpload from "../../../components/JobImageUpload";
 import Dropzone from "../../../components/Dropzone";
 import NewQuoteTask from "../../../components/NewQuoteTask";
 import TimeSheet from "../../../components/TImeSheet";
+import ReactModal from "react-modal";
+import Docs from "../../../components/Docs";
+
 
 
 
@@ -350,7 +353,7 @@ function jobProfile({ jobProps, id }) {
     setOther(true);
   };
 
-  function openModal(id) {
+  function isOpen(id) {
     setIsOpen(id);
   }
 
@@ -359,7 +362,7 @@ function jobProfile({ jobProps, id }) {
     subtitle.style.color = "#f00";
   }
 
-  function closeModal() {
+  function onCloseModal() {
     setIsOpen(false);
     setIsOpenJSEA(false);
     setIsOpenDPR(false);
@@ -378,6 +381,7 @@ function jobProfile({ jobProps, id }) {
     setIsOpenInspectionReport(false);
     setIsOpenPrintDocs(false);
     setIsOpenImages(false);
+    setAddTaskOpen(false);
   }
 
   //   UNIQUE ID
@@ -455,10 +459,7 @@ function jobProfile({ jobProps, id }) {
     window.location.reload(false);
   };
 
-  function onCloseModal() {
-    setAddTaskOpen(false);
-    
-  }
+  
 
 
   //ADD QUOTE TASK
@@ -794,7 +795,7 @@ function jobProfile({ jobProps, id }) {
               className={toggleState === 3 ? "tabs activeTabs" : "tabs"}
               onClick={() => toggleTab(3)}
             >
-              Documents
+              Forms
             </div>
             <div
               className={toggleState === 4 ? "tabs activeTabs" : "tabs"}
@@ -812,7 +813,7 @@ function jobProfile({ jobProps, id }) {
               className={toggleState === 6 ? "tabs activeTabs" : "tabs"}
               onClick={() => toggleTab(6)}
             >
-              Forms
+              Documents
             </div>
             <div
               className={toggleState === 7 ? "tabs activeTabs" : "tabs"}
@@ -1015,11 +1016,11 @@ function jobProfile({ jobProps, id }) {
             <Dropzone job={job} />
           </div>
           <div
-            id="docs"
+            id="forms"
             style={{ paddingBottom: "50px" }}
             className={toggleState === 3 ? "content  activeContent" : "content"}
           >
-            <h5>Documents</h5>
+            <h2>Forms</h2>
             <hr />
             <div style={{ textAlign: "center" }}>
               <div>
@@ -1031,11 +1032,9 @@ function jobProfile({ jobProps, id }) {
               </div>
               <div className="modal">
                 <Modal
-                  isOpen={modalIsOpenJSEA}
-                  onAfterOpen={afterOpenModal}
-                  onRequestClose={closeModal}
-                  style={customStyles}
-                  contentLabel="Example Modal"
+                  open={modalIsOpenJSEA}
+                  onClose={onCloseModal}
+                  center={true}
                 >
                   <h2 ref={(_subtitle) => (subtitle = _subtitle)}>
                     JSEA, SWMS, Rescue Plan
@@ -1077,9 +1076,9 @@ function jobProfile({ jobProps, id }) {
                     </p>
                     <hr />
                   </div>
-                  <button className="modalBtn" onClick={closeModal}>
+                  {/* <button className="modalBtn" onClick={closeM}>
                     close
-                  </button>
+                  </button> */}
                 </Modal>
               </div>
 
@@ -1088,11 +1087,9 @@ function jobProfile({ jobProps, id }) {
               </div>
               <div className="modal">
                 <Modal
-                  isOpen={modalIsOpenDPR}
-                  onAfterOpen={afterOpenModal}
-                  onRequestClose={closeModal}
-                  style={customStyles}
-                  contentLabel="Example Modal"
+                  open={modalIsOpenDPR}
+                  onClose={onCloseModal}
+                  center={true}
                 >
                   <h2 ref={(_subtitle) => (subtitle = _subtitle)}>
                     Daily Progress Report
@@ -1134,9 +1131,9 @@ function jobProfile({ jobProps, id }) {
                     </p>
                     <hr />
                   </div>
-                  <button className="modalBtn" onClick={closeModal}>
+                  {/* <button className="modalBtn" onClick={closeModal}>
                     close
-                  </button>
+                  </button> */}
                 </Modal>
               </div>
 
@@ -1145,12 +1142,7 @@ function jobProfile({ jobProps, id }) {
               </div>
               <div className="modal">
                 <Modal
-                  isOpen={modalIsOpenTTR}
-                  onAfterOpen={afterOpenModal}
-                  onRequestClose={closeModal}
-                  style={customStyles}
-                  contentLabel="Example Modal"
-                >
+                  isOpen={modalIsOpenTTR} onClose={onCloseModal} center>
                   <h2 ref={(_subtitle) => (subtitle = _subtitle)}>
                     Toolbox Talk Record
                   </h2>
@@ -1191,9 +1183,9 @@ function jobProfile({ jobProps, id }) {
                     </p>
                     <hr />
                   </div>
-                  <button className="modalBtn" onClick={closeModal}>
+                  {/* <button className="modalBtn" onClick={closeModal}>
                     close
-                  </button>
+                  </button> */}
                 </Modal>
               </div>
 
@@ -1202,12 +1194,8 @@ function jobProfile({ jobProps, id }) {
               </div>
               <div className="modal">
                 <Modal
-                  isOpen={modalIsOpenRB}
-                  onAfterOpen={afterOpenModal}
-                  onRequestClose={closeModal}
-                  style={customStyles}
-                  contentLabel="Example Modal"
-                >
+                  open={modalIsOpenRB}
+                  onClose={onCloseModal} center>
                   <h2 ref={(_subtitle) => (subtitle = _subtitle)}>
                     Resident Balconies
                   </h2>
@@ -1248,9 +1236,9 @@ function jobProfile({ jobProps, id }) {
                     </p>
                     <hr />
                   </div>
-                  <button className="modalBtn" onClick={closeModal}>
+                  {/* <button className="modalBtn" onClick={closeModal}>
                     close
-                  </button>
+                  </button> */}
                 </Modal>
               </div>
 
@@ -1259,11 +1247,8 @@ function jobProfile({ jobProps, id }) {
               </div>
               <div className="modal">
                 <Modal
-                  isOpen={modalIsOpenIR}
-                  onAfterOpen={afterOpenModal}
-                  onRequestClose={closeModal}
-                  style={customStyles}
-                  contentLabel="Example Modal"
+                  open={modalIsOpenIR}
+                  onClose={onCloseModal} center
                 >
                   <h2 ref={(_subtitle) => (subtitle = _subtitle)}>
                     Incident Report
@@ -1305,9 +1290,9 @@ function jobProfile({ jobProps, id }) {
                     </p>
                     <hr />
                   </div>
-                  <button className="modalBtn" onClick={closeModal}>
+                  {/* <button className="modalBtn" onClick={closeModal}>
                     close
-                  </button>
+                  </button> */}
                 </Modal>
               </div>
 
@@ -1316,12 +1301,7 @@ function jobProfile({ jobProps, id }) {
               </div>
               <div className="modal">
                 <Modal
-                  isOpen={modalIsOpenST}
-                  onAfterOpen={afterOpenModal}
-                  onRequestClose={closeModal}
-                  style={customStyles}
-                  contentLabel="Example Modal"
-                >
+                  open={modalIsOpenST} onClose={onCloseModal} center>
                   <h2 ref={(_subtitle) => (subtitle = _subtitle)}>
                     Subcontractor Timesheet
                   </h2>
@@ -1362,9 +1342,9 @@ function jobProfile({ jobProps, id }) {
                     </p>
                     <hr />
                   </div>
-                  <button className="modalBtn" onClick={closeModal}>
+                  {/* <button className="modalBtn" onClick={closeModal}>
                     close
-                  </button>
+                  </button> */}
                 </Modal>
               </div>
 
@@ -1379,12 +1359,7 @@ function jobProfile({ jobProps, id }) {
               </div>
               <div className="modal">
                 <Modal
-                  isOpen={modalIsOpenHSIF}
-                  onAfterOpen={afterOpenModal}
-                  onRequestClose={closeModal}
-                  style={heightSafetyFormCustomStyles}
-                  contentLabel="Example Modal"
-                >
+                  open={modalIsOpenHSIF} onClose={onCloseModal} center>
                   <h2 ref={(_subtitle) => (subtitle = _subtitle)}>
                     Height Safety Inspection Form
                   </h2>
@@ -1512,12 +1487,12 @@ function jobProfile({ jobProps, id }) {
                     />
                   </div>
 
-                  <button
+                  {/* <button
                     className="modalBtn heightSafetyBtn"
                     onClick={closeModal}
                   >
                     close
-                  </button>
+                  </button> */}
                 </Modal>
               </div>
 
@@ -1528,24 +1503,19 @@ function jobProfile({ jobProps, id }) {
               </div>
               <div className="modal">
                 <Modal
-                  isOpen={modalIsOpenHSIC}
-                  onAfterOpen={afterOpenModal}
-                  onRequestClose={closeModal}
-                  style={bodyCustomStyles}
-                  contentLabel="Example Modal"
-                >
+                  open={modalIsOpenHSIC} onClose={onCloseModal} center>
                   <h2 ref={(_subtitle) => (subtitle = _subtitle)}></h2>
 
                   <div>
                     <HeightSafetyCertificate job={job} />
                   </div>
 
-                  <button
+                  {/* <button
                     className="modalBtn heightSafetyBtn"
                     onClick={closeModal}
                   >
                     close
-                  </button>
+                  </button> */}
                 </Modal>
               </div>
 
@@ -1556,24 +1526,19 @@ function jobProfile({ jobProps, id }) {
               </div>
               <div className="modal">
                 <Modal
-                  isOpen={modalIsOpenHSBody}
-                  onAfterOpen={afterOpenModal}
-                  onRequestClose={closeModal}
-                  style={bodyCustomStyles}
-                  contentLabel="Example Modal"
-                >
+                  open={modalIsOpenHSBody} onClose={onCloseModal} center>
                   <h2 ref={(_subtitle) => (subtitle = _subtitle)}></h2>
 
                   <div>
                     <HeightSafetyBody job={job} />
                   </div>
 
-                  <button
+                  {/* <button
                     className="modalBtn heightSafetyBtn"
                     onClick={closeModal}
                   >
                     close
-                  </button>
+                  </button> */}
                 </Modal>
               </div>
 
@@ -1587,24 +1552,19 @@ function jobProfile({ jobProps, id }) {
               </div>
               <div className="modal">
                 <Modal
-                  isOpen={modalIsOpenHSInspectionSummary}
-                  onAfterOpen={afterOpenModal}
-                  onRequestClose={closeModal}
-                  style={bodyCustomStyles}
-                  contentLabel="Example Modal"
-                >
+                  open={modalIsOpenHSInspectionSummary} onClose={onCloseModal} center>
                   <h2 ref={(_subtitle) => (subtitle = _subtitle)}></h2>
 
                   <div>
                     <InspectionSummary job={job} />
                   </div>
 
-                  <button
+                  {/* <button
                     className="modalBtn heightSafetyBtn"
                     onClick={closeModal}
                   >
                     close
-                  </button>
+                  </button> */}
                 </Modal>
               </div>
 
@@ -1615,11 +1575,7 @@ function jobProfile({ jobProps, id }) {
               </div>
               <div className="modal">
                 <Modal
-                  isOpen={modalIsOpenHSAssetMap}
-                  onAfterOpen={afterOpenModal}
-                  onRequestClose={closeModal}
-                  style={bodyCustomStyles}
-                  contentLabel="Example Modal"
+                  open={modalIsOpenHSAssetMap} onClose={onCloseModal} center
                 >
                   <h2 ref={(_subtitle) => (subtitle = _subtitle)}></h2>
 
@@ -1627,12 +1583,12 @@ function jobProfile({ jobProps, id }) {
                     <HeightSafetyAssetMap job={job} />
                   </div>
 
-                  <button
+                  {/* <button
                     className="modalBtn heightSafetyBtn"
                     onClick={closeModal}
                   >
                     close
-                  </button>
+                  </button> */}
                 </Modal>
               </div>
 
@@ -1646,24 +1602,19 @@ function jobProfile({ jobProps, id }) {
               </div>
               <div className="modal">
                 <Modal
-                  isOpen={modalIsOpenInspectionReport}
-                  onAfterOpen={afterOpenModal}
-                  onRequestClose={closeModal}
-                  style={bodyCustomStyles}
-                  contentLabel="Example Modal"
-                >
+                  open={modalIsOpenInspectionReport} onClose={onCloseModal} center>
                   <h2 ref={(_subtitle) => (subtitle = _subtitle)}></h2>
 
                   <div>
                     <InspectionReport job={job} />
                   </div>
 
-                  <button
+                  {/* <button
                     className="modalBtn heightSafetyBtn"
                     onClick={closeModal}
                   >
                     close
-                  </button>
+                  </button> */}
                 </Modal>
               </div>
 
@@ -1673,11 +1624,7 @@ function jobProfile({ jobProps, id }) {
               </div>
               <div className="modal">
                 <Modal
-                  isOpen={modalIsOpenImages}
-                  onAfterOpen={afterOpenModal}
-                  onRequestClose={closeModal}
-                  style={customStyles}
-                  contentLabel="Example Modal"
+                  open={modalIsOpenImages} onClose={onCloseModal} center
                 >
                   <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Images</h2>
 
@@ -1685,12 +1632,12 @@ function jobProfile({ jobProps, id }) {
                     <HeightAndSafetyImages job={job} />
                   </div>
 
-                  <button
+                  {/* <button
                     className="modalBtn heightSafetyBtn"
                     onClick={closeModal}
                   >
                     close
-                  </button>
+                  </button> */}
                 </Modal>
               </div>
 
@@ -1701,11 +1648,7 @@ function jobProfile({ jobProps, id }) {
               </div>
               <div className="modal">
                 <Modal
-                  isOpen={modalIsOpenPrintDocs}
-                  onAfterOpen={afterOpenModal}
-                  onRequestClose={closeModal}
-                  style={toPrintCustomStyles}
-                  contentLabel="Example Modal"
+                  open={modalIsOpenPrintDocs} onClose={onCloseModal} center
                 >
                   <h2 ref={(_subtitle) => (subtitle = _subtitle)}></h2>
 
@@ -1713,12 +1656,12 @@ function jobProfile({ jobProps, id }) {
                     <HeightAndSafetyToPrint job={job} />
                   </div>
 
-                  <button
+                  {/* <button
                     className="modalBtn heightSafetyBtn"
                     onClick={closeModal}
                   >
                     close
-                  </button>
+                  </button> */}
                 </Modal>
               </div>
 
@@ -1735,11 +1678,7 @@ function jobProfile({ jobProps, id }) {
               </div>
               <div className="modal">
                 <Modal
-                  isOpen={modalIsOpenInQuote}
-                  onAfterOpen={afterOpenModal}
-                  onRequestClose={closeModal}
-                  style={customStyles}
-                  contentLabel="Example Modal"
+                  open={modalIsOpenInQuote} onClose={onCloseModal} center
                 >
                   <h2 ref={(_subtitle) => (subtitle = _subtitle)}>
                     Internal Quote
@@ -1747,9 +1686,9 @@ function jobProfile({ jobProps, id }) {
                   <div>
                     <hr />
                   </div>
-                  <button className="modalBtn" onClick={closeModal}>
+                  {/* <button className="modalBtn" onClick={closeModal}>
                     close
-                  </button>
+                  </button> */}
                 </Modal>
               </div>
             </div>
@@ -1772,13 +1711,17 @@ function jobProfile({ jobProps, id }) {
             </div>
           </div>
           <div
-            id="forms"
+            id="docs"
             style={{ paddingBottom: "50px" }}
             className={toggleState === 6 ? "content  activeContent" : "content"}
           >
             <div>
-              <h1>Forms</h1>
+              <h1>Documents</h1>
             </div>
+            <div>
+              <Docs job={job}  />
+            </div>
+            
           </div>
           <div
             id="Reports"

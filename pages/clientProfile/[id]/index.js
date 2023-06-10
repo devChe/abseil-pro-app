@@ -149,6 +149,10 @@ function clientProfile({ clientProps }) {
           <Link href="[id]/[slug]" as={`${client.id}/${client.slug}`}>
             <button>+ New Quote</button>
           </Link>
+          <Link href="[id]/edit/[slug]" as={`${client.id}/edit/${client.slug}`}>
+            <button>Edit Client</button>
+          </Link>
+          
         </div>
         <div className="blocTabs">
           <div
@@ -208,7 +212,10 @@ function clientProfile({ clientProps }) {
                 <div className="leftSideContent">
                   <div>
                     <a href="https://placeholder.com/200">
-                      <img src="https://via.placeholder.com/200" />
+                      {client.image ? (<img src={client.image} width={200}/>) : (
+                        <img src="https://via.placeholder.com/200" />
+                      )}
+                      
                     </a>
                   </div>
                   <div></div>
@@ -405,7 +412,7 @@ function clientProfile({ clientProps }) {
         </div>
       </div>
 
-      <style jsx="true">{`
+      <style jsx>{`
         .contentWrapper {
           height: 100vh;
           display: flex;

@@ -63,7 +63,6 @@ const WeeklyTable = ({ staff, jobs }) => {
           ))}
           <th>Total</th>
         </tr>
-        
       </thead>
     );
   };
@@ -71,10 +70,10 @@ const WeeklyTable = ({ staff, jobs }) => {
   const renderTableRows = (week, loginsByStaff) => {
     const tableRows = staff.map((staffMember) => {
       const staffJobs = jobs.filter((job) => job.staff === staffMember.name);
-      
+
       return (
         <tr key={staffMember.name}>
-          <td>{staffMember.name}</td>
+          <td style={{textAlign:"center",border:"1px solid #dddddd"}}>{staffMember.name}</td>
           {week.map((day) => {
             const dateString = day.toISOString().split("T")[0];
             const jobForDate = staffJobs.find((job) => {
@@ -82,19 +81,31 @@ const WeeklyTable = ({ staff, jobs }) => {
               const jobDateString = jobDate.toISOString().split("T")[0];
               return jobDateString === dateString;
             });
-            const midnight = new Date(day).toLocaleString().split(',')[0];
+            const midnight = new Date(day).toLocaleString().split(",")[0];
             const midnightEpoch = new Date(midnight).getTime();
             console.log(midnightEpoch);
-            const loginTime = loginsByStaff[staffMember.name] && loginsByStaff[staffMember.name][midnightEpoch] ? loginsByStaff[staffMember.name][midnightEpoch] : "-"
-            if(loginTime !== '-'){
-                if(loginsByStaff[staffMember.name].totalTime)
-                loginsByStaff[staffMember.name].totalTime += Number(loginTime.replace(':', '.'))
-                else
-                loginsByStaff[staffMember.name].totalTime = Number(loginTime.replace(':', '.'))
-            } 
-            return <td key={dateString}>{loginTime}</td>;
+            const loginTime =
+              loginsByStaff[staffMember.name] &&
+              loginsByStaff[staffMember.name][midnightEpoch]
+                ? loginsByStaff[staffMember.name][midnightEpoch]
+                : "-";
+            if (loginTime !== "-") {
+              if (loginsByStaff[staffMember.name].totalTime)
+                loginsByStaff[staffMember.name].totalTime += Number(
+                  loginTime.replace(":", ".")
+                );
+              else
+                loginsByStaff[staffMember.name].totalTime = Number(
+                  loginTime.replace(":", ".")
+                );
+            }
+            return <td style={{textAlign:"center",border:"1px solid #dddddd"}} key={dateString}>{loginTime}</td>;
           })}
-          <td>{loginsByStaff[staffMember.name] ? loginsByStaff[staffMember.name].totalTime : "-"}</td>
+          <td style={{textAlign:"center",border:"1px solid #dddddd"}}>
+            {loginsByStaff[staffMember.name]
+              ? loginsByStaff[staffMember.name].totalTime
+              : "-"}
+          </td>
         </tr>
       );
     });
@@ -133,7 +144,7 @@ const WeeklyTable = ({ staff, jobs }) => {
     <div>
       <button onClick={handlePrevWeek}>Previous Week</button>
       <button onClick={handleNextWeek}>Next Week</button>
-      <table>
+      <table style={{borderCollapse: "collapse", width:"100%"}}>
         {renderTableHeader(week)}
         <tbody>{renderTableRows(week, loginsByStaff)}</tbody>
       </table>
@@ -144,24 +155,26 @@ const WeeklyTable = ({ staff, jobs }) => {
           width: 100%;
         }
 
-        td, th {
-                border: 1px solid #dddddd;
-                padding: 8px;
-                white-space: nowrap;
-                transition: .15s ease;
-                
-            }
+        td {
+            text-align: center;
+        }
 
-            tr:hover {
-                background-color: lightgrey;
-                color: white;
-                cursor: pointer;
-            }
-            
-            tr:active {
-                background: darkgrey;
-            }
+        th {
+          border: 1px solid #dddddd;
+          padding: 8px;
+          white-space: nowrap;
+          transition: 0.15s ease;
+        }
 
+        tr:hover {
+          background-color: lightgrey;
+          color: white;
+          cursor: pointer;
+        }
+
+        tr:active {
+          background: darkgrey;
+        }
       `}</style>
     </div>
   );

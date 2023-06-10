@@ -760,7 +760,7 @@ function HeightAndSafetyToPrint({ job }) {
                 <th>Notes</th>
                 <th>Result</th>
               </tr>
-              {job.inspectionReport.map((report) => {
+              {job?.inspectionReport?.map((report) => {
                 return <tr>
                   <td>{report.qty}</td>
                   <td>{report.asset}</td>
