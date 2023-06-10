@@ -111,7 +111,7 @@ const Photos = () => {
 
 
 
-  const filteredPhotos = jobs.flatMap(job => job.data.photos.filter(photo => selectedPhotos.includes(photo.id)));
+  const filteredPhotos = jobs?.flatMap(job => job?.data?.photos?.filter(photo => selectedPhotos.includes(photo.id)));
   
   return (
     <div>
@@ -121,15 +121,15 @@ const Photos = () => {
       <Modal open={openModalReport} onClose={onCloseModal} center={true}>
         <div>
           <h1>REPORT</h1>
-          {filteredPhotos.map(photo => (
+          {filteredPhotos?.map(photo => (
             <div>
               <div>
-                <img key={photo.id} src={photo.url} alt="Job Photo" width={200} height={200} />
+                <img key={photo?.id} src={photo?.url} alt="Job Photo" width={200} height={200} />
                 <div>
-                  {photo.description}
+                  {photo?.description}
                 </div>
                 <div>
-                  {photo.jobName}
+                  {photo?.jobName}
                 </div>
               </div>
               
@@ -158,7 +158,7 @@ const Photos = () => {
                             ""
                           )}
                           <div className="content">
-                            <LazyLoadImage
+                            <img
                               onClick={() => {
                                 openSlick(photo.id);
                                 setActiveImage(index);
@@ -169,9 +169,6 @@ const Photos = () => {
                                 height: "150px",
                                 borderRadius: "8px",
                               }}
-                              PlaceholderSrc={PlaceholderImage}
-                              loading="lazy"
-                              effect="blur"
                             />
 
                             <Link
