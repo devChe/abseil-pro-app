@@ -50,7 +50,7 @@ function Loading() {
   return loading && (<LoadingSpinner />);
 }
 
-config.autoAddCss = false;
+// config.autoAddCss = false;
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
