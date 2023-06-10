@@ -22,8 +22,6 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import { useRouter } from "next/router";
 import { AuthCheck } from "../components/AuthCheck";
-import { config } from "@fortawesome/fontawesome-svg-core";
-import "@fortawesome/fontawesome-svg-core/styles.css";
 import "react-datepicker/dist/react-datepicker.css";
 import ErrorBoundary from "../components/ErrorBoundary";
 import JobContextProvider from "../context/jobContext";
@@ -76,7 +74,7 @@ function MyApp({ Component, pageProps }) {
               content="width=device-width, initial-scale=1"
             />
             <link rel="icon" href="/favicon.ico" />
-            <script src="https://use.fontawesome.com/e6c3f5247b.js" />
+            {/* <script src="https://use.fontawesome.com/e6c3f5247b.js" /> */}
             <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4clmPx_bEwSwrVgprTEQYbRZgc7CKGcM&libraries=places" />
           </Head>
           <div className="rightSideContent">
