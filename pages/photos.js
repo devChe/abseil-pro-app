@@ -14,7 +14,6 @@ import { Modal } from "react-responsive-modal";
 import 'react-responsive-modal/styles.css';
 import dynamic from 'next/dynamic';
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { PlaceholderImage } from "../public/placeholder.jpg"
 import Slick from '../components/Slick';
 const Paint = dynamic(() => import("../components/Painterro"), { ssr: false });
 
